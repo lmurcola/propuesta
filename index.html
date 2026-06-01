@@ -159,10 +159,31 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 .ef{border-bottom:1.5px dashed #b8dff5;display:inline;padding:0 2px;}
 .ef:focus{border-bottom:1.5px solid #2fabe4;}
 @media print{
+  @page{margin:12mm;size:letter;}
+  /* Preserve brand colors */
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  /* Hide UI chrome */
   .topbar,.cover-edit-hint,.edit-hint,.opt-toggle-btn,.no-print{display:none!important;}
-  .opt-content{display:block!important;}
+  /* Optional sections: hide entire block unless active */
+  .optional-sec{display:none!important;}
+  .optional-sec.active{display:block!important;}
+  .opt-content{display:none!important;}
+  .opt-content.visible{display:block!important;}
+  /* Pago único: hide unless active */
+  #block-pago-unico{display:none!important;}
+  #block-pago-unico.active{display:block!important;}
+  /* Clean editable fields */
   [contenteditable]{border:none!important;box-shadow:none!important;background:none!important;}
-  body{padding:0 16px;}
+  body{padding:0;margin:0;max-width:100%;background:#fff;}
+  /* Prevent page breaks inside key elements */
+  .pain-card,.risk-row,.sol-card,.diff-card,.impl-step,
+  .roi-block,.price-block,.dotacion-card,.optional-sec,
+  .hw-layout,.bvr-table,.logo-pill,.sem-item{
+    page-break-inside:avoid;break-inside:avoid;
+  }
+  .sec-label,.sec-heading{page-break-after:avoid;break-after:avoid;}
+  .footer-note,.signature{page-break-inside:avoid;break-inside:avoid;}
+  .cover{page-break-after:avoid;break-after:avoid;}
 }
 </style>
 </head>
