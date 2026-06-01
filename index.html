@@ -102,6 +102,17 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 .price-table tr.total td{font-weight:700;background:rgba(47,171,228,0.1);}
 .price-table td:last-child{text-align:right;}
 .price-fn{font-size:11px;color:#4a6080;margin-top:0.75rem;line-height:1.6;}
+.row-ctrl{display:inline-flex;align-items:center;gap:4px;margin-left:6px;vertical-align:middle;}
+.row-ctrl button{font-size:10px;padding:1px 6px;border:none;border-radius:3px;cursor:pointer;font-weight:700;line-height:1.4;}
+
+.btn-del-row{background:#fce8e8;color:#c0392b;}
+.price-row-hidden{display:none;}
+.price-add-btn{font-size:11px;font-weight:600;color:#2fabe4;background:none;border:1px dashed #2fabe4;border-radius:5px;padding:3px 12px;cursor:pointer;margin-top:8px;display:inline-block;}
+.price-add-btn:hover{background:#f0f9fe;}
+.price-block-toggle{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;}
+.price-block-toggle h4{margin-bottom:0;}
+.btn-collapse-block{font-size:10px;font-weight:600;color:#fff;background:#2fabe4;border:none;border-radius:5px;padding:3px 12px;cursor:pointer;white-space:nowrap;}
+@media print{.no-print{display:none!important;}}
 .hw-layout{display:grid;grid-template-columns:240px 1fr;gap:1.5rem;align-items:stretch;margin-top:1rem;}
 .hw-img-wrap{background:#f8f9fa;border:1px solid #b8dff5;border-radius:10px;padding:1rem;display:flex;align-items:center;justify-content:center;}
 .hw-img{max-width:100%;max-height:100%;height:auto;display:block;}
@@ -148,57 +159,17 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 .ef{border-bottom:1.5px dashed #b8dff5;display:inline;padding:0 2px;}
 .ef:focus{border-bottom:1.5px solid #2fabe4;}
 @media print{
-  /* Remove browser headers/footers */
-  @page{
-    margin:12mm 12mm 12mm 12mm;
-    size:letter;
-  }
-  /* Hide UI chrome */
-  .topbar,.cover-edit-hint,.edit-hint,.opt-toggle-btn{display:none!important;}
-  /* CRITICAL: respect hidden optional sections — hide entire block including title */
-  .optional-sec{display:none!important;}
-  .optional-sec.active{display:block!important;}
-  .opt-content{display:none!important;}
-  .opt-content.visible{display:block!important;}
-  /* Clean editable fields */
+  .topbar,.cover-edit-hint,.edit-hint,.opt-toggle-btn,.no-print{display:none!important;}
+  .opt-content{display:block!important;}
   [contenteditable]{border:none!important;box-shadow:none!important;background:none!important;}
-  body{padding:0;margin:0;max-width:100%;background:#fff;}
-  /* Preserve brand colors in print */
-  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
-  /* Prevent page breaks inside key elements */
-  .pain-card,.risk-row,.sol-card,.diff-card,.impl-step,
-  .roi-block,.price-block,.dotacion-card,.optional-sec,
-  .hw-layout,.bvr-table,.logo-pill,.sem-item{
-    page-break-inside:avoid;
-    break-inside:avoid;
-  }
-  /* Keep section labels with their content */
-  .sec-label,.sec-heading{
-    page-break-after:avoid;
-    break-after:avoid;
-  }
-  /* Grids: allow reasonable breaks */
-  .pain-grid,.sol-grid,.diff-grid,.roi-results,.logos-grid{
-    page-break-inside:auto;
-    break-inside:auto;
-  }
-  /* Signature and footer-note: keep together at end */
-  .footer-note,.signature{
-    page-break-inside:avoid;
-    break-inside:avoid;
-  }
-  /* Cover: keep on its own visual block */
-  .cover{
-    page-break-after:avoid;
-    break-after:avoid;
-  }
+  body{padding:0 16px;}
 }
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <span>PROPUESTA COMERCIAL · GEOVICTORIA PRUEBA</span>
+  <span>PROPUESTA COMERCIAL · GEOVICTORIA</span>
   <button onclick="window.print()">🖨 Exportar PDF</button>
 </div>
 
@@ -326,29 +297,110 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 <div class="sec">
   <div class="sec-label">Oferta económica</div>
   <div class="edit-hint">✏️ Haz clic en cualquier campo para editarlo</div>
+
+  <!-- COSTOS RECURRENTES -->
   <div class="price-block">
     <h4>Costos recurrentes (mensual)</h4>
     <div class="price-sub">
       <span class="by">Vence: <span class="ef" contenteditable="true" spellcheck="false">DD/MM/YYYY</span></span>
       <span class="bb">MXN + IVA</span>
     </div>
-    <table class="price-table"><thead><tr><th>Servicio</th><th>Usuarios</th><th>Precio unitario</th><th>Total mensual</th></tr></thead><tbody>
-      <tr><td>Control de asistencia</td><td style="text-align:center;" contenteditable="true" spellcheck="false">—</td><td style="text-align:right;" contenteditable="true" spellcheck="false">$— MXN</td><td contenteditable="true" spellcheck="false">$— MXN</td></tr>
-      <tr><td>Planificador inteligente</td><td style="text-align:center;" contenteditable="true" spellcheck="false">—</td><td style="text-align:right;" contenteditable="true" spellcheck="false">$— MXN</td><td contenteditable="true" spellcheck="false">$— MXN</td></tr>
-      <tr><td>Permisos y vacaciones</td><td style="text-align:center;" contenteditable="true" spellcheck="false">—</td><td style="text-align:right;" contenteditable="true" spellcheck="false">$— MXN</td><td contenteditable="true" spellcheck="false">$— MXN</td></tr>
-      <tr><td>Renta de equipos</td><td style="text-align:center;" contenteditable="true" spellcheck="false">—</td><td style="text-align:right;" contenteditable="true" spellcheck="false">$— MXN</td><td contenteditable="true" spellcheck="false">$— MXN</td></tr>
-      <tr class="total"><td colspan="3">Total mensual estimado</td><td contenteditable="true" spellcheck="false" style="color:#2fabe4;">$— MXN</td></tr>
-    </tbody></table>
+    <table class="price-table" id="tbl-recurrente">
+      <thead><tr><th>Servicio</th><th style="text-align:center;">Usuarios</th><th style="text-align:right;">Precio unitario</th><th style="text-align:right;">Total mensual</th><th class="no-print" style="width:80px;"></th></tr></thead>
+      <tbody id="tbody-recurrente">
+        <tr class="price-row" data-row="rec">
+          <td contenteditable="true" spellcheck="false">Control de asistencia</td>
+          <td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>
+          <td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>
+          <td style="text-align:right;" class="row-total">$0 MXN</td>
+          <td class="no-print" style="text-align:center;white-space:nowrap;">
+            <button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button>
+          </td>
+        </tr>
+        <tr class="price-row" data-row="rec">
+          <td contenteditable="true" spellcheck="false">Planificador inteligente</td>
+          <td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>
+          <td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>
+          <td style="text-align:right;" class="row-total">$0 MXN</td>
+          <td class="no-print" style="text-align:center;white-space:nowrap;">
+            <button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button>
+          </td>
+        </tr>
+        <tr class="price-row" data-row="rec">
+          <td contenteditable="true" spellcheck="false">Permisos y vacaciones</td>
+          <td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>
+          <td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>
+          <td style="text-align:right;" class="row-total">$0 MXN</td>
+          <td class="no-print" style="text-align:center;white-space:nowrap;">
+            <button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button>
+          </td>
+        </tr>
+        <tr class="price-row" data-row="rec">
+          <td contenteditable="true" spellcheck="false">Renta de equipos</td>
+          <td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>
+          <td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>
+          <td style="text-align:right;" class="row-total">$0 MXN</td>
+          <td class="no-print" style="text-align:center;white-space:nowrap;">
+            <button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button>
+          </td>
+        </tr>
+        <tr class="total">
+          <td colspan="3">Total mensual estimado</td>
+          <td style="color:#2fabe4;text-align:right;" id="total-recurrente">$0 MXN</td>
+          <td class="no-print"></td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="price-add-btn no-print" onclick="addPriceRow('tbody-recurrente','rec')">+ Agregar módulo</button>
     <div class="price-fn">El kick off se considera el hito de facturación inicial.</div>
   </div>
-  <div class="price-block">
-    <h4 style="margin-bottom:0.75rem;font-size:14px;">Costos de pago único</h4>
-    <table class="price-table"><thead><tr><th>Concepto</th><th>Cantidad</th><th>Precio unitario</th><th>Total</th></tr></thead><tbody>
-      <tr><td>Reloj checador biométrico</td><td style="text-align:center;" contenteditable="true" spellcheck="false">—</td><td style="text-align:right;" contenteditable="true" spellcheck="false">$— MXN</td><td contenteditable="true" spellcheck="false">$— MXN</td></tr>
-      <tr><td>Envío</td><td style="text-align:center;" contenteditable="true" spellcheck="false">1</td><td style="text-align:right;" contenteditable="true" spellcheck="false">$— MXN</td><td contenteditable="true" spellcheck="false">$— MXN</td></tr>
-      <tr><td>Instalación</td><td style="text-align:center;" contenteditable="true" spellcheck="false">—</td><td style="text-align:right;" contenteditable="true" spellcheck="false">$— MXN</td><td contenteditable="true" spellcheck="false">$— MXN</td></tr>
-      <tr class="total"><td colspan="3">Total pago único</td><td contenteditable="true" spellcheck="false" style="color:#2fabe4;">$— MXN</td></tr>
-    </tbody></table>
+
+  <!-- COSTOS DE PAGO ÚNICO (colapsable) -->
+  <div class="price-block" id="block-pago-unico">
+    <div class="price-block-toggle">
+      <h4 style="font-size:14px;">Costos de pago único</h4>
+      <button class="btn-collapse-block no-print" onclick="togglePagoUnico(this)">— Ocultar</button>
+    </div>
+    <div id="pago-unico-content">
+      <table class="price-table" id="tbl-unico">
+        <thead><tr><th>Concepto</th><th style="text-align:center;">Cantidad</th><th style="text-align:right;">Precio unitario</th><th style="text-align:right;">Total</th><th class="no-print" style="width:80px;"></th></tr></thead>
+        <tbody id="tbody-unico">
+          <tr class="price-row" data-row="uni">
+            <td contenteditable="true" spellcheck="false">Reloj checador biométrico</td>
+            <td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>
+            <td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>
+            <td style="text-align:right;" class="row-total">$0 MXN</td>
+            <td class="no-print" style="text-align:center;white-space:nowrap;">
+              <button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button>
+            </td>
+          </tr>
+          <tr class="price-row" data-row="uni">
+            <td contenteditable="true" spellcheck="false">Envío</td>
+            <td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">1</td>
+            <td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>
+            <td style="text-align:right;" class="row-total">$0 MXN</td>
+            <td class="no-print" style="text-align:center;white-space:nowrap;">
+              <button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button>
+            </td>
+          </tr>
+          <tr class="price-row" data-row="uni">
+            <td contenteditable="true" spellcheck="false">Instalación</td>
+            <td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>
+            <td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>
+            <td style="text-align:right;" class="row-total">$0 MXN</td>
+            <td class="no-print" style="text-align:center;white-space:nowrap;">
+              <button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button>
+            </td>
+          </tr>
+          <tr class="total">
+            <td colspan="3">Total pago único</td>
+            <td style="color:#2fabe4;text-align:right;" id="total-unico">$0 MXN</td>
+            <td class="no-print"></td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="price-add-btn no-print" onclick="addPriceRow('tbody-unico','uni')">+ Agregar concepto</button>
+    </div>
   </div>
 </div>
 
@@ -511,12 +563,96 @@ calc();
 function toggleOpt(id, openLabel){
   var content=document.getElementById('content-'+id);
   var btn=document.getElementById('btn-'+id);
-  var section=document.getElementById(id);
   var willOpen=!content.classList.contains('visible');
   content.classList.toggle('visible');
-  if(section) section.classList.toggle('active', willOpen);
   btn.textContent=willOpen?'— Ocultar':openLabel;
 }
+
+// ── PRICING: auto-calculate row totals and grand total ──────────────
+function parseNum(str){
+  var n=parseFloat((str||'').replace(/[^0-9.]/g,''));
+  return isNaN(n)?0:n;
+}
+function formatMXN(n){
+  return '$'+n.toLocaleString('es-MX',{minimumFractionDigits:0,maximumFractionDigits:2})+' MXN';
+}
+function recalcTable(tbodyId, totalId){
+  var tbody=document.getElementById(tbodyId);
+  if(!tbody) return;
+  var rows=tbody.querySelectorAll('tr.price-row:not(.price-row-hidden)');
+  var grand=0;
+  rows.forEach(function(row){
+    var qty=parseNum(row.querySelector('.qty')?row.querySelector('.qty').innerText:'0');
+    var unit=parseNum(row.querySelector('.unit')?row.querySelector('.unit').innerText:'0');
+    var subtotal=qty*unit;
+    grand+=subtotal;
+    var totalCell=row.querySelector('.row-total');
+    if(totalCell) totalCell.innerText=formatMXN(subtotal);
+  });
+  var grandCell=document.getElementById(totalId);
+  if(grandCell) grandCell.innerText=formatMXN(grand);
+}
+function bindPricingEvents(tbody, totalId){
+  tbody.addEventListener('input',function(e){
+    var cell=e.target;
+    if(cell.classList.contains('qty')||cell.classList.contains('unit')){
+      recalcTable(tbody.id, totalId);
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded',function(){
+  var tr=document.getElementById('tbody-recurrente');
+  var tu=document.getElementById('tbody-unico');
+  if(tr) bindPricingEvents(tr,'total-recurrente');
+  if(tu) bindPricingEvents(tu,'total-unico');
+});
+
+// ── PRICING ROWS: toggle visibility / delete / add ───────────────────
+function deletePriceRow(btn){
+  var row=btn.closest('tr');
+  var tbody=row.closest('tbody');
+  var tbodyId=tbody.id;
+  var totalId=tbodyId==='tbody-recurrente'?'total-recurrente':'total-unico';
+  row.remove();
+  recalcTable(tbodyId, totalId);
+}
+function addPriceRow(tbodyId, type){
+  var tbody=document.getElementById(tbodyId);
+  var totalId=type==='rec'?'total-recurrente':'total-unico';
+  var totalRow=tbody.querySelector('tr.total');
+  var newRow=document.createElement('tr');
+  newRow.className='price-row';
+  newRow.setAttribute('data-row',type);
+  newRow.innerHTML='<td contenteditable="true" spellcheck="false">Nuevo servicio</td>'
+    +'<td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>'
+    +'<td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>'
+    +'<td style="text-align:right;" class="row-total">$0 MXN</td>'
+    +'<td class="no-print" style="text-align:center;white-space:nowrap;">'
+    +' '
+    +'<button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)">✕</button></td>';
+  tbody.insertBefore(newRow,totalRow);
+}
+
+// ── PAGO ÚNICO: collapse/expand ───────────────────────────────────────
+function togglePagoUnico(btn){
+  var content=document.getElementById('pago-unico-content');
+  var hidden=content.style.display==='none';
+  content.style.display=hidden?'block':'none';
+  btn.textContent=hidden?'— Ocultar':'+ Incluir compra';
+  // mark block for print
+  var block=document.getElementById('block-pago-unico');
+  if(block) block.classList.toggle('active',hidden);
+}
+// Hide pago único by default on load
+document.addEventListener('DOMContentLoaded',function(){
+  var content=document.getElementById('pago-unico-content');
+  var btn=document.querySelector('[onclick="togglePagoUnico(this)"]');
+  var block=document.getElementById('block-pago-unico');
+  if(content){ content.style.display='none'; }
+  if(btn){ btn.textContent='+ Incluir compra'; }
+  if(block){ block.classList.remove('active'); }
+});
+
 </script>
 </body>
 </html>
