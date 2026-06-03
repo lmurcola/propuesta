@@ -366,7 +366,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           </td>
         </tr>
         <tr class="total">
-          <td colspan="3">Total mensual estimado</td>
+          <td colspan="3">Pago mensual total (IVA incluido)</td>
           <td style="color:#2fabe4;text-align:right;" id="total-recurrente">$0 MXN</td>
           <td class="no-print"></td>
         </tr>
@@ -414,7 +414,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
             </td>
           </tr>
           <tr class="total">
-            <td colspan="3">Total pago único</td>
+            <td colspan="3">Pago único total (IVA incluido)</td>
             <td style="color:#2fabe4;text-align:right;" id="total-unico">$0 MXN</td>
             <td class="no-print"></td>
           </tr>
@@ -619,7 +619,7 @@ function recalcTable(tbodyId, totalId){
     if(totalCell) totalCell.innerText=formatMXN(subtotal);
   });
   var grandCell=document.getElementById(totalId);
-  if(grandCell) grandCell.innerText=formatMXN(grand);
+  if(grandCell) grandCell.innerText=formatMXN(grand*1.16);
 }
 function bindPricingEvents(tbody, totalId){
   tbody.addEventListener('input',function(e){
