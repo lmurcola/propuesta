@@ -584,9 +584,17 @@ calc();
 function toggleOpt(id, openLabel){
   var content=document.getElementById('content-'+id);
   var btn=document.getElementById('btn-'+id);
-  var willOpen=!content.classList.contains('visible');
-  content.classList.toggle('visible');
-  btn.textContent=willOpen?'— Ocultar':openLabel;
+  var section=document.getElementById(id);
+  var isHidden=!content.classList.contains('visible');
+  if(isHidden){
+    content.classList.add('visible');
+    btn.textContent='— Ocultar';
+    if(section) section.classList.add('active');
+  } else {
+    content.classList.remove('visible');
+    btn.textContent=openLabel;
+    if(section) section.classList.remove('active');
+  }
 }
 
 // ── PRICING: auto-calculate row totals and grand total ──────────────
@@ -657,12 +665,17 @@ function addPriceRow(tbodyId, type){
 // ── PAGO ÚNICO: collapse/expand ───────────────────────────────────────
 function togglePagoUnico(btn){
   var content=document.getElementById('pago-unico-content');
-  var hidden=content.style.display==='none';
-  content.style.display=hidden?'block':'none';
-  btn.textContent=hidden?'— Ocultar':'+ Incluir compra';
-  // mark block for print
   var block=document.getElementById('block-pago-unico');
-  if(block) block.classList.toggle('active',hidden);
+  var isHidden=content.style.display==='none'||content.style.display==='';
+  if(isHidden){
+    content.style.display='block';
+    btn.textContent='— Ocultar';
+    if(block) block.classList.add('active');
+  } else {
+    content.style.display='none';
+    btn.textContent='+ Incluir compra';
+    if(block) block.classList.remove('active');
+  }
 }
 // Hide pago único by default on load
 document.addEventListener('DOMContentLoaded',function(){
