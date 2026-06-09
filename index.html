@@ -424,7 +424,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
     <div class="cover-edit-hint">✏️ Haz clic en los campos para editarlos</div>
     <div class="cover-meta">
       <div class="cover-meta-item"><label>Cliente</label><div class="ed" contenteditable="true" spellcheck="false"></div></div>
-      <div class="cover-meta-item"><label>Sucursales</label><div class="ed" contenteditable="true" spellcheck="false"></div></div>
+      <div class="cover-meta-item" id="cover-sucursales"><label>Sucursales</label><div class="ed" contenteditable="true" spellcheck="false"></div></div>
       <div class="cover-meta-item"><label>Colaboradores</label><div class="ed" contenteditable="true" spellcheck="false" id="cover-colab"></div></div>
       <div class="cover-meta-item"><label>Fecha</label><div class="ed" contenteditable="true" spellcheck="false" id="cover-fecha"></div></div>
     </div>
@@ -1325,6 +1325,8 @@ function wizGenerate(){
 
   // Cover
   document.getElementById('cover-title').innerHTML=d.title;
+  var sucEl=document.getElementById('cover-sucursales');
+  if(sucEl) sucEl.classList[WZ.ind==='retail'?'remove':'add']('wiz-hide');
   document.getElementById('cover-sub').textContent=d.sub;
   // Pains
   document.getElementById('pain-heading').textContent=d.heading;
