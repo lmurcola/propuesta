@@ -1387,7 +1387,7 @@ function wizGenerate(){
     var subLabels={restaurantes:'restaurantes',tiendas:'tiendas',supermercados:'supermercados',farmacias:'farmacias'};
     var logoSetKey=(WZ.sub&&CASE_LOGOS[WZ.sub])?WZ.sub:(CASE_LOGOS[WZ.ind]?WZ.ind:null);
     if(logoSetKey){
-      var lbl=(logoSetKey==='farmacias')?'Clientes de tu industria que ya operan con GeoVictoria':(subLabels[logoSetKey]?('Clientes de '+subLabels[logoSetKey]+' que ya operan con GeoVictoria'):'Clientes retail que ya operan con GeoVictoria');
+      var lbl=(logoSetKey==='restaurantes')?'Clientes del rubro que ya operan con GeoVictoria':(logoSetKey==='supermercados')?'Clientes de la industria que ya operan con GeoVictoria':(logoSetKey==='farmacias')?'Clientes de tu industria que ya operan con GeoVictoria':(subLabels[logoSetKey]?('Clientes de '+subLabels[logoSetKey]+' que ya operan con GeoVictoria'):'Clientes retail que ya operan con GeoVictoria');
       document.getElementById('cases-label').textContent=lbl;
       renderLogos(logoSetKey);
     } else {
