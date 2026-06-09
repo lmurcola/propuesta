@@ -368,7 +368,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
         <h3>Paso 4</h3>
         <div class="wh">Opciones del documento</div>
         <div class="whint">Define qué secciones incluir.</div>
-        <div class="wiz-tog">
+        <div class="wiz-tog" id="wt-reforma">
           <div class="wt-txt"><label>Marco regulatorio (Reforma Laboral)</label><span id="reform-rec">Incluye las secciones "Marco regulatorio" y "Análisis de escenarios"</span></div>
           <button class="wt-switch" id="sw-reform" onclick="wizToggle('reform')"></button>
         </div>
@@ -1166,10 +1166,31 @@ document.querySelectorAll('.wiz-sub .wiz-chip').forEach(function(b){b.onclick=fu
   b.classList.add('on');WZ.sub=b.dataset.sub;
 };});
 // (size chip handler removed — segment derived from colaboradores)
+function isStandaloneWiz(){return WZ.mods.indexOf('asistencia')<0&&(WZ.mods.indexOf('comedor')>=0||WZ.mods.indexOf('acceso')>=0);}
+function updateWiz3ForStandalone(sa){
+  var ws3=document.getElementById('ws3'); if(!ws3)return;
+  var h=ws3.querySelector('.wh'),hint=ws3.querySelector('.whint');
+  var tiles=document.getElementById('wc-marcaje'),wm=document.getElementById('wmodal');
+  var lbl=wm?wm.querySelector('label'):null;
+  if(sa){
+    if(h)h.textContent='Modalidad del equipo';
+    if(hint)hint.textContent='¿El cliente renta o adquiere el equipo?';
+    if(tiles)tiles.style.display='none';
+    if(wm){wm.classList.add('show');if(lbl)lbl.textContent='Modalidad del equipo';}
+    WZ.marcaje=[];document.querySelectorAll('#wc-marcaje .wiz-mod').forEach(function(x){x.classList.remove('on');});
+  } else {
+    if(h)h.textContent='Método de marcaje';
+    if(hint)hint.textContent='¿Cómo registrarán asistencia los colaboradores? Puedes elegir varios.';
+    if(tiles)tiles.style.display='';
+    if(wm&&WZ.marcaje.indexOf('reloj')<0)wm.classList.remove('show');
+    if(lbl)lbl.textContent='Modalidad del reloj checador';
+  }
+}
 document.querySelectorAll('#wc-mods .wiz-mod').forEach(function(b){b.onclick=function(){
   b.classList.toggle('on');var m=b.dataset.mod,i=WZ.mods.indexOf(m);
   if(i>=0)WZ.mods.splice(i,1);else WZ.mods.push(m);
-};});
+  updateWiz3ForStandalone(isStandaloneWiz());
+}});
 document.querySelectorAll('#wc-marcaje .wiz-mod').forEach(function(b){b.onclick=function(){
   b.classList.toggle('on');var m=b.dataset.mar,i=WZ.marcaje.indexOf(m);
   if(i>=0)WZ.marcaje.splice(i,1);else WZ.marcaje.push(m);
@@ -1198,7 +1219,11 @@ function wizNext(){
     WZ.size=segFromColab(cv);
   }
   if(WZ.step===3){
-    if(WZ.marcaje.indexOf('reloj')>=0 && !WZ.modalidad){alert('Selecciona la modalidad del reloj checador.');return;}
+    if(isStandaloneWiz()){
+      if(!WZ.modalidad){alert('Selecciona la modalidad del equipo.');return;}
+    } else {
+      if(WZ.marcaje.indexOf('reloj')>=0 && !WZ.modalidad){alert('Selecciona la modalidad del reloj checador.');return;}
+    }
   }
   if(WZ.step<4){
     document.getElementById('ws'+WZ.step).classList.remove('active');
@@ -1206,10 +1231,17 @@ function wizNext(){
     document.getElementById('wb-prev').style.visibility='visible';wizFill();
   }
   if(WZ.step===4){
-    var rec=document.getElementById('reform-rec');
-    if(WZ.size==='smb'){WZ.reform=true;document.getElementById('sw-reform').classList.add('on');rec.textContent='Activado: para SMB el cumplimiento es el gancho principal. Incluye "Marco regulatorio" y "Análisis de escenarios".';}
-    else if(WZ.size==='ent'){rec.textContent='En Enterprise el foco suele ser migración; actívalo solo si aplica. Incluye "Marco regulatorio" y "Análisis de escenarios".';}
-    else{WZ.reform=true;document.getElementById('sw-reform').classList.add('on');rec.textContent='Recomendado para Mid-Market. Incluye "Marco regulatorio" y "Análisis de escenarios".';}
+    var wtRef=document.getElementById('wt-reforma');
+    if(isStandaloneWiz()){
+      WZ.reform=false;document.getElementById('sw-reform').classList.remove('on');
+      if(wtRef)wtRef.style.display='none';
+    } else {
+      if(wtRef)wtRef.style.display='';
+      var rec=document.getElementById('reform-rec');
+      if(WZ.size==='smb'){WZ.reform=true;document.getElementById('sw-reform').classList.add('on');rec.textContent='Activado: para SMB el cumplimiento es el gancho principal. Incluye "Marco regulatorio" y "Análisis de escenarios".';}
+      else if(WZ.size==='ent'){rec.textContent='En Enterprise el foco suele ser migración; actívalo solo si aplica. Incluye "Marco regulatorio" y "Análisis de escenarios".';}
+      else{WZ.reform=true;document.getElementById('sw-reform').classList.add('on');rec.textContent='Recomendado para Mid-Market. Incluye "Marco regulatorio" y "Análisis de escenarios".';}
+    }
     document.getElementById('wb-next').style.display='none';
     document.getElementById('wb-go').style.display='inline-block';
   }
@@ -1435,23 +1467,67 @@ function wizGenerate(){
     }
   }
 
-  // ── Hardware logic based on marcaje + modalidad ──
+  // ── Hardware logic based on standalone mode / marcaje + modalidad ──
   var hasReloj = WZ.marcaje.indexOf('reloj')>=0;
   var mod = WZ.modalidad;
-  // defaults: hide everything hardware
   hideSec('sec-hardware'); hideSec('sec-bvr'); hideBlock('block-pago-unico');
-  if(hasReloj && mod && mod!=='tiene'){
-    showFixed('sec-hardware');                          // reloj section for renta/venta/ambos
-    if(mod==='renta'){ if(!WZ.phased) addRecurrenteItem('Renta de equipos'); }
-    if(mod==='venta'){ showBlock('block-pago-unico'); }
-    if(mod==='ambos'){ if(!WZ.phased) addRecurrenteItem('Renta de equipos'); showBlock('block-pago-unico'); showFixed('sec-bvr'); }
+  var hwLbl=document.querySelector('#sec-hardware .sec-label');
+  if(standaloneMode && mod){
+    showFixed('sec-hardware');
+    showBlock('block-pago-unico');
+    if(hwLbl)hwLbl.textContent=skey==='comedor'?'Equipo para Comedor':skey==='acceso'?'Equipo para Acceso':'Equipo para Acceso y Comedor';
+    clearUnicoRows();
+    if(mod==='renta'){
+      if(!WZ.phased)addRecurrenteItem('Renta de equipos');
+      addUnicoItem(''); // fila en blanco para RFID / impresora si aplica
+    } else if(mod==='venta'){
+      var eqL=skey==='comedor'?'GeoVictoria BOX Comedor':skey==='acceso'?'Equipo de Control de Acceso':'Equipo de Acceso y Comedor';
+      addUnicoItem(eqL);addUnicoItem('Instalación');addUnicoItem('Envío');
+    } else if(mod==='ambos'){
+      var eqL2=skey==='comedor'?'GeoVictoria BOX Comedor':'Equipo de Control de Acceso';
+      if(!WZ.phased)addRecurrenteItem('Renta de equipos');
+      addUnicoItem(eqL2);addUnicoItem('Instalación');addUnicoItem('Envío');
+      showFixed('sec-bvr');
+    }
+  } else if(!standaloneMode){
+    if(hwLbl)hwLbl.textContent='Reloj checador';
+    if(hasReloj && mod && mod!=='tiene'){
+      showFixed('sec-hardware');
+      if(mod==='renta'){if(!WZ.phased)addRecurrenteItem('Renta de equipos');}
+      if(mod==='venta'){
+        showBlock('block-pago-unico');clearUnicoRows();
+        addUnicoItem('Reloj checador biométrico');addUnicoItem('Instalación');addUnicoItem('Envío');
+      }
+      if(mod==='ambos'){
+        if(!WZ.phased)addRecurrenteItem('Renta de equipos');
+        showBlock('block-pago-unico');clearUnicoRows();
+        addUnicoItem('Reloj checador biométrico');addUnicoItem('Instalación');addUnicoItem('Envío');
+        showFixed('sec-bvr');
+      }
+    }
   }
-  // if mod==='tiene' or no reloj → nothing (already hidden)
+  // mod==='tiene' o sin reloj → ya oculto
 
   document.getElementById('wiz-overlay').classList.add('hidden');
   window.scrollTo(0,0);
 }
 
+function clearUnicoRows(){
+  var tb=document.getElementById('tbody-unico');if(!tb)return;
+  tb.querySelectorAll('tr.price-row').forEach(function(r){r.remove();});
+}
+function addUnicoItem(label){
+  var tb=document.getElementById('tbody-unico');if(!tb)return;
+  var totalRow=tb.querySelector('tr.total');
+  var tr=document.createElement('tr');tr.className='price-row';tr.setAttribute('data-row','uni');
+  tr.innerHTML='<td contenteditable="true" spellcheck="false">'+label+'</td>'
+    +'<td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>'
+    +'<td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>'
+    +'<td style="text-align:right;" class="row-total">$0 MXN</td>'
+    +'<td class="no-print" style="text-align:center;white-space:nowrap;"><button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button></td>';
+  tb.insertBefore(tr,totalRow||null);
+  if(typeof recalcTable==='function')recalcTable('tbody-unico','total-unico');
+}
 function addRecurrenteItem(label){
   var tb=document.getElementById('tbody-recurrente');
   if(!tb)return;
