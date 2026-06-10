@@ -404,7 +404,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           <div class="wt-txt"><label>Marco regulatorio (Reforma Laboral)</label><span id="reform-rec">Incluye las secciones "Marco regulatorio" y "Análisis de escenarios"</span></div>
           <button class="wt-switch" id="sw-reform" onclick="wizToggle('reform')"></button>
         </div>
-        <div class="wiz-tog">
+        <div class="wiz-tog" id="wt-faseado">
           <div class="wt-txt"><label>Proyecto faseado</label><span>Reemplaza "Costos recurrentes" por un cronograma de implementación por etapas</span></div>
           <button class="wt-switch" id="sw-phased" onclick="wizToggle('phased')"></button>
         </div>
@@ -1359,7 +1359,8 @@ document.querySelectorAll('.wiz-sub .wiz-chip').forEach(function(b){b.onclick=fu
 function wizSoloEquipo(btn){
   WZ.soloEquipo=!WZ.soloEquipo;
   if(WZ.soloEquipo){
-    WZ.mods=[];WZ.devices=[];WZ.equipQty=1;
+    WZ.mods=[];WZ.devices=[];WZ.equipQty=1;WZ.phased=false;
+    document.getElementById('sw-phased').classList.remove('on');
     document.querySelectorAll('#wc-mods .wiz-mod').forEach(function(x){x.classList.remove('on');});
     if(btn){btn.classList.add('on');btn.style.background='#2fabe4';btn.style.color='#fff';}
   } else {
@@ -1479,11 +1480,15 @@ function wizNext(){
   }
   if(WZ.step===4){
     var wtRef=document.getElementById('wt-reforma');
+    var wtFas=document.getElementById('wt-faseado');
     if(isStandaloneWiz()){
       WZ.reform=false;document.getElementById('sw-reform').classList.remove('on');
       if(wtRef)wtRef.style.display='none';
+      if(WZ.soloEquipo){WZ.phased=false;document.getElementById('sw-phased').classList.remove('on');if(wtFas)wtFas.style.display='none';}
+      else{if(wtFas)wtFas.style.display='';}
     } else {
       if(wtRef)wtRef.style.display='';
+      if(wtFas)wtFas.style.display='';
       var rec=document.getElementById('reform-rec');
       if(WZ.size==='smb'){WZ.reform=true;document.getElementById('sw-reform').classList.add('on');rec.textContent='Activado: para SMB el cumplimiento es el gancho principal. Incluye "Marco regulatorio" y "Análisis de escenarios".';}
       else if(WZ.size==='ent'){rec.textContent='En Enterprise el foco suele ser migración; actívalo solo si aplica. Incluye "Marco regulatorio" y "Análisis de escenarios".';}
