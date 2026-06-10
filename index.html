@@ -1355,7 +1355,8 @@ function updateWizDeviceSelector(){
   var standalone=isStandaloneWiz();
   var hasRelojMar=WZ.marcaje.indexOf('reloj')>=0;
   var comedorOnly=standalone&&WZ.mods.indexOf('acceso')<0;
-  var show=(hasRelojMar&&!standalone)||(standalone&&!comedorOnly);
+  var hasTiene=WZ.modalidad==='tiene';
+  var show=((hasRelojMar&&!hasTiene)&&!standalone)||(standalone&&!comedorOnly&&!hasTiene);
   sel.style.display=show?'block':'none';
   if(!show)return;
   // Filter buttons
@@ -1412,6 +1413,7 @@ document.querySelectorAll('#wc-marcaje .wiz-mod').forEach(function(b){b.onclick=
 document.querySelectorAll('#wc-modalidad .wiz-chip').forEach(function(b){b.onclick=function(){
   document.querySelectorAll('#wc-modalidad .wiz-chip').forEach(function(x){x.classList.remove('on');});
   b.classList.add('on');WZ.modalidad=b.dataset.modal;
+  updateWizDeviceSelector();
 };});
 
 function wizToggle(w){
