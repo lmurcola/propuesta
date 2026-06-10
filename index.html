@@ -1049,7 +1049,8 @@ function recalcTable(tbodyId, totalId){
   rows.forEach(function(row){
     var qty=parseNum(row.querySelector('.qty')?row.querySelector('.qty').innerText:'0');
     var unit=parseNum(row.querySelector('.unit')?row.querySelector('.unit').innerText:'0');
-    var subtotal=qty*unit;
+    var flatMin=parseNum(row.getAttribute('data-flat')||'0');
+    var subtotal=Math.max(qty*unit, flatMin);
     grand+=subtotal;
     var totalCell=row.querySelector('.row-total');
     if(totalCell) totalCell.innerText=formatMXN(subtotal);
@@ -1683,6 +1684,7 @@ function wizGenerate(){
         var qtyVal=precioTotal?1:WZ.colab;
         var unitVal=sug;
         var tr=document.createElement('tr');tr.className='price-row';tr.setAttribute('data-row','rec');
+        if(precioTotal)tr.setAttribute('data-flat',unitVal);
         tr.innerHTML='<td contenteditable="true" spellcheck="false">'+MOD_LABEL[m]+'</td>'
           +'<td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">'+qtyVal+'</td>'
           +'<td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">'+unitVal+'</td>'
