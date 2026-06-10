@@ -1357,6 +1357,7 @@ function updateWizDeviceSelector(){
   var comedorOnly=standalone&&WZ.mods.indexOf('acceso')<0;
   var show=(hasRelojMar&&!standalone)||(standalone&&!comedorOnly);
   sel.classList[show?'remove':'add']('wiz-hide');
+  sel.classList[show?'add':'remove']('show');
   if(!show)return;
   // Filter buttons
   document.querySelectorAll('#wiz-dev-btns .hw-sel-btn').forEach(function(b){
