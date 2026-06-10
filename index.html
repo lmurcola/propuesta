@@ -683,7 +683,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 
 <div class="optional-sec" id="sec-hardware">
   <div class="opt-toggle-bar" onclick="toggleOpt('sec-hardware','+ Ver equipo')">
-    <div class="sec-label">Reloj checador</div>
+    <div class="sec-label">Equipo biométrico</div>
     <button class="opt-toggle-btn" id="btn-sec-hardware">+ Ver especificaciones</button>
   </div>
   <div id="hw-reloj-selector" class="hw-selector wiz-hide" style="padding:10px 16px 4px;">
@@ -1697,7 +1697,7 @@ function wizGenerate(){
   if(standaloneMode&&mod){
     showFixed('sec-hardware');
     showBlock('block-pago-unico');
-    if(hwLbl)hwLbl.textContent=skey==='comedor'?'Equipo para Comedor':skey==='acceso'?'Equipo para Acceso':'Equipo para Acceso y Comedor';
+    if(hwLbl)hwLbl.textContent='Equipo biométrico';
     var defSA=isComedorOnly?['in05']:(hasComedorMod?['senseface','in05']:['senseface']);
     var selSA=WZ.devices.length>0?WZ.devices:defSA;
     if(hwSel)hwSel.classList.add('wiz-hide'); // selector en wizard, no en propuesta
@@ -1723,7 +1723,7 @@ function wizGenerate(){
     setRelojSelection(selDef);
     clearDeviceRecurrenteRows();
     var needsHW=(hasReloj&&mod&&mod!=='tiene')||hasComedorMod;
-    if(hwLbl)hwLbl.textContent=(hasReloj&&hasComedorMod)?'Reloj checador y Equipo de Comedor':hasComedorMod?'Equipo de Comedor':'Reloj checador';
+    if(hwLbl)hwLbl.textContent='Equipo biométrico';
     if(needsHW){
       showFixed('sec-hardware');
       if(hasReloj&&mod&&mod!=='tiene'){
