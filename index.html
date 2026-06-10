@@ -1384,7 +1384,7 @@ function updateWizDeviceSelector(){
   var sel=document.getElementById('wiz-device-sel');if(!sel)return;
   var standalone=isStandaloneWiz();
   var hasRelojMar=WZ.marcaje.indexOf('reloj')>=0;
-  var comedorOnly=standalone&&WZ.mods.indexOf('acceso')<0;
+  var comedorOnly=!WZ.soloEquipo&&standalone&&WZ.mods.indexOf('acceso')<0;
   var hasTiene=WZ.modalidad==='tiene';
   var show=((hasRelojMar&&!hasTiene)&&!standalone)||(standalone&&!comedorOnly&&!hasTiene);
   sel.style.display=show?'block':'none';
@@ -1474,6 +1474,13 @@ function wizNext(){
   if(WZ.step===3){
     if(isStandaloneWiz()){
       if(!WZ.modalidad){alert('Selecciona la modalidad del equipo.');return;}
+      if(WZ.soloEquipo){
+        if(WZ.devices.length===0){alert('Selecciona al menos un equipo.');return;}
+        if(!WZ.size)WZ.size='smb';
+        document.getElementById('wb-next').style.display='none';
+        document.getElementById('wb-go').style.display='inline-block';
+        return; // saltar paso 4 para solo equipos
+      }
     } else {
       if(WZ.marcaje.indexOf('reloj')>=0 && !WZ.modalidad){alert('Selecciona la modalidad del reloj checador.');return;}
     }
