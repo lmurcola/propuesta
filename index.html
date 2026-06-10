@@ -505,7 +505,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 </div>
 <div class="no-print" id="roi-readd-wrap" style="display:none;text-align:center;margin:-12px 0 24px;"><button onclick="agregarRoi()" style="font-size:11px;font-weight:700;color:#1a2332;background:#fabb0c;border:none;border-radius:5px;padding:6px 14px;cursor:pointer;">&#8617; Recuperar calculadora de ahorro</button></div>
 
-<div class="sec">
+<div class="sec" id="sec-solucion">
   <div class="sec-label">Solución</div>
   <div class="sec-heading">Lo que GeoVictoria activa en tu operación</div>
   <div class="dotacion-card" id="dotacion-card">
@@ -523,7 +523,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
   <div class="sol-grid" id="sol-grid"></div>
 </div>
 
-<div class="sec">
+<div class="sec" id="sec-porque">
   <div class="sec-label">Por qué GeoVictoria</div>
   <div class="sec-heading" id="diff-heading">Diferenciadores que importan en retail</div>
   <div class="diff-grid">
@@ -1361,10 +1361,15 @@ function wizSoloEquipo(btn){
   if(WZ.soloEquipo){
     WZ.mods=[];WZ.devices=[];WZ.equipQty=1;WZ.phased=false;
     document.getElementById('sw-phased').classList.remove('on');
+    var tieneChip=document.querySelector('#wc-modalidad [data-modal="tiene"]');
+    if(tieneChip)tieneChip.style.display='none';
+    if(WZ.modalidad==='tiene'){WZ.modalidad=null;document.querySelectorAll('#wc-modalidad .wiz-chip').forEach(function(x){x.classList.remove('on');});}
     document.querySelectorAll('#wc-mods .wiz-mod').forEach(function(x){x.classList.remove('on');});
     if(btn){btn.classList.add('on');btn.style.background='#2fabe4';btn.style.color='#fff';}
   } else {
     if(btn){btn.classList.remove('on');btn.style.background='#f0f9fe';btn.style.color='#2fabe4';}
+    var tieneChip2=document.querySelector('#wc-modalidad [data-modal="tiene"]');
+    if(tieneChip2)tieneChip2.style.display='';
   }
   updateWiz3ForStandalone(isStandaloneWiz());
   var qi=document.getElementById('wiz-equip-qty');if(qi)qi.value=1;
@@ -1612,9 +1617,10 @@ function wizGenerate(){
   var skey = WZ.soloEquipo ? 'equipos' : (standaloneMode ? (hasComedor && hasAcceso ? 'combo' : (hasComedor ? 'comedor' : 'acceso')) : null);
   if(standaloneMode){ d = STANDALONE_IND[skey]||STANDALONE_IND['equipos']; }
   if(WZ.soloEquipo){
-    ['sec-regulatorio','sec-escenarios','sec-roi','sec-casos','sec-diferenciadores','sec-cronograma','sec-bvr'].forEach(function(id){
+    ['sec-regulatorio','sec-escenarios','sec-roi','sec-diferenciadores','sec-cronograma','sec-bvr','sec-solucion','sec-porque','sec-implementacion'].forEach(function(id){
       var el=document.getElementById(id);if(el)el.classList.add('wiz-hide');
     });
+    var casosEl=document.getElementById('sec-casos');if(casosEl)casosEl.classList.remove('wiz-hide');
   }
 
   // Cover
