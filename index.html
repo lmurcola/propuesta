@@ -139,6 +139,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 .hw-sel-btn{padding:6px 18px;border-radius:999px;border:1.5px solid #b8dff5;background:#fff;font-size:13px;font-weight:700;color:#4a6080;cursor:pointer;transition:all .15s;}
 .hw-sel-btn.active{background:#2fabe4;border-color:#2fabe4;color:#fff;}
 .hw-sel-btn:hover:not(.active){background:#f0f8fd;border-color:#2fabe4;color:#2fabe4;}
+.hw-selector{page-break-inside:avoid;}
 .bvr-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:0.75rem;table-layout:fixed;}
 .bvr-table col{width:33.33%;}
 .bvr-table th{padding:8px 12px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
@@ -190,6 +191,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
   /* Optional sections: hide entire block unless active */
   .optional-sec{display:none!important;}
   .optional-sec.active{display:block!important;}
+  .hw-selector{display:none!important;}
   .opt-content{display:none!important;}
   .opt-content.visible{display:block!important;}
   /* Pago único: hide unless active */
@@ -667,8 +669,9 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
   </div>
   <div class="opt-content" id="content-sec-hardware">
     <div id="hw-reloj-selector" class="hw-selector wiz-hide">
-      <button class="hw-sel-btn active" onclick="selectReloj('senseface',this)">Senseface 2A</button>
-      <button class="hw-sel-btn" onclick="selectReloj('mb360',this)">MB360 ID</button>
+      <button class="hw-sel-btn active" data-dev="senseface" onclick="toggleReloj('senseface',this)">Senseface 2A</button>
+      <button class="hw-sel-btn" data-dev="mb360" onclick="toggleReloj('mb360',this)">MB360 ID</button>
+      <button class="hw-sel-btn" data-dev="in05" onclick="toggleReloj('in05',this)">IN05</button>
     </div>
     <div class="hw-layout" id="hw-senseface">
       <div class="hw-img-wrap"><img class="hw-img" src="relojes/reloj-01.jpg" alt="Senseface 2A"></div>
@@ -1393,7 +1396,8 @@ function wizGenerate(){
   if(standaloneMode){ d = STANDALONE_IND[skey]; }
 
   // Cover
-  document.getElementById('cover-title').innerHTML=d.title;
+  var dynT=buildCoverTitle(WZ.mods,WZ.ind,WZ.sub);
+  document.getElementById('cover-title').innerHTML=dynT||d.title;
   var sucEl=document.getElementById('cover-sucursales');
   if(sucEl) sucEl.classList[WZ.ind==='retail'?'remove':'add']('wiz-hide');
   document.getElementById('cover-sub').textContent=d.sub;
@@ -1512,55 +1516,56 @@ function wizGenerate(){
   var hwSenseface=document.getElementById('hw-senseface');
   var hwIn05=document.getElementById('hw-in05');
   var hasComedorMod=WZ.mods.indexOf('comedor')>=0;
-  if(standaloneMode && mod){
+  var isComedorOnly=standaloneMode&&skey==='comedor';
+  var hwSel=document.getElementById('hw-reloj-selector');
+  if(standaloneMode&&mod){
     showFixed('sec-hardware');
     showBlock('block-pago-unico');
     if(hwLbl)hwLbl.textContent=skey==='comedor'?'Equipo para Comedor':skey==='acceso'?'Equipo para Acceso':'Equipo para Acceso y Comedor';
-    var hwSel2=document.getElementById('hw-reloj-selector');
-    if(hwSel2)hwSel2.classList.add('wiz-hide');
-    if(hwSenseface)hwSenseface.classList.add('wiz-hide'); // en standalone no hay asistencia
-    if(hwIn05)hwIn05.classList[hasComedorMod?'remove':'add']('wiz-hide');
+    if(isComedorOnly){
+      // Comedor solo: sin selector, IN05 automático
+      if(hwSel)hwSel.classList.add('wiz-hide');
+      setRelojSelection(['in05']);
+    } else {
+      // Acceso o combo: mostrar selector, preseleccionar según módulos
+      if(hwSel)hwSel.classList.remove('wiz-hide');
+      setRelojSelection(hasComedorMod?['senseface','in05']:['senseface']);
+    }
     clearUnicoRows();
-    if(mod==='renta'){
-      if(!WZ.phased)addRecurrenteItem('Renta de equipos');
-      addUnicoItem('');
-    } else if(mod==='venta'){
-      if(hasComedorMod) addUnicoItem('GeoVictoria BOX Comedor');
-      if(skey==='acceso'||skey==='combo') addUnicoItem('Equipo de Control de Acceso');
+    if(mod==='renta'){if(!WZ.phased)addRecurrenteItem('Renta de equipos');addUnicoItem('');}
+    else if(mod==='venta'){
+      if(hasComedorMod)addUnicoItem('GeoVictoria BOX Comedor');
+      if(skey==='acceso'||skey==='combo')addUnicoItem('Equipo de Control de Acceso');
       addUnicoItem('Instalación');addUnicoItem('Envío');
     } else if(mod==='ambos'){
       if(!WZ.phased)addRecurrenteItem('Renta de equipos');
-      if(hasComedorMod) addUnicoItem('GeoVictoria BOX Comedor');
-      if(skey==='acceso'||skey==='combo') addUnicoItem('Equipo de Control de Acceso');
-      addUnicoItem('Instalación');addUnicoItem('Envío');
-      showFixed('sec-bvr');
+      if(hasComedorMod)addUnicoItem('GeoVictoria BOX Comedor');
+      if(skey==='acceso'||skey==='combo')addUnicoItem('Equipo de Control de Acceso');
+      addUnicoItem('Instalación');addUnicoItem('Envío');showFixed('sec-bvr');
     }
   } else if(!standaloneMode){
-    // asistencia activa — puede venir también con comedor
-    var hwSel=document.getElementById('hw-reloj-selector');
+    // Asistencia activa — puede combinar con comedor y/o acceso
     if(hwSel)hwSel.classList[hasReloj?'remove':'add']('wiz-hide');
-    if(hasReloj){selectReloj('senseface',document.querySelector('.hw-sel-btn'));} // reset al default
-    if(hwSenseface)hwSenseface.classList[hasReloj?'remove':'add']('wiz-hide');
-    if(hwIn05)hwIn05.classList[hasComedorMod?'remove':'add']('wiz-hide');
-    var needsHW=(hasReloj && mod && mod!=='tiene')||hasComedorMod;
+    var selDef=hasReloj?(hasComedorMod?['senseface','in05']:['senseface']):(hasComedorMod?['in05']:[]);
+    setRelojSelection(selDef);
+    var needsHW=(hasReloj&&mod&&mod!=='tiene')||hasComedorMod;
     if(hwLbl)hwLbl.textContent=(hasReloj&&hasComedorMod)?'Reloj checador y Equipo de Comedor':hasComedorMod?'Equipo de Comedor':'Reloj checador';
     if(needsHW){
       showFixed('sec-hardware');
-      if(hasReloj && mod && mod!=='tiene'){
+      if(hasReloj&&mod&&mod!=='tiene'){
         if(mod==='renta'){if(!WZ.phased)addRecurrenteItem('Renta de equipos');}
         if(mod==='venta'){
           showBlock('block-pago-unico');clearUnicoRows();
           addUnicoItem('Reloj checador biométrico');
-          if(hasComedorMod) addUnicoItem('GeoVictoria BOX Comedor');
+          if(hasComedorMod)addUnicoItem('GeoVictoria BOX Comedor');
           addUnicoItem('Instalación');addUnicoItem('Envío');
         }
         if(mod==='ambos'){
           if(!WZ.phased)addRecurrenteItem('Renta de equipos');
           showBlock('block-pago-unico');clearUnicoRows();
           addUnicoItem('Reloj checador biométrico');
-          if(hasComedorMod) addUnicoItem('GeoVictoria BOX Comedor');
-          addUnicoItem('Instalación');addUnicoItem('Envío');
-          showFixed('sec-bvr');
+          if(hasComedorMod)addUnicoItem('GeoVictoria BOX Comedor');
+          addUnicoItem('Instalación');addUnicoItem('Envío');showFixed('sec-bvr');
         }
       }
     }
@@ -1571,13 +1576,41 @@ function wizGenerate(){
   window.scrollTo(0,0);
 }
 
-function selectReloj(key,btn){
-  var sf=document.getElementById('hw-senseface');
-  var mb=document.getElementById('hw-mb360');
-  if(key==='senseface'){sf.classList.remove('wiz-hide');mb.classList.add('wiz-hide');}
-  else{sf.classList.add('wiz-hide');mb.classList.remove('wiz-hide');}
-  document.querySelectorAll('.hw-sel-btn').forEach(function(b){b.classList.remove('active');});
-  if(btn)btn.classList.add('active');
+function getIndName(ind,sub){
+  var sm={tiendas:'tiendas',supermercados:'supermercados',farmacias:'farmacias',
+    restaurantes:'restaurantes',limpieza:'servicios de limpieza',seguridad:'seguridad privada'};
+  var im={retail:'retail',construccion:'construcción',manufactura:'manufactura',
+    logistica:'logística y transporte',servicios:'servicios',comedor:'comedor',acceso:'accesos'};
+  return sm[sub]||im[ind]||'';
+}
+function buildCoverTitle(mods,ind,sub){
+  var hasA=mods.indexOf('asistencia')>=0,hasC=mods.indexOf('comedor')>=0,hasX=mods.indexOf('acceso')>=0;
+  var parts=[];
+  if(hasA)parts.push('asistencia');
+  if(hasX)parts.push('accesos');
+  if(hasC)parts.push('comedor');
+  if(!parts.length)return '';
+  var mStr=parts.length===1?parts[0]:parts.length===2?parts[0]+' y '+parts[1]:parts[0]+', '+parts[1]+' y '+parts[2];
+  var n=getIndName(ind,sub);
+  var t='Control de '+mStr+(n?' para '+n:'');
+  return t.charAt(0).toUpperCase()+t.slice(1);
+}
+var DEV_MAP={senseface:'hw-senseface',mb360:'hw-mb360',in05:'hw-in05'};
+function toggleReloj(key,btn){
+  var el=document.getElementById(DEV_MAP[key]);
+  if(!el)return;
+  var active=btn&&btn.classList.contains('active');
+  el.classList[active?'add':'remove']('wiz-hide');
+  if(btn)btn.classList[active?'remove':'add']('active');
+}
+function setRelojSelection(keys){
+  Object.keys(DEV_MAP).forEach(function(k){
+    var el=document.getElementById(DEV_MAP[k]);
+    var btn=document.querySelector('.hw-sel-btn[data-dev="'+k+'"]');
+    var on=keys.indexOf(k)>=0;
+    if(el)el.classList[on?'remove':'add']('wiz-hide');
+    if(btn)btn.classList[on?'add':'remove']('active');
+  });
 }
 function clearUnicoRows(){
   var tb=document.getElementById('tbody-unico');if(!tb)return;
