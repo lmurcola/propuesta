@@ -662,7 +662,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
     <button class="opt-toggle-btn" id="btn-sec-hardware">+ Ver equipo</button>
   </div>
   <div class="opt-content" id="content-sec-hardware">
-    <div class="hw-layout">
+    <div class="hw-layout" id="hw-senseface">
       <div class="hw-img-wrap"><img class="hw-img" src="relojes/reloj-01.jpg" alt="Senseface 2A"></div>
       <div class="hw-content">
         <div class="hw-name">Senseface 2A</div>
@@ -671,6 +671,20 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0114 0"/><path d="M1.42 9a16 16 0 0121 0"/><path d="M8.53 16.11a6 6 0 016.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg></div><div class="hw-spec-text"><h5>Conexión</h5><p>WiFi, LAN, USB-Host</p></div></div>
           <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div><div class="hw-spec-text"><h5>Capacidad</h5><p>3,000 usuarios · 1,500 rostros · 3,000 huellas · 3,000 tarjetas</p></div></div>
           <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg></div><div class="hw-spec-text"><h5>Temperatura operativa</h5><p>-5°C a 45°C</p></div></div>
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg></div><div class="hw-spec-text"><h5>Humedad</h5><p>20% – 80%</p></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="hw-layout wiz-hide" id="hw-in05">
+      <div class="hw-img-wrap"><img class="hw-img" src="relojes/reloj-02.jpg" alt="IN05"></div>
+      <div class="hw-content">
+        <div class="hw-name">IN05</div>
+        <div class="hw-specs">
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><circle cx="12" cy="8" r="4"/><path d="M3 21v-1a4 4 0 014-4h1"/><path d="M21 21v-1a4 4 0 00-4-4h-1"/></svg></div><div class="hw-spec-text"><h5>Métodos de validación</h5><p>Huella, Tarjeta ID, Contraseña</p></div></div>
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0114 0"/><path d="M1.42 9a16 16 0 0121 0"/><path d="M8.53 16.11a6 6 0 016.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg></div><div class="hw-spec-text"><h5>Conexión</h5><p>WiFi, LAN, USB-Host · Compatible con POE 28W</p></div></div>
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div><div class="hw-spec-text"><h5>Capacidad</h5><p>10,000 usuarios · 3,000 huellas</p></div></div>
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="16" height="11" rx="2"/><path d="M22 11v3"/><path d="M7 7V5a2 2 0 012-2h2a2 2 0 012 2v2"/></svg></div><div class="hw-spec-text"><h5>Autonomía</h5><p>Hasta 4 horas · Batería de respaldo integrada · Puerto RS232 para impresora</p></div></div>
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg></div><div class="hw-spec-text"><h5>Temperatura operativa</h5><p>0°C a 45°C</p></div></div>
           <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg></div><div class="hw-spec-text"><h5>Humedad</h5><p>20% – 80%</p></div></div>
         </div>
       </div>
@@ -1472,10 +1486,14 @@ function wizGenerate(){
   var mod = WZ.modalidad;
   hideSec('sec-hardware'); hideSec('sec-bvr'); hideBlock('block-pago-unico');
   var hwLbl=document.querySelector('#sec-hardware .sec-label');
+  var hwSenseface=document.getElementById('hw-senseface');
+  var hwIn05=document.getElementById('hw-in05');
   if(standaloneMode && mod){
     showFixed('sec-hardware');
     showBlock('block-pago-unico');
     if(hwLbl)hwLbl.textContent=skey==='comedor'?'Equipo para Comedor':skey==='acceso'?'Equipo para Acceso':'Equipo para Acceso y Comedor';
+    if(hwSenseface)hwSenseface.classList.add('wiz-hide');
+    if(hwIn05)hwIn05.classList[skey==='comedor'?'remove':'add']('wiz-hide');
     clearUnicoRows();
     if(mod==='renta'){
       if(!WZ.phased)addRecurrenteItem('Renta de equipos');
@@ -1491,6 +1509,8 @@ function wizGenerate(){
     }
   } else if(!standaloneMode){
     if(hwLbl)hwLbl.textContent='Reloj checador';
+    if(hwSenseface)hwSenseface.classList.remove('wiz-hide');
+    if(hwIn05)hwIn05.classList.add('wiz-hide');
     if(hasReloj && mod && mod!=='tiene'){
       showFixed('sec-hardware');
       if(mod==='renta'){if(!WZ.phased)addRecurrenteItem('Renta de equipos');}
