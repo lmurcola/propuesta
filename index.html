@@ -370,6 +370,22 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
             <button class="wiz-chip yel" data-modal="tiene">Ya cuenta con reloj (validar compatibilidad)</button>
           </div>
         </div>
+        <div id="wiz-device-sel" class="wiz-modal-box wiz-hide" style="background:#f0f9fe;border-color:#b8dff5;margin-top:8px;">
+          <label style="color:#1a6989;letter-spacing:1px;">Equipo a incluir &mdash; selecciona uno o más</label>
+          <div class="hw-selector" id="wiz-dev-btns" style="margin-top:8px;">
+            <button class="hw-sel-btn" data-dev="senseface" data-modes="asistencia,acceso" onclick="wizToggleDevice('senseface',this)">SenseFace 2A</button>
+            <button class="hw-sel-btn" data-dev="mb360" data-modes="asistencia,acceso" onclick="wizToggleDevice('mb360',this)">MB360 ID</button>
+            <button class="hw-sel-btn" data-dev="in05" data-modes="asistencia,acceso,comedor" onclick="wizToggleDevice('in05',this)">IN05</button>
+            <button class="hw-sel-btn" data-dev="f22" data-modes="asistencia,acceso" onclick="wizToggleDevice('f22',this)">F22</button>
+            <button class="hw-sel-btn" data-dev="speedface_v5lp" data-modes="asistencia,acceso" onclick="wizToggleDevice('speedface_v5lp',this)">SpeedFace V5LP</button>
+            <button class="hw-sel-btn" data-dev="senseface4a" data-modes="asistencia,acceso" onclick="wizToggleDevice('senseface4a',this)">SenseFace 4A</button>
+            <button class="hw-sel-btn" data-dev="senseface3a" data-modes="asistencia,acceso" onclick="wizToggleDevice('senseface3a',this)">SenseFace 3A</button>
+            <button class="hw-sel-btn" data-dev="senseface7a" data-modes="asistencia,acceso" onclick="wizToggleDevice('senseface7a',this)">SenseFace 7A</button>
+            <button class="hw-sel-btn" data-dev="s922" data-modes="asistencia" onclick="wizToggleDevice('s922',this)">S922</button>
+            <button class="hw-sel-btn" data-dev="ts2000pro" data-modes="acceso" onclick="wizToggleDevice('ts2000pro',this)">Torniquete TS2000 Pro</button>
+            <button class="hw-sel-btn" data-dev="ts2000plus" data-modes="acceso" onclick="wizToggleDevice('ts2000plus',this)">Torniquete TS2000 Plus</button>
+          </div>
+        </div>
       </div>
 
       <!-- STEP 4: opciones del documento -->
@@ -668,10 +684,10 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 <div class="optional-sec" id="sec-hardware">
   <div class="opt-toggle-bar" onclick="toggleOpt('sec-hardware','+ Ver equipo')">
     <div class="sec-label">Reloj checador</div>
-    <button class="opt-toggle-btn" id="btn-sec-hardware">+ Ver equipo</button>
+    <button class="opt-toggle-btn" id="btn-sec-hardware">+ Ver especificaciones</button>
   </div>
-  <div class="opt-content" id="content-sec-hardware">
-    <div id="hw-reloj-selector" class="hw-selector wiz-hide">
+  <div id="hw-reloj-selector" class="hw-selector wiz-hide" style="padding:10px 16px 4px;">
+    <div style="font-size:11px;font-weight:700;color:#4a6080;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;">Selecciona el equipo a incluir</div>
       <button class="hw-sel-btn active" data-dev="senseface" data-modes="asistencia,acceso" onclick="toggleReloj('senseface',this)">SenseFace 2A</button>
       <button class="hw-sel-btn" data-dev="mb360" data-modes="asistencia,acceso" onclick="toggleReloj('mb360',this)">MB360 ID</button>
       <button class="hw-sel-btn" data-dev="in05" data-modes="asistencia,acceso,comedor" onclick="toggleReloj('in05',this)">IN05</button>
@@ -683,7 +699,8 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
       <button class="hw-sel-btn" data-dev="s922" data-modes="asistencia" onclick="toggleReloj('s922',this)">S922</button>
       <button class="hw-sel-btn" data-dev="ts2000pro" data-modes="acceso" onclick="toggleReloj('ts2000pro',this)">Torniquete TS2000 Pro</button>
       <button class="hw-sel-btn" data-dev="ts2000plus" data-modes="acceso" onclick="toggleReloj('ts2000plus',this)">Torniquete TS2000 Plus</button>
-    </div>
+  </div>
+  <div class="opt-content" id="content-sec-hardware">
     <div class="hw-layout" id="hw-senseface">
       <div class="hw-img-wrap"><img class="hw-img" src="relojes/reloj-01.jpg" alt="SenseFace 2A"></div>
       <div class="hw-content">
@@ -1313,7 +1330,7 @@ function updateSegHint(){
 }
 
 // ── Wizard state ──
-var WZ = {ind:null,sub:null,size:null,colab:0,mods:[],marcaje:[],modalidad:null,reform:false,phased:false,step:1};
+var WZ = {ind:null,sub:null,size:null,colab:0,mods:[],marcaje:[],devices:[],modalidad:null,reform:false,phased:false,step:1};
 
 document.querySelectorAll('#wc-ind .wiz-chip').forEach(function(b){b.onclick=function(){
   document.querySelectorAll('#wc-ind .wiz-chip').forEach(function(x){x.classList.remove('on');});
@@ -1327,6 +1344,35 @@ document.querySelectorAll('.wiz-sub .wiz-chip').forEach(function(b){b.onclick=fu
   b.classList.add('on');WZ.sub=b.dataset.sub;
 };});
 // (size chip handler removed — segment derived from colaboradores)
+function wizToggleDevice(key,btn){
+  var wasOn=btn&&btn.classList.contains('active');
+  if(wasOn){var i=WZ.devices.indexOf(key);if(i>=0)WZ.devices.splice(i,1);}
+  else{if(WZ.devices.indexOf(key)<0)WZ.devices.push(key);}
+  if(btn)btn.classList[wasOn?'remove':'add']('active');
+}
+function updateWizDeviceSelector(){
+  var sel=document.getElementById('wiz-device-sel');if(!sel)return;
+  var standalone=isStandaloneWiz();
+  var hasRelojMar=WZ.marcaje.indexOf('reloj')>=0;
+  var comedorOnly=standalone&&WZ.mods.indexOf('acceso')<0;
+  var show=(hasRelojMar&&!standalone)||(standalone&&!comedorOnly);
+  sel.classList[show?'remove':'add']('wiz-hide');
+  if(!show)return;
+  // Filter buttons
+  document.querySelectorAll('#wiz-dev-btns .hw-sel-btn').forEach(function(b){
+    var bm=(b.getAttribute('data-modes')||'').split(',');
+    b.style.display=bm.some(function(m){return WZ.mods.indexOf(m)>=0||(hasRelojMar&&m==='asistencia');})?'':'none';
+  });
+  // Default selection if none chosen yet
+  if(WZ.devices.length===0){
+    var def=WZ.mods.indexOf('comedor')>=0?['senseface','in05']:['senseface'];
+    def.forEach(function(k){
+      WZ.devices.push(k);
+      var b=document.querySelector('#wiz-dev-btns .hw-sel-btn[data-dev="'+k+'"]');
+      if(b)b.classList.add('active');
+    });
+  }
+}
 function isStandaloneWiz(){return WZ.mods.indexOf('asistencia')<0&&(WZ.mods.indexOf('comedor')>=0||WZ.mods.indexOf('acceso')>=0);}
 function updateWiz3ForStandalone(sa){
   var ws3=document.getElementById('ws3'); if(!ws3)return;
@@ -1339,6 +1385,7 @@ function updateWiz3ForStandalone(sa){
     if(tiles)tiles.style.display='none';
     if(wm){wm.classList.add('show');if(lbl)lbl.textContent='Modalidad del equipo';}
     WZ.marcaje=[];document.querySelectorAll('#wc-marcaje .wiz-mod').forEach(function(x){x.classList.remove('on');});
+    WZ.devices=[];document.querySelectorAll('#wiz-dev-btns .hw-sel-btn').forEach(function(x){x.classList.remove('active');});
   } else {
     if(h)h.textContent='Método de marcaje';
     if(hint)hint.textContent='¿Cómo registrarán asistencia los colaboradores? Puedes elegir varios.';
@@ -1357,7 +1404,10 @@ document.querySelectorAll('#wc-marcaje .wiz-mod').forEach(function(b){b.onclick=
   if(i>=0)WZ.marcaje.splice(i,1);else WZ.marcaje.push(m);
   // show/hide modalidad
   if(WZ.marcaje.indexOf('reloj')>=0){document.getElementById('wmodal').classList.add('show');}
-  else{document.getElementById('wmodal').classList.remove('show');WZ.modalidad=null;document.querySelectorAll('#wc-modalidad .wiz-chip').forEach(function(x){x.classList.remove('on');});}
+  else{document.getElementById('wmodal').classList.remove('show');WZ.modalidad=null;
+    document.querySelectorAll('#wc-modalidad .wiz-chip').forEach(function(x){x.classList.remove('on');});
+    WZ.devices=[];document.querySelectorAll('#wiz-dev-btns .hw-sel-btn').forEach(function(x){x.classList.remove('active');});}
+  updateWizDeviceSelector();
 };});
 document.querySelectorAll('#wc-modalidad .wiz-chip').forEach(function(b){b.onclick=function(){
   document.querySelectorAll('#wc-modalidad .wiz-chip').forEach(function(x){x.classList.remove('on');});
@@ -1643,9 +1693,9 @@ function wizGenerate(){
     showFixed('sec-hardware');
     showBlock('block-pago-unico');
     if(hwLbl)hwLbl.textContent=skey==='comedor'?'Equipo para Comedor':skey==='acceso'?'Equipo para Acceso':'Equipo para Acceso y Comedor';
-    var selSA=isComedorOnly?['in05']:(hasComedorMod?['senseface','in05']:['senseface']);
-    if(hwSel)hwSel.classList[isComedorOnly?'add':'remove']('wiz-hide');
-    if(!isComedorOnly)updateSelectorModes(WZ.mods);
+    var defSA=isComedorOnly?['in05']:(hasComedorMod?['senseface','in05']:['senseface']);
+    var selSA=WZ.devices.length>0?WZ.devices:defSA;
+    if(hwSel)hwSel.classList.add('wiz-hide'); // selector en wizard, no en propuesta
     setRelojSelection(selSA);
     clearUnicoRows();clearDeviceRecurrenteRows();
     if(mod==='renta'){
@@ -1662,9 +1712,9 @@ function wizGenerate(){
     }
   } else if(!standaloneMode){
     // Asistencia activa — puede combinar con comedor y/o acceso
-    if(hwSel)hwSel.classList[hasReloj?'remove':'add']('wiz-hide');
-    if(hasReloj)updateSelectorModes(WZ.mods);
-    var selDef=hasReloj?(hasComedorMod?['senseface','in05']:['senseface']):(hasComedorMod?['in05']:[]);
+    if(hwSel)hwSel.classList.add('wiz-hide'); // selector en wizard, no en propuesta
+    var defNS=hasReloj?(hasComedorMod?['senseface','in05']:['senseface']):(hasComedorMod?['in05']:[]);
+    var selDef=WZ.devices.length>0?WZ.devices:defNS;
     setRelojSelection(selDef);
     clearDeviceRecurrenteRows();
     var needsHW=(hasReloj&&mod&&mod!=='tiene')||hasComedorMod;
