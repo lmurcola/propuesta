@@ -1050,7 +1050,7 @@ function recalcTable(tbodyId, totalId){
     var qty=parseNum(row.querySelector('.qty')?row.querySelector('.qty').innerText:'0');
     var unit=parseNum(row.querySelector('.unit')?row.querySelector('.unit').innerText:'0');
     var flatMin=parseNum(row.getAttribute('data-flat')||'0');
-    var subtotal=Math.max(qty*unit, flatMin);
+    var subtotal=flatMin>0 ? flatMin : qty*unit;
     grand+=subtotal;
     var totalCell=row.querySelector('.row-total');
     if(totalCell) totalCell.innerText=formatMXN(subtotal);
