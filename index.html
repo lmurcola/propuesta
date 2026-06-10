@@ -1261,7 +1261,8 @@ var LOGOS={"officemax":"logos/officemax.png","farmacias_similares":"logos/farmac
 var LOGO_NAME={officemax:'OfficeMax',farmacias_similares:'Farmacias Similares',comex:'Comex',wilson:'Wilson',converse:'Converse',despegar:'Despegar',julio:'Julio',mia:'Mía Hotels & Resorts',bestday:'BestDay',winland:'Winland Group',alcachofa:'Corazón de Alcachofa',benedettis:"Benedetti's Pizza",antromex:'Antromex',altour:'Altour',tous:'Tous',juguetron:'Juguetrón',farmacias_omega:'Farmacias Omega',weemedic:'WeeMedic',kidzania:'KidZania',lapi:'Lapi',cinco_contemporanea:'Cinco Contemporánea',aleatica:'Aleática',anahuac:'Anáhuac Organización Constructora',idinsa:'Idinsa',mafersa:'Mafersa',tensa:'Tensa Construcciones',dhl:'DHL',aktiva:'Aktiva Capital para Logística',jyt_express:'J&T Express',u_storage:'U-Storage',sintra:'Sintra',transportes_ruga:'Transportes Ruga',metro_asfaltos:'Metro Asfaltos',ajemex:'Ajemex',cmpc:'CMPC',softys:'Softys',puratos:'Puratos',fruehauf:'Fruehauf',heineken:'Heineken',full_services:'Full Services Supplier',grupo_eulen:'Grupo Eulen',sirampen:'Ramper',sgs:'SGS',mercurio:'Mercurio Seguridad Privada',prosegur:'Prosegur',newrest:'Newrest',coperva:'Coperva',gtc:'GTC Termo Control',seicsa:'Seicsa',plato_express:'Plato Express',justo:'Justo',pimsa:'Pimsa',crrc:'CRRC',grupo_promass:'Grupo Promass',glory:'Glory',concorde:'Concorde Group',dicipa:'Dicipa',urimar:'Urimar',servigue:'Servigue'};
 // Logos that keep their own colored background (rendered on a tile)
 var LOGO_TILE={juguetron:'#25af59',weemedic:'#0951fe'};
-var LOGO_SCALE={idinsa:2.2,fruehauf:1.6,transportes_ruga:1.6,plato_express:1.5,urimar:1.6,sgs:1.5,mercurio:2.5,prosegur:2.2,grupo_eulen:1.4,gtc:1.5,seicsa:1.5,dicipa:1.5,softys:0.85,cmpc:1.3,metro_asfaltos:1.3,kidzania:1.3,glory:2.0,julio:0.55,tous:0.5,juguetron:0.75};
+var LOGO_MAXPCT={julio:"52%",tous:"48%",juguetron:"52%"};
+var LOGO_SCALE={idinsa:2.2,fruehauf:1.6,transportes_ruga:1.6,plato_express:1.5,urimar:1.6,sgs:1.5,mercurio:2.5,prosegur:2.2,grupo_eulen:1.4,gtc:1.5,seicsa:1.5,dicipa:1.5,softys:0.85,cmpc:1.3,metro_asfaltos:1.3,kidzania:1.3,glory:2.0};
 // Per-subcategory / industry success-case logo sets
 var CASE_LOGOS={
   retail:['officemax','comex','despegar','julio','antromex','altour','bestday','kidzania'],
@@ -1301,14 +1302,17 @@ function renderLogos(setKey){
   var html='', idx=0;
   rows.forEach(function(cnt,ri){
     var big=(ri===featuredRow);
-    var rowFit=(cnt>=4);
+    var rowFit=(cnt>=3);
     html+='<div class="logos-row'+(rowFit?' logos-row-fit':'')+'">';
     for(var j=0;j<cnt;j++){
       var key=arr[idx++]; if(!key||!LOGOS[key]) continue;
       var tile=LOGO_TILE[key]?(' style="background:'+LOGO_TILE[key]+';"'):'';
       var cls='logo-pill'+(big?' logo-pill-lg':'');
-      var scl=(typeof LOGO_SCALE!=='undefined'&&LOGO_SCALE[key])?(' style="transform:scale('+LOGO_SCALE[key]+');"'):'';
-      html+='<div class="'+cls+'"'+tile+'><img src="'+LOGOS[key]+'" alt="'+(LOGO_NAME[key]||key)+'"'+scl+'></div>';
+      var scl='';
+      if(typeof LOGO_SCALE!=='undefined'&&LOGO_SCALE[key])scl+='transform:scale('+LOGO_SCALE[key]+');';
+      if(typeof LOGO_MAXPCT!=='undefined'&&LOGO_MAXPCT[key])scl+='max-width:'+LOGO_MAXPCT[key]+';';
+      var sclAttr=scl?' style="'+scl+'"':'';
+      html+='<div class="'+cls+'"'+tile+'><img src="'+LOGOS[key]+'" alt="'+(LOGO_NAME[key]||key)+'"'+sclAttr+'></div>';
     }
     html+='</div>';
   });
