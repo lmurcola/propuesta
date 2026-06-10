@@ -385,6 +385,12 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
             <button class="hw-sel-btn" data-dev="ts2000pro" data-modes="acceso" onclick="wizToggleDevice('ts2000pro',this)">Torniquete TS2000 Pro</button>
             <button class="hw-sel-btn" data-dev="ts2000plus" data-modes="acceso" onclick="wizToggleDevice('ts2000plus',this)">Torniquete TS2000 Plus</button>
           </div>
+        <div id="wiz-qty-box" style="display:none;background:#f0f9fe;border:1px solid #b8dff5;border-radius:8px;padding:12px 15px;margin:8px 0;">
+          <label style="color:#1a6989;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:8px;">Cantidad de equipos</label>
+          <input type="number" id="wiz-equip-qty" min="1" value="1"
+            style="width:110px;padding:9px 12px;border:1.5px solid #b8dff5;border-radius:8px;font-size:14px;font-weight:600;color:#1a2332;outline:none;"
+            oninput="WZ.equipQty=Math.max(1,parseInt(this.value)||1)">
+        </div>
         </div>
       </div>
 
@@ -1334,7 +1340,7 @@ function updateSegHint(){
 }
 
 // ── Wizard state ──
-var WZ = {ind:null,sub:null,size:null,colab:0,mods:[],marcaje:[],devices:[],modalidad:null,reform:false,phased:false,step:1};
+var WZ = {ind:null,sub:null,size:null,colab:0,mods:[],marcaje:[],devices:[],equipQty:1,modalidad:null,reform:false,phased:false,step:1};
 
 document.querySelectorAll('#wc-ind .wiz-chip').forEach(function(b){b.onclick=function(){
   document.querySelectorAll('#wc-ind .wiz-chip').forEach(function(x){x.classList.remove('on');});
@@ -1362,6 +1368,9 @@ function updateWizDeviceSelector(){
   var hasTiene=WZ.modalidad==='tiene';
   var show=((hasRelojMar&&!hasTiene)&&!standalone)||(standalone&&!comedorOnly&&!hasTiene);
   sel.style.display=show?'block':'none';
+  var qtyBox=document.getElementById('wiz-qty-box');
+  var showQty=show||(comedorOnly&&WZ.modalidad&&WZ.modalidad!=='tiene');
+  if(qtyBox)qtyBox.style.display=showQty?'block':'none';
   if(!show)return;
   // Filter buttons
   document.querySelectorAll('#wiz-dev-btns .hw-sel-btn').forEach(function(b){
@@ -1390,7 +1399,9 @@ function updateWiz3ForStandalone(sa){
     if(tiles)tiles.style.display='none';
     if(wm){wm.classList.add('show');if(lbl)lbl.textContent='Modalidad del equipo';}
     WZ.marcaje=[];document.querySelectorAll('#wc-marcaje .wiz-mod').forEach(function(x){x.classList.remove('on');});
-    WZ.devices=[];document.querySelectorAll('#wiz-dev-btns .hw-sel-btn').forEach(function(x){x.classList.remove('active');});
+    WZ.devices=[];WZ.equipQty=1;
+    var qi=document.getElementById('wiz-equip-qty');if(qi)qi.value=1;
+    document.querySelectorAll('#wiz-dev-btns .hw-sel-btn').forEach(function(x){x.classList.remove('active');});
   } else {
     if(h)h.textContent='Método de marcaje';
     if(hint)hint.textContent='¿Cómo registrarán asistencia los colaboradores? Puedes elegir varios.';
@@ -1794,12 +1805,13 @@ function addDeviceRowsForSelection(keys,type){
   keys.forEach(function(key){
     var prices=DEVICE_PRICES[key];
     var name=getDeviceName(key);
+    var qty=WZ.equipQty||1;
     if(type==='renta'){
       var r=prices?prices.renta:0;
-      if(r!==null){addDeviceRow('tbody-recurrente',key,'Renta — '+name,1,r||0,'rec');}
+      if(r!==null){addDeviceRow('tbody-recurrente',key,'Renta — '+name,qty,r||0,'rec');}
     } else {
       var c=prices?prices.compra:0;
-      addDeviceRow('tbody-unico',key,name,1,c||0,'uni');
+      addDeviceRow('tbody-unico',key,name,qty,c||0,'uni');
     }
   });
   if(type==='renta'){if(typeof recalcTable==='function')recalcTable('tbody-recurrente','total-recurrente');if(typeof syncFeeFromTable==='function')syncFeeFromTable();}
