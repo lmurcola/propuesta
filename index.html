@@ -346,6 +346,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           
           <div class="wiz-mod" data-mod="victoria"><div class="wm-ic"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></div><span>VictorIA</span></div>
           <div class="wiz-mod" data-mod="alertas"><div class="wm-ic"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div><span>Alertas</span></div>
+          <div id="btn-solo-equipo" class="wiz-solo-btn" onclick="wizSoloEquipo(this)" style="margin-top:14px;display:flex;align-items:center;gap:8px;padding:8px 16px;border:1.5px dashed #b8dff5;border-radius:999px;cursor:pointer;font-size:12px;font-weight:700;color:#2fabe4;background:#f0f9fe;width:fit-content;transition:all .15s;" onmouseover="this.style.background='#2fabe4';this.style.color='#fff'" onmouseout="if(!this.classList.contains('on')){this.style.background='#f0f9fe';this.style.color='#2fabe4'}"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg> Cotizar solo equipos</div>
         </div>
       </div>
 
@@ -1341,7 +1342,7 @@ function updateSegHint(){
 }
 
 // ── Wizard state ──
-var WZ = {ind:null,sub:null,size:null,colab:0,mods:[],marcaje:[],devices:[],equipQty:1,modalidad:null,reform:false,phased:false,step:1};
+var WZ = {ind:null,sub:null,size:null,colab:0,mods:[],marcaje:[],devices:[],equipQty:1,soloEquipo:false,modalidad:null,reform:false,phased:false,step:1};
 
 document.querySelectorAll('#wc-ind .wiz-chip').forEach(function(b){b.onclick=function(){
   document.querySelectorAll('#wc-ind .wiz-chip').forEach(function(x){x.classList.remove('on');});
@@ -1355,6 +1356,18 @@ document.querySelectorAll('.wiz-sub .wiz-chip').forEach(function(b){b.onclick=fu
   b.classList.add('on');WZ.sub=b.dataset.sub;
 };});
 // (size chip handler removed — segment derived from colaboradores)
+function wizSoloEquipo(btn){
+  WZ.soloEquipo=!WZ.soloEquipo;
+  if(WZ.soloEquipo){
+    WZ.mods=[];WZ.devices=[];WZ.equipQty=1;
+    document.querySelectorAll('#wc-mods .wiz-mod').forEach(function(x){x.classList.remove('on');});
+    if(btn){btn.classList.add('on');btn.style.background='#2fabe4';btn.style.color='#fff';}
+  } else {
+    if(btn){btn.classList.remove('on');btn.style.background='#f0f9fe';btn.style.color='#2fabe4';}
+  }
+  updateWiz3ForStandalone(isStandaloneWiz());
+  var qi=document.getElementById('wiz-equip-qty');if(qi)qi.value=1;
+}
 function wizToggleDevice(key,btn){
   var wasOn=btn&&btn.classList.contains('active');
   if(wasOn){var i=WZ.devices.indexOf(key);if(i>=0)WZ.devices.splice(i,1);}
@@ -1388,7 +1401,7 @@ function updateWizDeviceSelector(){
     });
   }
 }
-function isStandaloneWiz(){return WZ.mods.indexOf('asistencia')<0&&(WZ.mods.indexOf('comedor')>=0||WZ.mods.indexOf('acceso')>=0);}
+function isStandaloneWiz(){return WZ.soloEquipo||WZ.mods.indexOf('asistencia')<0&&(WZ.mods.indexOf('comedor')>=0||WZ.mods.indexOf('acceso')>=0);}
 function updateWiz3ForStandalone(sa){
   var ws3=document.getElementById('ws3'); if(!ws3)return;
   var h=ws3.querySelector('.wh'),hint=ws3.querySelector('.whint');
@@ -1414,6 +1427,11 @@ function updateWiz3ForStandalone(sa){
 document.querySelectorAll('#wc-mods .wiz-mod').forEach(function(b){b.onclick=function(){
   b.classList.toggle('on');var m=b.dataset.mod,i=WZ.mods.indexOf(m);
   if(i>=0)WZ.mods.splice(i,1);else WZ.mods.push(m);
+  if(WZ.soloEquipo){
+    WZ.soloEquipo=false;
+    var sb=document.getElementById('btn-solo-equipo');
+    if(sb){sb.classList.remove('on');sb.style.background='#f0f9fe';sb.style.color='#2fabe4';}
+  }
   updateWiz3ForStandalone(isStandaloneWiz());
 }});
 document.querySelectorAll('#wc-marcaje .wiz-mod').forEach(function(b){b.onclick=function(){
@@ -1498,6 +1516,11 @@ function hideBlock(id){var s=document.getElementById(id);if(s)s.classList.add('w
 
 // ── STANDALONE mode content (comedor or acceso solo, sin asistencia) ──
 var STANDALONE_IND={
+  equipos:{
+    title:'Cotización de Equipo Biométrico',
+    sub:'Equipo de control de acceso y asistencia',
+    heading:'',semaforo:false,georetail:false,pains:[],diffHeading:''
+  },
   comedor:{
     title:'Control de Comedor GeoVictoria',
     sub:'Elimina el desperdicio y el descontrol en tu operación de comedor',
@@ -1580,9 +1603,14 @@ function wizGenerate(){
   var hasAsistencia = WZ.mods.indexOf('asistencia')>=0;
   var hasComedor    = WZ.mods.indexOf('comedor')>=0;
   var hasAcceso     = WZ.mods.indexOf('acceso')>=0;
-  var standaloneMode = !hasAsistencia && (hasComedor || hasAcceso);
-  var skey = standaloneMode ? (hasComedor && hasAcceso ? 'combo' : (hasComedor ? 'comedor' : 'acceso')) : null;
-  if(standaloneMode){ d = STANDALONE_IND[skey]; }
+  var standaloneMode = WZ.soloEquipo || (!hasAsistencia && (hasComedor || hasAcceso));
+  var skey = WZ.soloEquipo ? 'equipos' : (standaloneMode ? (hasComedor && hasAcceso ? 'combo' : (hasComedor ? 'comedor' : 'acceso')) : null);
+  if(standaloneMode){ d = STANDALONE_IND[skey]||STANDALONE_IND['equipos']; }
+  if(WZ.soloEquipo){
+    ['sec-regulatorio','sec-escenarios','sec-roi','sec-casos','sec-diferenciadores','sec-cronograma','sec-bvr'].forEach(function(id){
+      var el=document.getElementById(id);if(el)el.classList.add('wiz-hide');
+    });
+  }
 
   // Cover
   var dynT=buildCoverTitle(WZ.mods,WZ.ind,WZ.sub);
@@ -1740,7 +1768,11 @@ function wizGenerate(){
     if(needsHW){
       showFixed('sec-hardware');
       if(hasReloj&&mod&&mod!=='tiene'){
-        if(mod==='renta'){addDeviceRowsForSelection(selDef,'renta');}
+        if(mod==='renta'){
+          addDeviceRowsForSelection(selDef,'renta');
+          showBlock('block-pago-unico');clearUnicoRows();
+          addUnicoItem('Instalación');addUnicoItem('Envío');
+        }
         if(mod==='venta'){
           showBlock('block-pago-unico');clearUnicoRows();
           addDeviceRowsForSelection(selDef,'venta');
@@ -1770,6 +1802,8 @@ function getIndName(ind,sub){
   return sm[sub]||im[ind]||'';
 }
 function buildCoverTitle(mods,ind,sub){
+  if(WZ.soloEquipo){var n=getIndName(ind,sub);return 'Cotización de equipo biométrico'+(n?' para '+n:'');}
+
   var hasA=mods.indexOf('asistencia')>=0,hasC=mods.indexOf('comedor')>=0,hasX=mods.indexOf('acceso')>=0;
   var parts=[];
   if(hasA)parts.push('asistencia');
