@@ -300,7 +300,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
         <div class="whint">Selecciona la industria principal del prospecto.</div>
         <div class="wiz-chips" id="wc-ind">
           <button class="wiz-chip" data-ind="retail">Retail</button>
-          <button class="wiz-chip" data-ind="servicios">Servicios Especializados</button>
+          <button class="wiz-chip" data-ind="servicios">Servicios</button>
           <button class="wiz-chip" data-ind="construccion">Construcción</button>
           <button class="wiz-chip" data-ind="manufactura">Manufactura</button>
           <button class="wiz-chip" data-ind="logistica">Logística y Transporte</button>
@@ -316,7 +316,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           </div>
         </div>
         <div class="wiz-sub" id="wsub-servicios">
-          <label>Subsegmento de Servicios Especializados</label>
+          <label>Subsegmento de Servicios</label>
           <div class="wiz-chips">
             <button class="wiz-chip" data-sub="limpieza">Limpieza profesional</button>
             <button class="wiz-chip" data-sub="seguridad">Seguridad privada</button>
@@ -1323,7 +1323,7 @@ function renderLogos(setKey){
 
 
 // Derive segment from colaboradores (cortes: <=200 SMB, <=2000 Mid, else Enterprise)
-function segFromColab(n){ if(n<=200) return 'smb'; if(n<=2000) return 'mid'; return 'ent'; }
+function segFromColab(n){ if(n<=200) return 'smb'; if(n<=999) return 'mid'; return 'ent'; }
 function segLabel(s){ return s==='smb'?'SMB':(s==='mid'?'Mid-Market':'Enterprise'); }
 function updateSegHint(){
   var n=parseInt(document.getElementById('wc-colab').value,10);
