@@ -1261,7 +1261,7 @@ var LOGOS={"officemax":"logos/officemax.png","farmacias_similares":"logos/farmac
 var LOGO_NAME={officemax:'OfficeMax',farmacias_similares:'Farmacias Similares',comex:'Comex',wilson:'Wilson',converse:'Converse',despegar:'Despegar',julio:'Julio',mia:'Mía Hotels & Resorts',bestday:'BestDay',winland:'Winland Group',alcachofa:'Corazón de Alcachofa',benedettis:"Benedetti's Pizza",antromex:'Antromex',altour:'Altour',tous:'Tous',juguetron:'Juguetrón',farmacias_omega:'Farmacias Omega',weemedic:'WeeMedic',kidzania:'KidZania',lapi:'Lapi',cinco_contemporanea:'Cinco Contemporánea',aleatica:'Aleática',anahuac:'Anáhuac Organización Constructora',idinsa:'Idinsa',mafersa:'Mafersa',tensa:'Tensa Construcciones',dhl:'DHL',aktiva:'Aktiva Capital para Logística',jyt_express:'J&T Express',u_storage:'U-Storage',sintra:'Sintra',transportes_ruga:'Transportes Ruga',metro_asfaltos:'Metro Asfaltos',ajemex:'Ajemex',cmpc:'CMPC',softys:'Softys',puratos:'Puratos',fruehauf:'Fruehauf',heineken:'Heineken',full_services:'Full Services Supplier',grupo_eulen:'Grupo Eulen',sirampen:'Ramper',sgs:'SGS',mercurio:'Mercurio Seguridad Privada',prosegur:'Prosegur',newrest:'Newrest',coperva:'Coperva',gtc:'GTC Termo Control',seicsa:'Seicsa',plato_express:'Plato Express',justo:'Justo',pimsa:'Pimsa',crrc:'CRRC',grupo_promass:'Grupo Promass',glory:'Glory',concorde:'Concorde Group',dicipa:'Dicipa',urimar:'Urimar',servigue:'Servigue'};
 // Logos that keep their own colored background (rendered on a tile)
 var LOGO_TILE={juguetron:'#25af59',weemedic:'#0951fe'};
-var LOGO_SCALE={idinsa:2.2,fruehauf:1.6,transportes_ruga:1.6,plato_express:1.5,urimar:1.6,sgs:1.5,mercurio:2.5,prosegur:2.2,grupo_eulen:1.4,gtc:1.5,seicsa:1.5,dicipa:1.5,softys:1.3,cmpc:1.3,metro_asfaltos:1.3,kidzania:1.3};
+var LOGO_SCALE={idinsa:2.2,fruehauf:1.6,transportes_ruga:1.6,plato_express:1.5,urimar:1.6,sgs:1.5,mercurio:2.5,prosegur:2.2,grupo_eulen:1.4,gtc:1.5,seicsa:1.5,dicipa:1.5,softys:0.85,cmpc:1.3,metro_asfaltos:1.3,kidzania:1.3,glory:2.0};
 // Per-subcategory / industry success-case logo sets
 var CASE_LOGOS={
   retail:['officemax','comex','despegar','julio','antromex','altour','bestday','kidzania'],
@@ -1622,9 +1622,8 @@ function wizGenerate(){
   if(standaloneMode){
     if(logosSec) logosSec.classList.remove('wiz-hide');
     var standaloneLogoKey=(skey==='comedor')?'comedor':'acceso';
-    var standaloneLbl=(skey==='comedor')
-      ?'Clientes que ya confían en GeoVictoria su Servicio de Comedor'
-      :'Clientes que ya confían en GeoVictoria su Control de Acceso';
+    var indN=getIndName(WZ.ind,WZ.sub)||'tu sector';
+    var standaloneLbl='Clientes de '+indN+' que ya operan con GeoVictoria';
     document.getElementById('cases-label').textContent=standaloneLbl;
     renderLogos(standaloneLogoKey);
   } else {
