@@ -123,6 +123,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 .price-add-btn:hover{background:#f0f9fe;}
 .price-block-toggle{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;}
 .price-block-toggle h4{margin-bottom:0;}
+.btn-toggle-totals{font-size:10px;font-weight:600;color:#4a6080;background:transparent;border:1px solid #d0eaf8;border-radius:5px;padding:3px 10px;cursor:pointer;white-space:nowrap;margin-left:6px;}
 .btn-collapse-block{font-size:10px;font-weight:600;color:#fff;background:#2fabe4;border:none;border-radius:5px;padding:3px 12px;cursor:pointer;white-space:nowrap;}
 @media print{.no-print{display:none!important;}}
 .hw-layout{display:grid;grid-template-columns:240px 1fr;gap:1.5rem;align-items:stretch;margin-top:1rem;}
@@ -571,7 +572,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 
   <!-- COSTOS RECURRENTES -->
   <div class="price-block" id="block-recurrente">
-    <h4>Costos recurrentes (mensual)</h4>
+    <h4>Costos recurrentes (mensual)</h4><button class="btn-toggle-totals no-print" onclick="toggleTotals(this,'tbody-recurrente')">Ocultar totales</button>
     <div class="price-sub">
       <span class="bb">MXN + IVA</span>
     </div>
@@ -658,7 +659,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
   <!-- COSTOS DE PAGO ÚNICO (colapsable) -->
   <div class="price-block" id="block-pago-unico">
     <div class="price-block-toggle">
-      <h4 style="font-size:14px;">Costos de pago único</h4>
+      <h4 style="font-size:14px;">Costos de pago único</h4><button class="btn-toggle-totals no-print" onclick="toggleTotals(this,'tbody-unico')">Ocultar totales</button>
       <button class="btn-collapse-block no-print" onclick="togglePagoUnico(this)">— Ocultar</button>
     </div>
     <div class="price-sub"><span class="bb">MXN + IVA</span></div>
@@ -1579,6 +1580,14 @@ function showFixed(id){
 }
 function hideSec(id){var s=document.getElementById(id);if(s){s.classList.add('wiz-hide');s.classList.remove('active');}}
 function showBlock(id){var s=document.getElementById(id);if(s)s.classList.remove('wiz-hide');}
+function toggleTotals(btn,tbodyId){
+  var tb=document.getElementById(tbodyId);
+  if(!tb)return;
+  var rows=tb.querySelectorAll('tr.total,tr.subtotal');
+  var hidden=rows.length>0&&rows[0].style.display==='none';
+  rows.forEach(function(r){r.style.display=hidden?'':'none';});
+  btn.textContent=hidden?'Ocultar totales':'Mostrar totales';
+}
 function showPagoUnicoExpanded(){
   showBlock('block-pago-unico');
   var c=document.getElementById('pago-unico-content');
