@@ -463,7 +463,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
   </div>
 </div>
 
-<div class="sec">
+<div class="sec" id="sec-contexto">
   <div class="sec-label">Contexto del negocio</div>
   <div class="sec-heading" id="pain-heading">Entendemos cómo opera el retail</div>
   <div class="pain-grid" id="pain-grid">
@@ -1624,7 +1624,7 @@ function wizGenerate(){
   var skey = WZ.soloEquipo ? 'equipos' : (standaloneMode ? (hasComedor && hasAcceso ? 'combo' : (hasComedor ? 'comedor' : 'acceso')) : null);
   if(standaloneMode){ d = STANDALONE_IND[skey]||STANDALONE_IND['equipos']; }
   if(WZ.soloEquipo){
-    ['sec-regulatorio','sec-escenarios','sec-roi','sec-diferenciadores','sec-cronograma','sec-bvr','sec-solucion','sec-porque','sec-implementacion'].forEach(function(id){
+    ['sec-regulatorio','sec-escenarios','sec-roi','sec-diferenciadores','sec-cronograma','sec-bvr','sec-solucion','sec-porque','sec-implementacion','sec-contexto'].forEach(function(id){
       var el=document.getElementById(id);if(el)el.classList.add('wiz-hide');
     });
     var casosEl=document.getElementById('sec-casos');if(casosEl)casosEl.classList.remove('wiz-hide');
