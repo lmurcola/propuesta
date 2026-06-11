@@ -1120,6 +1120,7 @@ function addPriceRow(tbodyId, type){
   var tbody=document.getElementById(tbodyId);
   var totalId=type==='rec'?'total-recurrente':'total-unico';
   var totalRow=tbody.querySelector('tr.total');
+  var insertRef=tbody.querySelector('tr.subtotal')||totalRow;
   var newRow=document.createElement('tr');
   newRow.className='price-row';
   newRow.setAttribute('data-row',type);
@@ -1130,7 +1131,7 @@ function addPriceRow(tbodyId, type){
     +'<td class="no-print" style="text-align:center;white-space:nowrap;">'
     +' '
     +'<button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)">✕</button></td>';
-  tbody.insertBefore(newRow,totalRow);
+  tbody.insertBefore(newRow,insertRef);
 }
 
 // ── PAGO ÚNICO: collapse/expand ───────────────────────────────────────
@@ -1790,7 +1791,8 @@ function wizGenerate(){
         var sug=precioSugerido(m,WZ.colab);
         var qtyVal=precioTotal?1:WZ.colab;
         var unitVal=sug;
-        var tr=document.createElement('tr');tr.className='price-row';tr.setAttribute('data-row','rec');
+        var insAnchor=tb.querySelector('tr.subtotal')||totalRow;
+  var tr=document.createElement('tr');tr.className='price-row';tr.setAttribute('data-row','rec');
         if(precioTotal)tr.setAttribute('data-flat',unitVal);
         tr.innerHTML='<td contenteditable="true" spellcheck="false">'+MOD_LABEL[m]+'</td>'
           +'<td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">'+qtyVal+'</td>'
@@ -1913,7 +1915,7 @@ function clearDeviceRecurrenteRows(){
 }
 function addDeviceRow(tbodyId,devKey,label,qty,unit,rowType){
   var tb=document.getElementById(tbodyId);if(!tb)return;
-  var totalRow=tb.querySelector('tr.total');
+  var totalRow=tb.querySelector('tr.subtotal')||tb.querySelector('tr.total');
   var tr=document.createElement('tr');tr.className='price-row';
   tr.setAttribute('data-row',rowType);tr.setAttribute('data-device',devKey);
   tr.innerHTML='<td contenteditable="true" spellcheck="false">'+label+'</td>'
@@ -1992,7 +1994,7 @@ function clearUnicoRows(){
 }
 function addUnicoItem(label){
   var tb=document.getElementById('tbody-unico');if(!tb)return;
-  var totalRow=tb.querySelector('tr.total');
+  var totalRow=tb.querySelector('tr.subtotal')||tb.querySelector('tr.total');
   var tr=document.createElement('tr');tr.className='price-row';tr.setAttribute('data-row','uni');
   tr.innerHTML='<td contenteditable="true" spellcheck="false">'+label+'</td>'
     +'<td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>'
@@ -2005,7 +2007,7 @@ function addUnicoItem(label){
 function addRecurrenteItem(label){
   var tb=document.getElementById('tbody-recurrente');
   if(!tb)return;
-  var totalRow=tb.querySelector('tr.total');
+  var totalRow=tb.querySelector('tr.subtotal')||tb.querySelector('tr.total');
   var tr=document.createElement('tr');tr.className='price-row';tr.setAttribute('data-row','rec');
   tr.innerHTML='<td contenteditable="true" spellcheck="false">'+label+'</td>'
     +'<td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>'
