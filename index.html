@@ -661,6 +661,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
       <h4 style="font-size:14px;">Costos de pago único</h4>
       <button class="btn-collapse-block no-print" onclick="togglePagoUnico(this)">— Ocultar</button>
     </div>
+    <div class="price-sub"><span class="bb">MXN + IVA</span></div>
     <div id="pago-unico-content">
       <table class="price-table" id="tbl-unico">
         <thead><tr><th>Concepto</th><th style="text-align:center;">Cantidad</th><th style="text-align:right;">Precio unitario</th><th style="text-align:right;">Total</th><th class="no-print" style="width:80px;"></th></tr></thead>
@@ -692,8 +693,13 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
               <button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button>
             </td>
           </tr>
+          <tr class="subtotal">
+            <td colspan="3">Pago total único</td>
+            <td style="text-align:right;" id="subtotal-unico">$0 MXN</td>
+            <td class="no-print"></td>
+          </tr>
           <tr class="total">
-            <td colspan="3">Pago único total (IVA incluido)</td>
+            <td colspan="3">Pago total único + IVA</td>
             <td style="color:#2fabe4;text-align:right;" id="total-unico">$0 MXN</td>
             <td class="no-print"></td>
           </tr>
@@ -1078,6 +1084,10 @@ function recalcTable(tbodyId, totalId){
   if(tbodyId==='tbody-recurrente'){
     var subCell=document.getElementById('subtotal-recurrente');
     if(subCell) subCell.innerText=formatMXN(grand);
+  }
+  if(tbodyId==='tbody-unico'){
+    var subCellU=document.getElementById('subtotal-unico');
+    if(subCellU) subCellU.innerText=formatMXN(grand);
   }
 }
 function bindPricingEvents(tbody, totalId){
