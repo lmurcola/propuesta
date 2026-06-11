@@ -110,6 +110,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 .price-table{width:100%;border-collapse:collapse;}
 .price-table th{text-align:left;padding:6px 10px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#1a8fc7;border-bottom:2px solid #2fabe4;}
 .price-table td{padding:9px 10px;font-size:13px;border-top:0.5px solid #b8dff5;color:#1a2332;}
+.price-table tr.subtotal td{background:#f0f9fe;font-weight:600;font-size:12px;color:#4a6080;border-top:1px solid #d0eaf8;padding:8px 10px;}
 .price-table tr.total td{font-weight:700;background:rgba(47,171,228,0.1);}
 .price-table td:last-child{text-align:right;}
 .price-fn{font-size:11px;color:#4a6080;margin-top:0.75rem;line-height:1.6;}
@@ -613,8 +614,13 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
             <button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button>
           </td>
         </tr>
+        <tr class="subtotal">
+          <td colspan="3">Pago total mensual</td>
+          <td style="text-align:right;" id="subtotal-recurrente">$0 MXN</td>
+          <td class="no-print"></td>
+        </tr>
         <tr class="total">
-          <td colspan="3">Pago mensual total (IVA incluido)</td>
+          <td colspan="3">Pago total mensual + IVA</td>
           <td style="color:#2fabe4;text-align:right;" id="total-recurrente">$0 MXN</td>
           <td class="no-print"></td>
         </tr>
@@ -1003,7 +1009,8 @@ function fmt(n){return '$'+Math.round(n).toLocaleString('es-MX');}
 function syncFeeFromTable(){
   var totalEl=document.getElementById('total-recurrente');
   if(!totalEl) return;
-  var fee=parseNum(totalEl.innerText)/1.16; // sin IVA
+  var subEl=document.getElementById('subtotal-recurrente');
+  var fee=subEl?parseNum(subEl.innerText):parseNum(totalEl.innerText)/1.16;
   var feeInput=document.getElementById('fee');
   if(feeInput){ feeInput.value=Math.round(fee); calc(); }
 }
@@ -1068,6 +1075,10 @@ function recalcTable(tbodyId, totalId){
   });
   var grandCell=document.getElementById(totalId);
   if(grandCell) grandCell.innerText=formatMXN(grand*1.16);
+  if(tbodyId==='tbody-recurrente'){
+    var subCell=document.getElementById('subtotal-recurrente');
+    if(subCell) subCell.innerText=formatMXN(grand);
+  }
 }
 function bindPricingEvents(tbody, totalId){
   tbody.addEventListener('input',function(e){
