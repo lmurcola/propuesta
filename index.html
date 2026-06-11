@@ -1826,7 +1826,7 @@ function getIndName(ind,sub){
   return sm[sub]||im[ind]||'';
 }
 function buildCoverTitle(mods,ind,sub){
-  if(WZ.soloEquipo){var n=getIndName(ind,sub);return 'Cotización de equipo biométrico'+(n?' para '+n:'');}
+  if(WZ.soloEquipo){var n=getIndName(ind,sub);return 'Equipo biométrico'+(n?' para '+n:'');}
 
   var hasA=mods.indexOf('asistencia')>=0,hasC=mods.indexOf('comedor')>=0,hasX=mods.indexOf('acceso')>=0;
   var parts=[];
