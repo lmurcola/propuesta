@@ -1709,12 +1709,16 @@ function wizGenerate(){
   if(!standaloneMode && WZ.reform){showFixed('sec-regulatorio');showFixed('sec-escenarios');}
   else{hideSec('sec-regulatorio');hideSec('sec-escenarios');}
 
-  // ── Faseado replaces recurrentes ──
+  // ── Faseado / Modalidad controla recurrentes ──
   if(WZ.phased){
     hideBlock('block-recurrente');
     showBlock('block-faseado');
     fasInitRows();
     hideBlock('impl-steps'); showBlock('impl-faseado');
+  } else if(WZ.modalidad==='venta'){
+    hideBlock('block-recurrente'); // compra: sin costos recurrentes
+    hideBlock('block-faseado');
+    showBlock('impl-steps'); hideBlock('impl-faseado');
   }else{
     showBlock('block-recurrente');
     hideBlock('block-faseado');
