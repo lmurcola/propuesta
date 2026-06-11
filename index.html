@@ -1556,6 +1556,15 @@ function showFixed(id){
 }
 function hideSec(id){var s=document.getElementById(id);if(s){s.classList.add('wiz-hide');s.classList.remove('active');}}
 function showBlock(id){var s=document.getElementById(id);if(s)s.classList.remove('wiz-hide');}
+function showPagoUnicoExpanded(){
+  showBlock('block-pago-unico');
+  var c=document.getElementById('pago-unico-content');
+  var b=document.querySelector('[onclick="togglePagoUnico(this)"]');
+  var bl=document.getElementById('block-pago-unico');
+  if(c)c.style.display='block';
+  if(b)b.textContent='— Ocultar';
+  if(bl)bl.classList.add('active');
+}
 function hideBlock(id){var s=document.getElementById(id);if(s)s.classList.add('wiz-hide');}
 
 // ── STANDALONE mode content (comedor or acceso solo, sin asistencia) ──
@@ -1807,6 +1816,7 @@ function wizGenerate(){
       addUnicoItem('Instalación');addUnicoItem('Envío');
     } else if(mod==='ambos'){
       addDeviceRowsForSelection(selSA,'renta');
+      showPagoUnicoExpanded();clearUnicoRows();
       addDeviceRowsForSelection(selSA,'venta');
       addUnicoItem('Instalación');addUnicoItem('Envío');
       showFixed('sec-bvr');
@@ -1835,7 +1845,7 @@ function wizGenerate(){
         }
         if(mod==='ambos'){
           addDeviceRowsForSelection(selDef,'renta');
-          showBlock('block-pago-unico');clearUnicoRows();
+          showPagoUnicoExpanded();clearUnicoRows();
           addDeviceRowsForSelection(selDef,'venta');
           addUnicoItem('Instalación');addUnicoItem('Envío');
           showFixed('sec-bvr');
