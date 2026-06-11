@@ -320,6 +320,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           <div class="wiz-chips">
             <button class="wiz-chip" data-sub="limpieza">Limpieza profesional</button>
             <button class="wiz-chip" data-sub="seguridad">Seguridad privada</button>
+            <button class="wiz-chip" data-sub="servicios_esp">Servicios Especializados</button>
             <button class="wiz-chip" data-sub="_none">No aplica</button>
           </div>
         </div>
@@ -1164,7 +1165,9 @@ var IND = {
     pains:[['clock','Operación 24/7 multiturno','Administrar tres turnos diarios con personal de distintos departamentos requiere automatización total.'],['users','Planta y temporal mezclados','La coexistencia de planta, eventuales y outsourcing en la misma nómina crea riesgo de simulación laboral.'],['dollar','Errores en el cálculo de nómina','Con cientos de colaboradores y pagos frecuentes, un error en el cálculo de horas extra o faltas se multiplica y termina en pagos incorrectos o contingencias.'],['eye','Dotación mínima por sección','Cajas, abarrotes, perecederos: cada área necesita su dotación mínima cubierta en todo momento.']]},
   farmacias:{title:'Control de asistencia<br>para redes de farmacia',sub:'Cobertura 24h · Cumplimiento LFT · Trazabilidad para auditoría',heading:'Entendemos la operación de farmacias',diffHeading:'Diferenciadores que importan en farmacias',semaforo:true,georetail:true,
     pains:[['clock','Cobertura 24h con personal mínimo','Las farmacias que operan toda la noche no pueden tener el turno nocturno sin cobertura validada.'],['doc','Registros para auditoría','La trazabilidad del personal que opera en farmacia puede ser requerida por autoridades sanitarias.'],['refresh','Rotación entre sucursales','Un colaborador puede cubrir varias sucursales en una semana. Sin control digital es imposible calcular su jornada.'],['dollar','Finiquitos con respaldo exacto','GeoVictoria entrega el registro preciso de días trabajados, faltas y horas extra de cada colaborador, de modo que cada finiquito se calcula con datos inmutables y sin riesgo de reclamo.']]},
-  servicios:{title:'Gestión de personal<br>para servicios',sub:'Personal en sitio de cliente · Cumplimiento LFT · Facturación respaldada',heading:'Entendemos la complejidad de los servicios',diffHeading:'Diferenciadores que importan en servicios',semaforo:false,georetail:false,
+  servicios:{title:'Control de personal<br>para empresas de servicios',sub:'Jornada por proyecto · Cumplimiento LFT · Control sin fricción',heading:'Entendemos la operación de empresas de servicios',diffHeading:'Diferenciadores que importan en servicios',semaforo:false,georetail:false,
+    pains:[['clock','Jornada diluida en proyectos','Consultores y técnicos reparten su tiempo entre proyectos y clientes. Sin registro automatizado, validar horas reales trabajadas se hace en hojas de cálculo.'],['users','Personal mixto: planta, externos y honorarios','La misma empresa combina empleados, contratistas y esquemas por proyecto. La STPS exige diferenciación clara para evitar contingencias.'],['pin','Trabajo de campo sin evidencia','El personal que visita clientes o trabaja en sitio necesita un registro de presencia que respalde informes de avance y facturas emitidas.'],['doc','Cumplimiento LFT para organizaciones profesionales','La reforma laboral obliga a registrar electrónicamente la jornada de todos los colaboradores, incluso en esquemas híbridos o por proyecto.']]},
+  servicios_esp:{title:'Gestión de personal<br>para servicios especializados',sub:'Personal en sitio de cliente · Cumplimiento LFT · Facturación respaldada',heading:'Entendemos la complejidad de los servicios especializados',diffHeading:'Diferenciadores que importan en servicios especializados',semaforo:false,georetail:false,
     pains:[['pin','Personal disperso en clientes','Controlar la asistencia de colaboradores asignados a distintos sitios de cliente es imposible sin tecnología.'],['doc','Facturación por horas trabajadas','Si tu modelo cobra por hora, necesitas registros irrefutables de asistencia por cliente y por persona.'],['shield','Riesgo de simulación laboral','Los contratos de servicios son blanco frecuente de la STPS. Un registro electrónico inmutable te protege.'],['refresh','Rotación continua de personal','Las altas y bajas frecuentes requieren un sistema ágil: activar y desactivar usuarios en minutos.']]},
   limpieza:{title:'Control de asistencia<br>para empresas de limpieza',sub:'Geofencing en sitio · Cumplimiento LFT · Evidencia de servicio',heading:'Entendemos la operación de limpieza profesional',diffHeading:'Diferenciadores que importan en limpieza',semaforo:true,georetail:false,
     pains:[['pin','Personal en sitio del cliente','Tus colaboradores trabajan en instalaciones de terceros. Necesitas geofencing para validar su presencia.'],['clock','Turnos de madrugada sin supervisión','Los turnos nocturnos y de madrugada son los más difíciles de supervisar y los primeros en generar incidencias.'],['doc','Evidencia de servicio para cobrar','Muchos contratos requieren acreditar presencia del personal como requisito de pago. El registro digital lo resuelve.'],['dollar','Costo de supervisores de ruta','El tiempo de supervisores recorriendo sitios para verificar asistencia tiene un costo oculto enorme.']]},
@@ -1284,6 +1287,7 @@ var CASE_LOGOS={
   limpieza:['full_services','grupo_eulen','sirampen','servigue'],
   seguridad:['sgs','grupo_eulen','mercurio','prosegur'],
   servicios:['newrest','coperva','gtc','seicsa','grupo_eulen','sirampen'],
+  servicios_esp:['full_services','grupo_eulen','sgs','prosegur','gtc','seicsa'],
   acceso:['coperva','softys','puratos','crrc','grupo_promass','glory'],
   comedor:['sintra','softys','cmpc','concorde','urimar','plato_express']
 };
@@ -1824,7 +1828,7 @@ function wizGenerate(){
 
 function getIndName(ind,sub){
   var sm={tiendas:'tiendas',supermercados:'supermercados',farmacias:'farmacias',
-    restaurantes:'restaurantes',limpieza:'servicios de limpieza',seguridad:'seguridad privada'};
+    restaurantes:'restaurantes',limpieza:'servicios de limpieza',seguridad:'seguridad privada',servicios_esp:'servicios especializados'};
   var im={retail:'retail',construccion:'construcción',manufactura:'manufactura',
     logistica:'logística y transporte',servicios:'servicios',comedor:'comedor',acceso:'accesos'};
   return sm[sub]||im[ind]||'';
