@@ -304,6 +304,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           <button class="wiz-chip" data-ind="construccion">Construcción</button>
           <button class="wiz-chip" data-ind="manufactura">Manufactura</button>
           <button class="wiz-chip" data-ind="logistica">Logística y Transporte</button>
+          <button class="wiz-chip" data-ind="no_aplica">No aplica / Multi-industria</button>
         </div>
         <div class="wiz-sub" id="wsub-retail">
           <label>Subsegmento de Retail</label>
@@ -460,8 +461,8 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
     <path d="M6.46,18.2c-.08.29-.16.6-.22.9l8.57,2.29c0-.21.08-.42.13-.63,1.3-4.82,6.26-7.68,11.08-6.38s7.68,6.26,6.38,11.08c-.06.21-.12.39-.19.59l8.57,2.3c.09-.29.17-.55.25-.85,2.56-9.55-3.09-19.36-12.64-21.93-1.56-.42-3.16-.61-4.77-.59-8.04.06-15.06,5.46-17.16,13.22" fill="#fabb0c"/>
   </svg>
     <div class="cover-label">Propuesta Económica</div>
-    <h1 id="cover-title">Control de asistencia<br>para operaciones multisucursal</h1>
-    <div class="cover-sub" id="cover-sub">Gestión centralizada · Cumplimiento LFT · ROI desde el primer mes</div>
+    <h1 id="cover-title" contenteditable="true" spellcheck="false">Control de asistencia<br>para operaciones multisucursal</h1>
+    <div class="cover-sub" id="cover-sub" contenteditable="true" spellcheck="false">Gestión centralizada · Cumplimiento LFT · ROI desde el primer mes</div>
     <div class="cover-edit-hint">✏️ Haz clic en los campos para editarlos</div>
     <div class="cover-meta">
       <div class="cover-meta-item"><label>Cliente</label><div class="ed" contenteditable="true" spellcheck="false"></div></div>
@@ -1187,6 +1188,8 @@ var IND = {
     pains:[['pin','Obras sin conectividad y sin control','Las obras en campo, desarrollos remotos o zonas industriales no tienen WiFi estable. Un reloj checador convencional queda inútil. Sin registro en sitio, no sabes quién entró, cuándo salió ni cuántas horas reales tienes que pagar.'],['shield','Subcontratistas en obra: el riesgo que muchas empresas ignoran','Cuando tus subcontratistas trabajan bajo tu supervisión, en tu obra y con tus herramientas, la STPS puede determinar que son tus trabajadores. El registro diferenciado por empresa y por sitio es tu principal protección ante una contingencia millonaria.'],['doc','IMSS e INFONAVIT: construcción es el sector más inspeccionado','Las obras son el blanco favorito de las inspecciones del IMSS. Con trabajadores eventuales, sindicalizados y subcontratistas, cualquier omisión en el registro puede derivar en créditos fiscales que superan el margen del proyecto.'],['clock','HE en fases críticas que nadie controló','En las semanas de entrega de obra, las horas extra se disparan. Sin automatización, el cálculo llega con semanas de retraso, cargado de errores y disputas con el personal — justo cuando menos tiempo tienes para resolverlos.']]},
   manufactura:{title:'Gestión de turnos<br>en planta productiva',sub:'Turnos rotativos · Cumplimiento LFT · Dotación que no para la línea',heading:'Entendemos la operación de plantas productivas',diffHeading:'Diferenciadores que importan en manufactura',semaforo:true,georetail:false,
     pains:[['factory','Ausentismo que detiene la línea','En manufactura, un puesto clave sin cubrir puede parar toda la línea productiva. Sin visibilidad en tiempo real de quién está presente y dónde, el supervisor tarda en reaccionar y el costo por paro se multiplica cada minuto.'],['refresh','Turnos rotativos que se cierran con errores','Mañana, tarde, noche y fin de semana con plantillas que rotan semanalmente: sin automatización, los errores de asignación generan sobrecargas, HE no planificadas y disputas cada cierre de nómina.'],['shield','Subcontratistas y maquiladores mezclados en planta','La coexistencia de planta fija, eventuales, maquiladores y agencias en la misma línea es un riesgo legal crítico. Si la STPS detecta simulación laboral, las consecuencias pueden superar la nómina del año.'],['doc','NOM-035 y contratos colectivos sin respaldo digital','Los contratos colectivos definen reglas específicas para HE, descansos y bonos de puntualidad. Cualquier error es un conflicto sindical. Adicionalmente, la NOM-035 exige registros de jornada como evidencia de bienestar laboral — y pocas empresas los tienen.']]},
+  no_aplica:{title:'Control de asistencia',sub:'Registro electrónico · Cumplimiento LFT · ROI desde el primer mes',heading:'Entendemos los retos del control de asistencia',diffHeading:'Diferenciadores que importan para tu operación',semaforo:true,georetail:false,
+    pains:[['eye','Sin visibilidad del tiempo real trabajado','Retardos no registrados, entradas anticipadas y salidas tempranas representan entre 5–10% de la nómina mensual sin que nadie lo detecte.'],['dollar','Horas extra sin respaldo ni control','Las HE se aprueban verbalmente, se calculan en hojas de cálculo y se descubren al cerrar nómina. El resultado: pagos incorrectos, disputas y riesgo de contingencia laboral.'],['refresh','Turnos y jornadas sin automatización','Mañana, tarde, noche, semanas comprimidas, pagos semanales y quincenales: administrar todo esto manualmente tiene un costo oculto enorme en tiempo de supervisores y errores de RRHH.'],['doc','Cumplimiento LFT sin evidencia','La reforma laboral exige registro electrónico inmutable de la jornada. Sin él, cualquier inspección de la STPS o reclamo de un colaborador deja a la empresa sin defensa.']]},
   logistica:{title:'Control de personal<br>en logística y transporte',sub:'Personal en ruta y CEDIS · Cumplimiento LFT · HE nocturnas controladas',heading:'Entendemos la operación logística y de transporte',diffHeading:'Diferenciadores que importan en logística',semaforo:false,georetail:false,
     pains:[['users','Personal sin punto fijo de trabajo','Operadores, estibadores y supervisores trabajan en múltiples ubicaciones y horarios. Sin marcaje flexible (móvil, facial o reloj en CEDIS), registrar la jornada de todos se vuelve un caos.'],['clock','HE nocturnas y de fin de semana sin control','Las operaciones logísticas no se detienen. Los turnos nocturnos, dominicales y de guardia generan HE que se descubren hasta el cierre de nómina, a menudo mal calculadas.'],['refresh','Alta rotación y alta velocidad de contratación','Logística tiene uno de los índices de rotación más altos del mercado. Dar de alta y de baja usuarios en minutos, sin fricción, es un requisito operativo básico.'],['doc','Cumplimiento LFT en jornadas atípicas','Turnos de 12 horas, semanas comprimidas y jornadas mixtas. La reforma laboral exige registro electrónico inmutable — cualquier empresa del sector sin él está expuesta.']]},
   transporte:{title:'Control de operadores<br>y rutas de transporte',sub:'Marcaje móvil · Normativa SCT · HE en ruta controladas',heading:'Entendemos la operación de transporte y última milla',diffHeading:'Diferenciadores que importan en transporte',semaforo:false,georetail:false,
@@ -1304,7 +1307,10 @@ var CASE_LOGOS={
   seguridad:['sgs','grupo_eulen','mercurio','prosegur'],
   servicios:['newrest','coperva','gtc','seicsa','grupo_eulen','sirampen'],
   servicios_esp:['full_services','grupo_eulen','sgs','prosegur','gtc','seicsa'],
-  acceso:['coperva','softys','puratos','crrc','grupo_promass','glory'],
+  no_aplica:['grupo_eulen','ajemex','despegar','farmacias_similares','softys','cmpc','jyt_express'],
+  no_aplica:['grupo_eulen','ajemex','despegar','farmacias_similares','softys','cmpc','jyt_express'],
+  no_aplica:['grupo_eulen','ajemex','despegar','farmacias_similares','softys','cmpc','jyt_express'],
+    acceso:['coperva','softys','puratos','crrc','grupo_promass','glory'],
   comedor:['sintra','softys','cmpc','concorde','urimar','plato_express']
 };
 // Custom layouts per set: rows = sizes per row; featuredRow = index of row rendered larger
