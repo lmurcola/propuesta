@@ -1441,8 +1441,9 @@ function updateWizDeviceSelector(){
   var showQty=show||(comedorOnly&&WZ.modalidad&&WZ.modalidad!=='tiene');
   if(qtyBox)qtyBox.style.display=showQty?'block':'none';
   if(!show)return;
-  // Filter buttons
+  // Filter buttons (soloEquipo muestra todo)
   document.querySelectorAll('#wiz-dev-btns .hw-sel-btn').forEach(function(b){
+    if(WZ.soloEquipo){b.style.display='';return;}
     var bm=(b.getAttribute('data-modes')||'').split(',');
     b.style.display=bm.some(function(m){return WZ.mods.indexOf(m)>=0||(hasRelojMar&&m==='asistencia');})?'':'none';
   });
