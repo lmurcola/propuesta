@@ -1753,6 +1753,12 @@ function wizGenerate(){
   var hasComedorMod=WZ.mods.indexOf('comedor')>=0;
   var isComedorOnly=standaloneMode&&skey==='comedor';
   var hwSel=document.getElementById('hw-reloj-selector');
+  // soloEquipo: wipe all software rows from table
+  if(WZ.soloEquipo){
+    document.querySelectorAll('#tbody-recurrente tr.price-row').forEach(function(r){r.remove();});
+    if(typeof recalcTable==='function')recalcTable('tbody-recurrente','total-recurrente');
+    if(typeof syncFeeFromTable==='function')syncFeeFromTable();
+  }
   if(standaloneMode&&mod){
     showFixed('sec-hardware');
     showBlock('block-pago-unico');
