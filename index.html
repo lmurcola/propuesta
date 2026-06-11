@@ -1734,7 +1734,7 @@ function wizGenerate(){
     else { roiFn.innerHTML='Estimaciones conservadoras basadas en fuga del 5% de nómina. No incluye ahorros por HE, prenómina automatizada ni reducción de riesgo legal. <span>El break-even se alcanza el primer mes.</span>'; }
   }
   // Semaforo de dotacion: only for asistencia mode
-  document.getElementById('dotacion-card').style.display=(d.semaforo&&!standaloneMode)?'':'none';
+  document.getElementById('dotacion-card').style.display=(d.semaforo&&!standaloneMode&&WZ.ind!=='no_aplica')?'':'none';
 
   // ── Solution cards ──
   renderSolGrid(hasAsistencia,hasComedor,hasAcceso,WZ.mods,WZ.size,d);
@@ -1799,7 +1799,7 @@ function wizGenerate(){
           +'<td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">'+unitVal+'</td>'
           +'<td style="text-align:right;" class="row-total">$0 MXN</td>'
           +'<td class="no-print" style="text-align:center;white-space:nowrap;"><button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button></td>';
-        tb.insertBefore(tr,totalRow);
+        tb.insertBefore(tr,insAnchor);
       });
       recalcTable('tbody-recurrente','total-recurrente');
       syncFeeFromTable();
