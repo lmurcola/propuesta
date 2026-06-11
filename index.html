@@ -324,6 +324,14 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
             <button class="wiz-chip" data-sub="_none">No aplica</button>
           </div>
         </div>
+        <div class="wiz-sub" id="wsub-logistica">
+          <label>Subsegmento de Logística y Transporte</label>
+          <div class="wiz-chips">
+            <button class="wiz-chip" data-sub="transporte">Transporte y última milla</button>
+            <button class="wiz-chip" data-sub="cedis">Almacén y CEDIS</button>
+            <button class="wiz-chip" data-sub="_none">No aplica</button>
+          </div>
+        </div>
         <div class="wh" style="font-size:16px;margin-top:4px;">Número de colaboradores</div>
         <div class="whint">Define el enfoque, el precio sugerido por tramo y el contenido de la propuesta. El segmento se asigna automáticamente.</div>
         <input type="number" id="wc-colab" placeholder="Ej: 500" min="1" oninput="updateSegHint()" style="width:160px;padding:9px 12px;border:1.5px solid #b8dff5;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:#1a2332;outline:none;">
@@ -1179,9 +1187,13 @@ var IND = {
     pains:[['pin','Personal en múltiples obras','Controlar la asistencia de trabajadores distribuidos en distintas obras sin tecnología es imposible.'],['users','Subcontratistas y sindicalizados','La coexistencia de planta, subcontratistas y personal sindicalizado crea riesgo de simulación laboral.'],['clock','Horas extra en etapas críticas','En fases de entrega de obra las HE se disparan. Sin automatización, el cálculo es manual y propenso a errores.'],['doc','Registros para IMSS e INFONAVIT','Las inspecciones del IMSS en obra son frecuentes. El registro electrónico inmutable es tu mejor defensa.']]},
   manufactura:{title:'Gestión de turnos<br>en planta productiva',sub:'Turnos rotativos · Cumplimiento LFT · Dotación que no para la línea',heading:'Entendemos la operación de plantas productivas',diffHeading:'Diferenciadores que importan en manufactura',semaforo:true,georetail:false,
     pains:[['factory','Ausentismo que detiene la línea','En manufactura, un puesto clave sin cubrir puede parar toda la línea productiva. Sin visibilidad en tiempo real de quién está presente y dónde, el supervisor tarda en reaccionar y el costo por paro se multiplica cada minuto.'],['refresh','Turnos rotativos que se cierran con errores','Mañana, tarde, noche y fin de semana con plantillas que rotan semanalmente: sin automatización, los errores de asignación generan sobrecargas, HE no planificadas y disputas cada cierre de nómina.'],['shield','Subcontratistas y maquiladores mezclados en planta','La coexistencia de planta fija, eventuales, maquiladores y agencias en la misma línea es un riesgo legal crítico. Si la STPS detecta simulación laboral, las consecuencias pueden superar la nómina del año.'],['doc','NOM-035 y contratos colectivos sin respaldo digital','Los contratos colectivos definen reglas específicas para HE, descansos y bonos de puntualidad. Cualquier error es un conflicto sindical. Adicionalmente, la NOM-035 exige registros de jornada como evidencia de bienestar laboral — y pocas empresas los tienen.']]},
-  logistica:{title:'Control de operadores<br>y almacén en una sola plataforma',sub:'Personal en ruta y CEDIS · Cumplimiento LFT · HE nocturnas controladas',heading:'Entendemos la operación logística y de transporte',diffHeading:'Diferenciadores que importan en logística',semaforo:false,georetail:false,
-    pains:[['truck','Conductores fuera de base','Los operadores de transporte rara vez pasan por la empresa. Necesitas marcaje móvil y geofencing de ruta.'],['clock','Horas de manejo y descanso','La normativa de tiempos de conducción requiere registros precisos. El incumplimiento genera sanciones graves.'],['users','Almacén y ruta mezclados','El mismo sistema debe gestionar a los trabajadores fijos en CEDIS y a los que están en movimiento.'],['dollar','HE nocturnas y dominicales','Las operaciones de última milla implican jornadas irregulares. El cálculo automático de HE es crítico.']]}
-};
+  logistica:{title:'Control de personal<br>en logística y transporte',sub:'Personal en ruta y CEDIS · Cumplimiento LFT · HE nocturnas controladas',heading:'Entendemos la operación logística y de transporte',diffHeading:'Diferenciadores que importan en logística',semaforo:false,georetail:false,
+    pains:[['users','Personal sin punto fijo de trabajo','Operadores, estibadores y supervisores trabajan en múltiples ubicaciones y horarios. Sin marcaje flexible (móvil, facial o reloj en CEDIS), registrar la jornada de todos se vuelve un caos.'],['clock','HE nocturnas y de fin de semana sin control','Las operaciones logísticas no se detienen. Los turnos nocturnos, dominicales y de guardia generan HE que se descubren hasta el cierre de nómina, a menudo mal calculadas.'],['refresh','Alta rotación y alta velocidad de contratación','Logística tiene uno de los índices de rotación más altos del mercado. Dar de alta y de baja usuarios en minutos, sin fricción, es un requisito operativo básico.'],['doc','Cumplimiento LFT en jornadas atípicas','Turnos de 12 horas, semanas comprimidas y jornadas mixtas. La reforma laboral exige registro electrónico inmutable — cualquier empresa del sector sin él está expuesta.']]},
+  transporte:{title:'Control de operadores<br>y rutas de transporte',sub:'Marcaje móvil · Normativa SCT · HE en ruta controladas',heading:'Entendemos la operación de transporte y última milla',diffHeading:'Diferenciadores que importan en transporte',semaforo:false,georetail:false,
+    pains:[['truck','Operadores que nunca pasan por la empresa','Los conductores inician y terminan su jornada en paradero, cliente o ruta. Sin marcaje móvil con geofencing, no hay evidencia de a qué hora salieron, cuándo llegaron ni cuánto equivale a HE.'],['doc','Normativa de tiempos de manejo y descanso','La SCT y la LFT regulan los tiempos máximos de conducción y los descansos obligatorios. Sin registros automáticos, cualquier accidente o inspección puede derivar en una contingencia legal de gran costo.'],['clock','Horas de espera que se pierden o se pagan mal','Los tiempos de carga, descarga y espera en cliente son jornada laboral. Si no se documentan, se pagan mal o generan disputas que terminan en el IMSS o en conciliación.'],['users','Retención de operadores en un mercado escaso','México tiene déficit real de conductores calificados. Los operadores eligen empresas con nómina clara y HE bien pagadas. Un sistema confiable es argumento de retención, no solo de control.']]},
+  cedis:{title:'Control de personal<br>en almacén y CEDIS',sub:'Dotación por zona · Cumplimiento LFT · Temporadas sin caos',heading:'Entendemos la operación de almacén y CEDIS',diffHeading:'Diferenciadores que importan en almacén y CEDIS',semaforo:true,georetail:false,
+    pains:[['eye','Dotación mínima por zona y turno','Recibo, despacho, picking, packing: cada área necesita su dotación cubierta en todo momento. Sin semáforo en tiempo real, una zona descubierta frena el flujo de toda la operación.'],['shield','Personal de agencia y externo dentro del CEDIS','Los CEDIS mezclan planta propia, personal de agencia y proveedores externos. Sin diferenciación clara, la STPS puede interpretar simulación laboral.'],['refresh','Picos de temporada y contratación masiva','Hot Sale, Buen Fin, cierre de año: la demanda de personal temporal se dispara. Activar y desactivar colaboradores en minutos es la diferencia entre una temporada rentable y una caótica.'],['dollar','Sobretiempos en turnos de descarga nocturna','Los turnos de madrugada en recibo y despacho acumulan HE semana a semana. Sin automatización, RRHH los detecta cuando ya es tarde para corregirlos.']]]
+}
 
 // Module labels for price table
 var MOD_LABEL = {asistencia:'Control de asistencia',comedor:'Comedor',acceso:'Control de acceso',vacaciones:'Permisos y vacaciones',planificador:'Planificador inteligente',bi:'Dashboard BI',connect:'Victoria Connect',reporte:'Reporte personalizado',optimizador:'Optimizador de turnos',victoria:'VictorIA',alertas:'Alertas'};
@@ -1283,6 +1295,10 @@ var CASE_LOGOS={
   restaurantes:['alcachofa','winland','mia','antromex','benedettis'],
   construccion:['cinco_contemporanea','aleatica','anahuac','idinsa','mafersa','tensa'],
   logistica:['dhl','aktiva','jyt_express','u_storage','sintra','transportes_ruga'],
+  transporte:['dhl','jyt_express','sintra','transportes_ruga'],
+  cedis:['aktiva','u_storage','cmpc','softys'],
+  transporte:['dhl','jyt_express','sintra','transportes_ruga'],
+  cedis:['aktiva','u_storage','cmpc','softys'],
   manufactura:['metro_asfaltos','ajemex','cmpc','softys','puratos','fruehauf','heineken'],
   limpieza:['full_services','grupo_eulen','sirampen','servigue'],
   seguridad:['sgs','grupo_eulen','mercurio','prosegur'],
@@ -1828,7 +1844,7 @@ function wizGenerate(){
 
 function getIndName(ind,sub){
   var sm={tiendas:'tiendas',supermercados:'supermercados',farmacias:'farmacias',
-    restaurantes:'restaurantes',limpieza:'servicios de limpieza',seguridad:'seguridad privada',servicios_esp:'servicios especializados'};
+    restaurantes:'restaurantes',limpieza:'servicios de limpieza',seguridad:'seguridad privada',servicios_esp:'servicios especializados',transporte:'transporte y última milla',cedis:'almacén y CEDIS'};
   var im={retail:'retail',construccion:'construcción',manufactura:'manufactura',
     logistica:'logística y transporte',servicios:'servicios',comedor:'comedor',acceso:'accesos'};
   return sm[sub]||im[ind]||'';
