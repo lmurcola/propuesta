@@ -1376,6 +1376,7 @@ document.querySelectorAll('#wc-ind .wiz-chip').forEach(function(b){b.onclick=fun
   document.querySelectorAll('.wiz-sub').forEach(function(s){s.classList.remove('show');});
   if(WZ.ind==='retail')document.getElementById('wsub-retail').classList.add('show');
   if(WZ.ind==='servicios')document.getElementById('wsub-servicios').classList.add('show');
+  if(WZ.ind==='logistica')document.getElementById('wsub-logistica').classList.add('show');
 };});
 document.querySelectorAll('.wiz-sub .wiz-chip').forEach(function(b){b.onclick=function(){
   var p=b.closest('.wiz-sub');p.querySelectorAll('.wiz-chip').forEach(function(x){x.classList.remove('on');});
@@ -1491,7 +1492,7 @@ function wizFill(){document.getElementById('wiz-fill').style.width=(WZ.step/4*10
 function wizNext(){
   if(WZ.step===1){
     if(!WZ.ind){alert('Selecciona una industria.');return;}
-    if((WZ.ind==='retail'||WZ.ind==='servicios')&&!WZ.sub){alert('Selecciona un subsegmento (o "No aplica").');return;}
+    if((WZ.ind==='retail'||WZ.ind==='servicios'||WZ.ind==='logistica')&&!WZ.sub){alert('Selecciona un subsegmento (o "No aplica").');return;}
     var cv=parseInt(document.getElementById('wc-colab').value,10);
     if(!cv||cv<1){alert('Ingresa el número de colaboradores.');return;}
     WZ.colab=cv;
