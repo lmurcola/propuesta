@@ -1003,7 +1003,7 @@ function fmt(n){return '$'+Math.round(n).toLocaleString('es-MX');}
 function syncFeeFromTable(){
   var totalEl=document.getElementById('total-recurrente');
   if(!totalEl) return;
-  var fee=parseNum(totalEl.innerText);
+  var fee=parseNum(totalEl.innerText)/1.16; // sin IVA
   var feeInput=document.getElementById('fee');
   if(feeInput){ feeInput.value=Math.round(fee); calc(); }
 }
