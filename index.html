@@ -1539,7 +1539,16 @@ function updateWiz3ForStandalone(sa){
 }
 document.querySelectorAll('#wc-mods .wiz-mod').forEach(function(b){b.onclick=function(){
   b.classList.toggle('on');var m=b.dataset.mod,i=WZ.mods.indexOf(m);
-  if(i>=0)WZ.mods.splice(i,1);else WZ.mods.push(m);
+  if(i>=0)WZ.mods.splice(i,1);
+  else{
+    WZ.mods.push(m);
+    var childMods=['vacaciones','planificador','bi','connect','reporte','victoria','supervisor','alertas'];
+    if(childMods.indexOf(m)>=0&&WZ.mods.indexOf('asistencia')<0){
+      WZ.mods.unshift('asistencia');
+      var ac=document.querySelector('#wc-mods .wiz-mod[data-mod="asistencia"]');
+      if(ac)ac.classList.add('on');
+    }
+  }
   if(WZ.soloEquipo){
     WZ.soloEquipo=false;
     var sb=document.getElementById('btn-solo-equipo');
@@ -1749,7 +1758,8 @@ function renderSolGrid(hasAsistencia,hasComedor,hasAcceso,mods,size,d){
     modOrder.forEach(function(m){ if(mods.indexOf(m)>=0&&m!=='asistencia'){ cards+=modSolCard(m,d.georetail); } });
     if(hasAcceso) cards+='<div class="sol-card"><span class="sol-tag yellow">Control de Acceso</span><h4>Control de acceso físico</h4><ul><li>Control de entradas y salidas por torniquete, lector biométrico o app</li><li>Restricción por horario, turno y perfil de colaborador — configurable por sede</li><li>Bitácora digital e inmutable: quién entró, cuándo y desde qué punto</li><li>Compatible con tarjeta, PIN, facial o huella sin hardware obligatorio adicional</li></ul></div>';
     var addons=mods.filter(function(m){return m!=='asistencia';});
-    if(size==='smb'&&addons.length<=1){
+    // Relleno base solo si no hay add-ons seleccionados
+    if(addons.length===0){
       cards+='<div class="sol-card"><span class="sol-tag">Plataforma</span><h4>App de asistencia</h4><ul><li>Marcaje con geolocalización y geocerca por sucursal</li><li>Biometría facial disponible desde el móvil</li><li>Disponible para iOS y Android — sin hardware adicional</li></ul></div>';
       cards+='<div class="sol-card"><span class="sol-tag">Reportería</span><h4>Reportes incluidos</h4><ul><li>+30 reportes estándar: retardos, ausencias, HE, dotación</li><li>Exportables a Excel — compatibles con tu ERP</li><li>Acceso desde cualquier dispositivo, en tiempo real</li></ul></div>';
     }
@@ -1890,7 +1900,8 @@ function wizGenerate(){
       var tb=document.getElementById('tbody-recurrente');
       var totalRow=tb.querySelector('tr.total');
       tb.querySelectorAll('tr.price-row').forEach(function(r){r.remove();});
-      WZ.mods.forEach(function(m){
+      var modsOrdered=WZ.mods.slice().sort(function(a,b){return a==='asistencia'?-1:b==='asistencia'?1:0;});
+      modsOrdered.forEach(function(m){
         var precioTotal=esPrecioTotal(m,WZ.colab);
         var sug=precioSugerido(m,WZ.colab);
         var qtyVal=precioTotal?1:WZ.colab;
