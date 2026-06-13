@@ -584,7 +584,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
       <span class="bb">MXN + IVA</span>
     </div>
     <table class="price-table" id="tbl-recurrente">
-      <thead><tr><th>Servicio</th><th style="text-align:center;">Cantidad</th><th style="text-align:right;">Precio unitario</th><th style="text-align:right;">Total mensual</th><th class="dcto-col" style="text-align:right;color:#718096;display:none;">Precio pref.</th><th class="dcto-col" style="text-align:right;color:#38a169;display:none;">Valor ref.</th><th class="no-print" style="width:80px;"></th></tr></thead>
+      <thead><tr><th>Servicio</th><th style="text-align:center;">Cantidad</th><th style="text-align:right;">Precio unitario</th><th class="dcto-col" contenteditable="true" spellcheck="false" style="text-align:right;color:#718096;display:none;">Precio pref.</th><th style="text-align:right;">Total mensual</th><th class="dcto-col" contenteditable="true" spellcheck="false" style="text-align:right;color:#38a169;display:none;">Total pref.</th><th class="no-print" style="width:80px;"></th></tr></thead>
       <tbody id="tbody-recurrente">
         <tr class="price-row" data-row="rec">
           <td contenteditable="true" spellcheck="false">Control de asistencia</td>
@@ -676,7 +676,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
     <div class="price-sub"><span class="bb">MXN + IVA</span></div>
     <div id="pago-unico-content">
       <table class="price-table" id="tbl-unico">
-        <thead><tr><th>Concepto</th><th style="text-align:center;">Cantidad</th><th style="text-align:right;">Precio unitario</th><th style="text-align:right;">Total</th><th class="dcto-col" style="text-align:right;color:#718096;display:none;">Precio pref.</th><th class="dcto-col" style="text-align:right;color:#38a169;display:none;">Valor ref.</th><th class="no-print" style="width:80px;"></th></tr></thead>
+        <thead><tr><th>Concepto</th><th style="text-align:center;">Cantidad</th><th style="text-align:right;">Precio unitario</th><th class="dcto-col" contenteditable="true" spellcheck="false" style="text-align:right;color:#718096;display:none;">Precio pref.</th><th style="text-align:right;">Total</th><th class="dcto-col" contenteditable="true" spellcheck="false" style="text-align:right;color:#38a169;display:none;">Total pref.</th><th class="no-print" style="width:80px;"></th></tr></thead>
         <tbody id="tbody-unico">
           <tr class="price-row" data-row="uni">
             <td contenteditable="true" spellcheck="false">Reloj checador biométrico</td>
@@ -1086,7 +1086,7 @@ function recalcTable(tbodyId, totalId){
     var qty=parseNum(row.querySelector('.qty')?row.querySelector('.qty').innerText:'0');
     var unit=parseNum(row.querySelector('.unit')?row.querySelector('.unit').innerText:'0');
     var flatMin=parseNum(row.getAttribute('data-flat')||'0');
-    var subtotal=flatMin>0 ? flatMin : qty*unit;
+    var subtotal=(flatMin>0&&qty<=15) ? flatMin : qty*unit;
     grand+=subtotal;
     var totalCell=row.querySelector('.row-total');
     if(totalCell) totalCell.innerText=formatMXN(subtotal);
@@ -2010,8 +2010,8 @@ function addDeviceRow(tbodyId,devKey,label,qty,unit,rowType){
   tr.innerHTML='<td contenteditable="true" spellcheck="false">'+label+'</td>'
     +'<td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">'+qty+'</td>'
     +'<td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">'+unit+'</td>'
-    +'<td style="text-align:right;" class="row-total">$0 MXN</td>'
     +'<td class="dcto-pct-cell" contenteditable="true" spellcheck="false" style="display:'+_dd+';text-align:right;" inputmode="numeric"></td>'
+    +'<td style="text-align:right;" class="row-total">$0 MXN</td>'
     +'<td class="dcto-total-cell" style="display:'+_dd+';"></td>'
     +'<td class="no-print" style="text-align:center;white-space:nowrap;"><button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button></td>';
   tb.insertBefore(tr,totalRow||null);
