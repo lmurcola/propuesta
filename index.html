@@ -1631,9 +1631,9 @@ function dctoActive(tbodyId){
 function showDctoColumns(tbodyId,show){
   var tb=document.getElementById(tbodyId);if(!tb)return;
   var tbl=tb.closest('table');
-  if(tbl)tbl.querySelectorAll('.dcto-col').forEach(function(h){h.style.display=show?'':'none';});
-  tb.querySelectorAll('.dcto-pct-cell,.dcto-total-cell').forEach(function(c){c.style.display=show?'':'none';});
-  tb.querySelectorAll('.pref-total-cell').forEach(function(c){c.style.display=show?'':'none';});
+  if(tbl)tbl.querySelectorAll('.dcto-col').forEach(function(h){h.style.display=show?'table-cell':'none';});
+  tb.querySelectorAll('.dcto-pct-cell,.dcto-total-cell').forEach(function(c){c.style.display=show?'table-cell':'none';});
+  tb.querySelectorAll('.pref-total-cell').forEach(function(c){c.style.display=show?'table-cell':'none';});
   if(!show){
     tb.querySelectorAll('.row-total').forEach(function(c){c.classList.remove('price-original');});
     tb.querySelectorAll('.dcto-pct-cell').forEach(function(c){c.innerText='';});
