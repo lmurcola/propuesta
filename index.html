@@ -1745,41 +1745,66 @@ var STANDALONE_IND={
 
 // ── Render solution cards — dynamic per mode ──
 function renderSolGrid(hasAsistencia,hasComedor,hasAcceso,mods,size,d){
-  var cards='';
+  var cards=[];
   var ind=WZ.ind||''; var sub=WZ.sub||'';
-  var rutaInds=["logistica","transporte","construccion","servicios","servicios_esp","limpieza","seguridad","cedis"];
-  var proyInds=["construccion","manufactura","servicios","servicios_esp","cedis"];
+  var rutaInds=['logistica','transporte','construccion','servicios','servicios_esp','limpieza','seguridad','cedis'];
+  var proyInds=['construccion','manufactura','servicios','servicios_esp','cedis'];
   var showRuta=rutaInds.indexOf(ind)>=0||rutaInds.indexOf(sub)>=0;
   var showProy=proyInds.indexOf(ind)>=0||proyInds.indexOf(sub)>=0;
+  var addons=mods.filter(function(m){return m!=='asistencia';});
+
   if(hasAsistencia){
-    if(size!=='ent') cards+=prenominaSolCard();
-    cards+=marcajeSolCard(WZ.marcaje);
-    var modOrder=['planificador','vacaciones','bi','comedor','acceso','connect','reporte','optimizador','victoria','alertas','supervisor'];
-    modOrder.forEach(function(m){ if(mods.indexOf(m)>=0&&m!=='asistencia'){ cards+=modSolCard(m,d.georetail); } });
-    if(hasAcceso) cards+='<div class="sol-card"><span class="sol-tag yellow">Control de Acceso</span><h4>Control de acceso físico</h4><ul><li>Control de entradas y salidas por torniquete, lector biométrico o app</li><li>Restricción por horario, turno y perfil de colaborador — configurable por sede</li><li>Bitácora digital e inmutable: quién entró, cuándo y desde qué punto</li><li>Compatible con tarjeta, PIN, facial o huella sin hardware obligatorio adicional</li></ul></div>';
-    var addons=mods.filter(function(m){return m!=='asistencia';});
-    // Relleno base solo si no hay add-ons seleccionados
-    if(addons.length===0){
-      cards+='<div class="sol-card"><span class="sol-tag">Plataforma</span><h4>App de asistencia</h4><ul><li>Marcaje con geolocalización y geocerca por sucursal</li><li>Biometría facial disponible desde el móvil</li><li>Disponible para iOS y Android — sin hardware adicional</li></ul></div>';
-      cards+='<div class="sol-card"><span class="sol-tag">Reportería</span><h4>Reportes incluidos</h4><ul><li>+30 reportes estándar: retardos, ausencias, HE, dotación</li><li>Exportables a Excel — compatibles con tu ERP</li><li>Acceso desde cualquier dispositivo, en tiempo real</li></ul></div>';
-    }
-    if(showRuta) cards+='<div class="sol-card"><span class="sol-tag">Trazabilidad</span><h4>Ruta histórica</h4><ul><li>Registro GPS del recorrido real de cada colaborador en campo o ruta</li><li>Historial verificable de presencia en cada punto de visita o sitio de trabajo</li><li>Evidencia ante auditorías del cliente o inspecciones de la STPS</li><li>Contrasta el marcaje declarado con la ubicación real — cierra la puerta a registros falsos</li></ul></div>';
-    if(showProy) cards+='<div class="sol-card"><span class="sol-tag yellow">Gestión</span><h4>Proyectos y Tareas</h4><ul><li>Asigna tareas a colaboradores o cuadrillas por turno, área u obra</li><li>Seguimiento de avance en tiempo real: completado, en proceso, pendiente</li><li>Visibilidad centralizada para el supervisor sin depender de reportes manuales</li><li>Historial de cumplimiento por colaborador, área o proyecto</li></ul></div>';
+    // ── Slot 1: Plataforma card (dynamic by marcaje + reform) ──
+    var mar=WZ.marcaje||[];
+    var marItems=[];
+    if(mar.indexOf('reloj')>=0)  marItems.push('Reloj checador biométrico y facial en sitio');
+    if(mar.indexOf('app')>=0)    marItems.push('App móvil con geolocalización y geocerca');
+    if(mar.indexOf('web')>=0)    marItems.push('Marcaje web desde navegador — sin instalar nada');
+    if(mar.indexOf('victoria')>=0) marItems.push('WhatsApp con VictorIA — marcaje conversacional con geocerca');
+    if(marItems.length===0) marItems.push('Múltiples métodos de marcaje según la operación');
+    var marBullet=marItems.length===1?marItems[0]:marItems.slice(0,-1).join(', ')+' y '+marItems[marItems.length-1];
+    var platBuls=['<strong>Marcaje:</strong> '+marBullet,'Reportes de asistencia, retardos, HE y dotación disponibles al instante desde cualquier dispositivo','Configuración completa incluida: turnos, sucursales, reglas de cálculo y usuarios desde el día uno'];
+    if(WZ.reform) platBuls.push('Registro electrónico de jornada listo para auditoría STPS — cumplimiento LFT automático');
+    var platLi=platBuls.map(function(b){return '<li>'+b+'</li>';}).join('');
+    cards.push('<div class="sol-card"><span class="sol-tag">Plataforma</span><h4>Control de asistencia en tiempo real</h4><ul>'+platLi+'</ul></div>');
+
+    // ── Slots 2+: module cards (cotizados) ──
+    var modOrder=['planificador','vacaciones','bi','connect','reporte','optimizador','victoria','alertas','supervisor'];
+    modOrder.forEach(function(m){
+      if(mods.indexOf(m)>=0) cards.push(modSolCard(m,d.georetail));
+    });
+    if(hasAcceso) cards.push('<div class="sol-card"><span class="sol-tag yellow">Control de Acceso</span><h4>Control de acceso físico</h4><ul><li>Control de entradas y salidas por torniquete, lector biométrico o app</li><li>Restricción por horario, turno y perfil de colaborador — configurable por sede</li><li>Bitácora digital e inmutable: quién entró, cuándo y desde qué punto</li><li>Compatible con tarjeta, PIN, facial o huella sin hardware obligatorio adicional</li></ul></div>');
+
+    // ── Industry cards ──
+    if(showRuta) cards.push('<div class="sol-card"><span class="sol-tag">Trazabilidad</span><h4>Ruta histórica</h4><ul><li>Registro GPS del recorrido real de cada colaborador en campo o ruta</li><li>Historial verificable de presencia en cada punto de visita o sitio de trabajo</li><li>Evidencia ante auditorías del cliente o inspecciones de la STPS</li><li>Contrasta el marcaje declarado con la ubicación real — cierra la puerta a registros falsos</li></ul></div>');
+    if(showProy) cards.push('<div class="sol-card"><span class="sol-tag yellow">Gestión</span><h4>Proyectos y Tareas</h4><ul><li>Asigna tareas a colaboradores o cuadrillas por turno, área u obra</li><li>Seguimiento de avance en tiempo real: completado, en proceso, pendiente</li><li>Visibilidad centralizada para el supervisor sin depender de reportes manuales</li><li>Historial de cumplimiento por colaborador, área o proyecto</li></ul></div>');
+
+    // ── Prenómina: only for SMB with ≤1 add-ons ──
+    if(size==='smb'&&addons.length<=1) cards.push('<div class="sol-card"><span class="sol-tag">Eficiencia</span><h4>Prenómina automatizada</h4><ul><li>Cálculo automático de HE simples y dobles conforme a la LFT</li><li>Exportable directo a tu proceso de nómina — sin capturas manuales</li><li>Menos carga en RRHH y menos aclaraciones con colaboradores</li></ul></div>');
+
   } else {
+    // Standalone comedor/acceso
     var skey=hasComedor&&hasAcceso?'combo':(hasComedor?'comedor':'acceso');
     if(skey==='comedor'||skey==='combo'){
-      cards+='<div class="sol-card"><span class="sol-tag yellow">Operación</span><h4>Asignación automática por turno</h4><ul><li>Asignaciones automáticas basadas en turnos y marcas de entrada</li><li>Hasta 6 servicios de alimentación configurables por empresa</li><li>Límites de consumo por colaborador según políticas internas</li></ul></div>';
-      cards+='<div class="sol-card"><span class="sol-tag">Reportería</span><h4>Reportes consolidados descargables</h4><ul><li>4 tipos: Totales, Consolidado, Detallado y Detallado por Marca</li><li>Filtra por fecha, usuario, grupo o ubicación</li><li>Integrable con Asistencia — cruce automático de marcas de entrada</li></ul></div>';
-      cards+='<div class="sol-card"><span class="sol-tag">Hardware</span><h4>GeoVictoria BOX Comedor</h4><ul><li>Biométrico facial, dactilar y tarjeta de proximidad — LAN, WiFi o 4G</li><li>8,000 huellas y 10,000 tarjetas almacenadas en un solo equipo</li><li>Impresora integrada — de 500 a 1,000 tickets por rollo</li></ul></div>';
-      cards+='<div class="sol-card"><span class="sol-tag">Integración</span><h4>Conectado con tu plataforma de Asistencia</h4><ul><li>Colaboradores con marca de entrada se habilitan automáticamente al comedor</li><li>Sin doble registro — un sistema, dos módulos sincronizados</li><li>Gestión centralizada de personas, turnos y raciones desde un solo lugar</li></ul></div>';
+      cards.push('<div class="sol-card"><span class="sol-tag yellow">Operación</span><h4>Asignación automática por turno</h4><ul><li>Asignaciones automáticas basadas en turnos y marcas de entrada</li><li>Hasta 6 servicios de alimentación configurables por empresa</li><li>Límites de consumo por colaborador según políticas internas</li></ul></div>');
+      cards.push('<div class="sol-card"><span class="sol-tag">Reportería</span><h4>Reportes consolidados descargables</h4><ul><li>4 tipos: Totales, Consolidado, Detallado y Detallado por Marca</li><li>Filtra por fecha, usuario, grupo o ubicación</li><li>Integrable con Asistencia — cruce automático de marcas de entrada</li></ul></div>');
+      cards.push('<div class="sol-card"><span class="sol-tag">Hardware</span><h4>GeoVictoria BOX Comedor</h4><ul><li>Biométrico facial, dactilar y tarjeta de proximidad — LAN, WiFi o 4G</li><li>8,000 huellas y 10,000 tarjetas almacenadas en un solo equipo</li><li>Impresora integrada — de 500 a 1,000 tickets por rollo</li></ul></div>');
+      cards.push('<div class="sol-card"><span class="sol-tag">Integración</span><h4>Conectado con tu plataforma de Asistencia</h4><ul><li>Colaboradores con marca de entrada se habilitan automáticamente al comedor</li><li>Sin doble registro — un sistema, dos módulos sincronizados</li><li>Gestión centralizada de personas, turnos y raciones desde un solo lugar</li></ul></div>');
     }
     if(skey==='acceso'||skey==='combo'){
-      cards+='<div class="sol-card"><span class="sol-tag yellow">Control de Acceso</span><h4>Control de acceso físico</h4><ul><li>Control de entradas y salidas por torniquete, lector biométrico o app</li><li>Restricción por horario, turno y perfil de colaborador — configurable por sede</li><li>Bitácora digital e inmutable: quién entró, cuándo y desde qué punto</li><li>Compatible con tarjeta, PIN, facial o huella sin hardware obligatorio adicional</li></ul></div>';
-      cards+='<div class="sol-card"><span class="sol-tag">Trazabilidad</span><h4>Visitas, contratistas y reportería</h4><ul><li>Gestión de externos con documentación e indicadores de cumplimiento</li><li>Dashboard de presencia y tiempo de permanencia por instalación</li><li>Alertas automáticas: intentos fallidos y accesos fuera de horario</li></ul></div>';
+      cards.push('<div class="sol-card"><span class="sol-tag yellow">Control de Acceso</span><h4>Control de acceso físico</h4><ul><li>Control de entradas y salidas por torniquete, lector biométrico o app</li><li>Restricción por horario, turno y perfil de colaborador — configurable por sede</li><li>Bitácora digital e inmutable: quién entró, cuándo y desde qué punto</li><li>Compatible con tarjeta, PIN, facial o huella sin hardware obligatorio adicional</li></ul></div>');
+      cards.push('<div class="sol-card"><span class="sol-tag">Trazabilidad</span><h4>Visitas, contratistas y reportería</h4><ul><li>Gestión de externos con documentación e indicadores de cumplimiento</li><li>Dashboard de presencia y tiempo de permanencia por instalación</li><li>Alertas automáticas: intentos fallidos y accesos fuera de horario</li></ul></div>');
     }
   }
-  document.getElementById('sol-grid').innerHTML=cards;
+
+  // ── Enforce even number (4 or 6 max) ──
+  var max=cards.length<=4?4:6;
+  cards=cards.slice(0,max);
+  if(cards.length%2!==0&&cards.length>0) cards=cards.slice(0,cards.length-1);
+
+  document.getElementById('sol-grid').innerHTML=cards.join('');
 }
+
 
 function wizGenerate(){
   var key=(WZ.sub&&WZ.sub!=='_none')?WZ.sub:WZ.ind;
