@@ -364,6 +364,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           <div class="wiz-mod" data-mod="reporte"><div class="wm-ic"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><span>Reporte Personalizado</span></div>
           
           <div class="wiz-mod" data-mod="victoria"><div class="wm-ic"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></div><span>VictorIA</span></div>
+          <div class="wiz-mod" data-mod="supervisor"><div class="wm-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M3 21v-1a7 7 0 0114 0v1"/><path d="M17.5 10l2 2 3.5-3.5"/></svg></div><span>APP Supervisor</span></div>
           <div class="wiz-mod" data-mod="alertas"><div class="wm-ic"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div><span>Alertas</span></div>
           <div id="btn-solo-equipo" class="wiz-solo-btn" onclick="wizSoloEquipo(this)" style="margin-top:14px;display:flex;align-items:center;gap:8px;padding:8px 16px;border:1.5px dashed #b8dff5;border-radius:999px;cursor:pointer;font-size:12px;font-weight:700;color:#2fabe4;background:#f0f9fe;width:fit-content;transition:all .15s;" onmouseover="this.style.background='#2fabe4';this.style.color='#fff'" onmouseout="if(!this.classList.contains('on')){this.style.background='#f0f9fe';this.style.color='#2fabe4'}"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg> Cotizar solo equipos</div>
         </div>
@@ -1264,7 +1265,7 @@ var IND = {
 }
 
 // Module labels for price table
-var MOD_LABEL = {asistencia:'Control de asistencia',comedor:'Comedor',acceso:'Control de acceso',vacaciones:'Permisos y vacaciones',planificador:'Planificador inteligente',bi:'Dashboard BI',connect:'Victoria Connect',reporte:'Reporte personalizado',optimizador:'Optimizador de turnos',victoria:'VictorIA',alertas:'Alertas'};
+var MOD_LABEL = {asistencia:'Control de asistencia',comedor:'Comedor',acceso:'Control de acceso',vacaciones:'Permisos y vacaciones',planificador:'Planificador inteligente',bi:'Dashboard BI',connect:'Victoria Connect',reporte:'Reporte personalizado',optimizador:'Optimizador de turnos',victoria:'VictorIA',alertas:'Alertas',supervisor:'APP Supervisor'};
 
 // Solution cards per module (shown only if quoted). georetail flag swaps badge.
 function modSolCard(mod, georetail){
@@ -1278,7 +1279,8 @@ function modSolCard(mod, georetail){
     reporte:{tag:'Reportería',cls:'',title:'Reportes personalizados',bul:['Reporte a Medida (RAM) con los conceptos exactos que tu empresa necesita','Visualización diaria, consolidada o diaria-consolidada con filtros de la plataforma','Descargable en Excel y PDF — listo para nómina y auditoría']},
     optimizador:{tag:'Eficiencia',cls:'',title:'Optimizador de turnos',bul:['Sugerencia de turnos según demanda real de cada punto','Reduce sobre y subdotación en cada franja horaria','Optimiza el costo de mano de obra sin perder cobertura']},
     victoria:{tag:'Flexibilidad',cls:'',title:'VictorIA (WhatsApp)',bul:['Consulta y marca asistencia por WhatsApp — el canal que tu equipo ya usa','Registro en tiempo real, integrado directo con la plataforma','Reportes y consultas al instante, sin abrir el sistema']},
-    alertas:{tag:'Control',cls:'',title:'Alertas en tiempo real',bul:['Atrasos, inasistencias, HE excedidas y marcas incorrectas detectadas al instante','Notificación por WhatsApp, correo o app al supervisor que corresponda','Define límites de HE para frenar el pago excesivo antes de que ocurra']}
+    supervisor:{tag:'Supervisión',cls:'',title:'APP Supervisor',bul:['Consulta en tiempo real quién está presente desde cualquier dispositivo','Autoriza cambios de turno, HE y permisos desde el móvil sin estar en la oficina','Recibe alertas de dotación crítica al instante y actúa sin estar en la oficina','Disponible para iOS y Android — sin licencia adicional de hardware']},
+  alertas:{tag:'Control',cls:'',title:'Alertas en tiempo real',bul:['Atrasos, inasistencias, HE excedidas y marcas incorrectas detectadas al instante','Notificación por WhatsApp, correo o app al supervisor que corresponda','Define límites de HE para frenar el pago excesivo antes de que ocurra']}
   };
   var c=C[mod]; if(!c) return '';
   var badge = (c.badge && georetail) ? ' <span class="new-badge">GeoRetail</span>' : '';
@@ -1723,22 +1725,26 @@ var STANDALONE_IND={
 // ── Render solution cards — dynamic per mode ──
 function renderSolGrid(hasAsistencia,hasComedor,hasAcceso,mods,size,d){
   var cards='';
+  var ind=WZ.ind||''; var sub=WZ.sub||'';
+  var rutaInds=["logistica","transporte","construccion","servicios","servicios_esp","limpieza","seguridad","cedis"];
+  var proyInds=["construccion","manufactura","servicios","servicios_esp","cedis"];
+  var showRuta=rutaInds.indexOf(ind)>=0||rutaInds.indexOf(sub)>=0;
+  var showProy=proyInds.indexOf(ind)>=0||proyInds.indexOf(sub)>=0;
   if(hasAsistencia){
-    // Base cards always shown
-    cards+=prenominaSolCard();
+    if(size!=='ent') cards+=prenominaSolCard();
     cards+=marcajeSolCard(WZ.marcaje);
-    // Module benefit cards for selected add-ons
-    var modOrder=['planificador','vacaciones','bi','comedor','acceso','connect','reporte','optimizador','victoria','alertas'];
-    var addons=mods.filter(function(m){return m!=='asistencia';});
+    var modOrder=['planificador','vacaciones','bi','comedor','acceso','connect','reporte','optimizador','victoria','alertas','supervisor'];
     modOrder.forEach(function(m){ if(mods.indexOf(m)>=0&&m!=='asistencia'){ cards+=modSolCard(m,d.georetail); } });
-    // SMB with 0-1 add-ons: show extra base feature cards
-    if(size==='smb' && addons.length<=1){
+    if(hasAcceso) cards+='<div class="sol-card"><span class="sol-tag yellow">Control de Acceso</span><h4>Control de acceso físico</h4><ul><li>Control de entradas y salidas por torniquete, lector biométrico o app</li><li>Restricción por horario, turno y perfil de colaborador — configurable por sede</li><li>Bitácora digital e inmutable: quién entró, cuándo y desde qué punto</li><li>Compatible con tarjeta, PIN, facial o huella sin hardware obligatorio adicional</li></ul></div>';
+    var addons=mods.filter(function(m){return m!=='asistencia';});
+    if(size==='smb'&&addons.length<=1){
       cards+='<div class="sol-card"><span class="sol-tag">Plataforma</span><h4>App de asistencia</h4><ul><li>Marcaje con geolocalización y geocerca por sucursal</li><li>Biometría facial disponible desde el móvil</li><li>Disponible para iOS y Android — sin hardware adicional</li></ul></div>';
       cards+='<div class="sol-card"><span class="sol-tag">Reportería</span><h4>Reportes incluidos</h4><ul><li>+30 reportes estándar: retardos, ausencias, HE, dotación</li><li>Exportables a Excel — compatibles con tu ERP</li><li>Acceso desde cualquier dispositivo, en tiempo real</li></ul></div>';
     }
+    if(showRuta) cards+='<div class="sol-card"><span class="sol-tag">Trazabilidad</span><h4>Ruta histórica</h4><ul><li>Registro GPS del recorrido real de cada colaborador en campo o ruta</li><li>Historial verificable de presencia en cada punto de visita o sitio de trabajo</li><li>Evidencia ante auditorías del cliente o inspecciones de la STPS</li><li>Contrasta el marcaje declarado con la ubicación real — cierra la puerta a registros falsos</li></ul></div>';
+    if(showProy) cards+='<div class="sol-card"><span class="sol-tag yellow">Gestión</span><h4>Proyectos y Tareas</h4><ul><li>Asigna tareas a colaboradores o cuadrillas por turno, área u obra</li><li>Seguimiento de avance en tiempo real: completado, en proceso, pendiente</li><li>Visibilidad centralizada para el supervisor sin depender de reportes manuales</li><li>Historial de cumplimiento por colaborador, área o proyecto</li></ul></div>';
   } else {
-    // Standalone: comedor, acceso, o combo
-    var skey = hasComedor && hasAcceso ? 'combo' : (hasComedor ? 'comedor' : 'acceso');
+    var skey=hasComedor&&hasAcceso?'combo':(hasComedor?'comedor':'acceso');
     if(skey==='comedor'||skey==='combo'){
       cards+='<div class="sol-card"><span class="sol-tag yellow">Operación</span><h4>Asignación automática por turno</h4><ul><li>Asignaciones automáticas basadas en turnos y marcas de entrada</li><li>Hasta 6 servicios de alimentación configurables por empresa</li><li>Límites de consumo por colaborador según políticas internas</li></ul></div>';
       cards+='<div class="sol-card"><span class="sol-tag">Reportería</span><h4>Reportes consolidados descargables</h4><ul><li>4 tipos: Totales, Consolidado, Detallado y Detallado por Marca</li><li>Filtra por fecha, usuario, grupo o ubicación</li><li>Integrable con Asistencia — cruce automático de marcas de entrada</li></ul></div>';
@@ -1746,7 +1752,7 @@ function renderSolGrid(hasAsistencia,hasComedor,hasAcceso,mods,size,d){
       cards+='<div class="sol-card"><span class="sol-tag">Integración</span><h4>Conectado con tu plataforma de Asistencia</h4><ul><li>Colaboradores con marca de entrada se habilitan automáticamente al comedor</li><li>Sin doble registro — un sistema, dos módulos sincronizados</li><li>Gestión centralizada de personas, turnos y raciones desde un solo lugar</li></ul></div>';
     }
     if(skey==='acceso'||skey==='combo'){
-      cards+='<div class="sol-card"><span class="sol-tag yellow">Seguridad</span><h4>Control de acceso en tiempo real</h4><ul><li>Supervisión centralizada: quién entra y sale de cada instalación</li><li>Múltiples métodos: biometría, app, tarjeta de proximidad o código QR</li><li>Antipassback y modo esclusa — bloquea accesos no autorizados</li></ul></div>';
+      cards+='<div class="sol-card"><span class="sol-tag yellow">Control de Acceso</span><h4>Control de acceso físico</h4><ul><li>Control de entradas y salidas por torniquete, lector biométrico o app</li><li>Restricción por horario, turno y perfil de colaborador — configurable por sede</li><li>Bitácora digital e inmutable: quién entró, cuándo y desde qué punto</li><li>Compatible con tarjeta, PIN, facial o huella sin hardware obligatorio adicional</li></ul></div>';
       cards+='<div class="sol-card"><span class="sol-tag">Trazabilidad</span><h4>Visitas, contratistas y reportería</h4><ul><li>Gestión de externos con documentación e indicadores de cumplimiento</li><li>Dashboard de presencia y tiempo de permanencia por instalación</li><li>Alertas automáticas: intentos fallidos y accesos fuera de horario</li></ul></div>';
     }
   }
@@ -1877,7 +1883,8 @@ function wizGenerate(){
         var sug=precioSugerido(m,WZ.colab);
         var qtyVal=precioTotal?1:WZ.colab;
         var unitVal=sug;
-        var insAnchor=tb.querySelector('tr.subtotal')||totalRow;
+        if(!PRICING[m]){qtyVal=1;unitVal=0;}
+  var insAnchor=tb.querySelector('tr.subtotal')||totalRow;
   var tr=document.createElement('tr');tr.className='price-row';tr.setAttribute('data-row','rec');
         if(precioTotal)tr.setAttribute('data-flat',unitVal);
         tr.innerHTML='<td contenteditable="true" spellcheck="false">'+MOD_LABEL[m]+'</td>'
