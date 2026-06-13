@@ -579,7 +579,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 
   <!-- COSTOS RECURRENTES -->
   <div class="price-block" id="block-recurrente">
-    <h4>Costos recurrentes (mensual)</h4><button class="btn-toggle-totals no-print" onclick="toggleTotals(this,'tbody-recurrente')">Ocultar totales</button>
+    <h4>Costos recurrentes (mensual)</h4><button class="btn-toggle-totals no-print wiz-hide" id="btn-toggle-rec" onclick="toggleTotals(this,'tbody-recurrente')">Ocultar totales</button>
     <div class="price-sub">
       <span class="bb">MXN + IVA</span>
     </div>
@@ -670,7 +670,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
   <!-- COSTOS DE PAGO ÚNICO (colapsable) -->
   <div class="price-block" id="block-pago-unico">
     <div class="price-block-toggle">
-      <h4 style="font-size:14px;">Costos de pago único</h4><button class="btn-toggle-totals no-print" onclick="toggleTotals(this,'tbody-unico')">Ocultar totales</button>
+      <h4 style="font-size:14px;">Costos de pago único</h4><button class="btn-toggle-totals no-print wiz-hide" id="btn-toggle-uni" onclick="toggleTotals(this,'tbody-unico')">Ocultar totales</button>
       <button class="btn-collapse-block no-print" onclick="togglePagoUnico(this)">— Ocultar</button>
     </div>
     <div class="price-sub"><span class="bb">MXN + IVA</span></div>
@@ -1769,6 +1769,9 @@ function wizGenerate(){
       var el=document.getElementById(id);if(el)el.classList.add('wiz-hide');
     });
     var casosEl=document.getElementById('sec-casos');if(casosEl)casosEl.classList.remove('wiz-hide');
+    // Mostrar botones ocultar totales solo en cotización de equipos
+    var btr=document.getElementById('btn-toggle-rec');if(btr)btr.classList.remove('wiz-hide');
+    var btu=document.getElementById('btn-toggle-uni');if(btu)btu.classList.remove('wiz-hide');
   }
 
   // Cover
