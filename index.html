@@ -1912,8 +1912,8 @@ function wizGenerate(){
     showBlock('block-faseado');
     fasInitRows();
     hideBlock('impl-steps'); showBlock('impl-faseado');
-  } else if(WZ.modalidad==='venta'){
-    hideBlock('block-recurrente'); // compra: sin costos recurrentes
+  } else if(WZ.modalidad==='venta' && WZ.mods.filter(function(m){return m!=='comedor'&&m!=='acceso';}).length===0){
+    hideBlock('block-recurrente'); // compra sin SaaS: sin costos recurrentes
     hideBlock('block-faseado');
     showBlock('impl-steps'); hideBlock('impl-faseado');
   }else{
