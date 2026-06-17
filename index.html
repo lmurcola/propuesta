@@ -1314,6 +1314,9 @@ function marcajeSolCard(methods){
 function prenominaSolCard(){
   return '<div class="sol-card"><span class="sol-tag">Eficiencia</span><h4>Prenómina automatizada</h4><ul><li>Cálculo automático de HE simples y dobles</li><li>Compatible con los principales ERPs del mercado</li><li>Menos carga en RRHH y menos aclaraciones</li></ul></div>';
 }
+function integracionSolCard(){
+  return '<div class="sol-card"><span class="sol-tag">Integración</span><h4>Conectado con tu ecosistema de RRHH</h4><ul><li>Sincronización bidireccional con tu ERP o sistema de nómina — sin desarrollos a medida</li><li>Usuarios, turnos y asistencia siempre consistentes entre plataformas</li><li>Reducción de captura manual y errores de sincronización entre sistemas</li></ul></div>';
+}
 
 
 // ── PRICING por tramo (precio recomendado MXN/usuario, sin IVA) ──
@@ -1800,7 +1803,17 @@ function renderSolGrid(hasAsistencia,hasComedor,hasAcceso,mods,size,d){
   // ── Enforce even number (4 or 6 max) ──
   var max=cards.length<=4?4:6;
   cards=cards.slice(0,max);
-  if(cards.length%2!==0&&cards.length>0) cards=cards.slice(0,cards.length-1);
+  if(cards.length%2!==0&&cards.length>0){
+    var filled=false;
+    if((WZ.marcaje||[]).length>=3){
+      var marcajeCard=marcajeSolCard(WZ.marcaje);
+      if(cards.indexOf(marcajeCard)<0){ cards.push(marcajeCard); filled=true; }
+    }
+    if(!filled){
+      if(size==='smb') cards.push(prenominaSolCard());
+      else cards.push(integracionSolCard());
+    }
+  }
 
   document.getElementById('sol-grid').innerHTML=cards.join('');
 }
