@@ -664,7 +664,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
     </table>
     </div>
     <button class="price-add-btn no-print" onclick="addFasedRow()">+ Agregar etapa</button> <button class="no-print" id="btn-readd-addon" onclick="agregarAddonCol()" style="display:none;font-size:11px;font-weight:700;color:#1a2332;background:#fabb0c;border:none;border-radius:5px;padding:6px 14px;cursor:pointer;margin-left:8px;">&#8617; Recuperar columna Módulo adicional</button>
-    <div class="price-fn">Edita los campos en blanco. El precio con descuento y los totales (con y sin add-on) se calculan automáticamente. Los montos no incluyen IVA. Los descuentos por volumen se validan con gerencia comercial.</div>
+    <div class="price-fn no-print">Edita los campos en blanco. El precio con descuento y los totales (con y sin add-on) se calculan automáticamente. Los montos no incluyen IVA. Los descuentos por volumen se validan con gerencia comercial.</div>
   </div>
   </div>
 
@@ -1784,12 +1784,17 @@ function renderSolGrid(hasAsistencia,hasComedor,hasAcceso,mods,size,d){
     });
     if(hasAcceso) cards.push('<div class="sol-card"><span class="sol-tag yellow">Control de Acceso</span><h4>Control de acceso físico</h4><ul><li>Control de entradas y salidas por torniquete, lector biométrico o app</li><li>Restricción por horario, turno y perfil de colaborador — configurable por sede</li><li>Bitácora digital e inmutable: quién entró, cuándo y desde qué punto</li><li>Compatible con tarjeta, PIN, facial o huella sin hardware obligatorio adicional</li></ul></div>');
 
-    // ── Industry cards ──
-    if(showRuta) cards.push('<div class="sol-card"><span class="sol-tag">Trazabilidad</span><h4>Ruta histórica</h4><ul><li>Registro GPS del recorrido real de cada colaborador en campo o ruta</li><li>Historial verificable de presencia en cada punto de visita o sitio de trabajo</li><li>Evidencia ante auditorías del cliente o inspecciones de la STPS</li><li>Contrasta el marcaje declarado con la ubicación real — cierra la puerta a registros falsos</li></ul></div>');
-    if(showProy) cards.push('<div class="sol-card"><span class="sol-tag yellow">Gestión</span><h4>Proyectos y Tareas</h4><ul><li>Asigna tareas a colaboradores o cuadrillas por turno, área u obra</li><li>Seguimiento de avance en tiempo real: completado, en proceso, pendiente</li><li>Visibilidad centralizada para el supervisor sin depender de reportes manuales</li><li>Historial de cumplimiento por colaborador, área o proyecto</li></ul></div>');
-
     // ── Prenómina: only for SMB with ≤1 add-ons ──
     if(size==='smb'&&addons.length<=1) cards.push('<div class="sol-card"><span class="sol-tag">Eficiencia</span><h4>Prenómina automatizada</h4><ul><li>Cálculo automático de HE simples y dobles conforme a la LFT</li><li>Exportable directo a tu proceso de nómina — sin capturas manuales</li><li>Menos carga en RRHH y menos aclaraciones con colaboradores</li></ul></div>');
+
+    // ── Industry cards: fill remaining slots only (max 4, or 6 if modules already ≥5) ──
+    var baseMax=cards.length>=5?6:4;
+    var indCandidates=[];
+    if(showRuta) indCandidates.push('<div class="sol-card"><span class="sol-tag">Trazabilidad</span><h4>Ruta histórica</h4><ul><li>Registro GPS del recorrido real de cada colaborador en campo o ruta</li><li>Historial verificable de presencia en cada punto de visita o sitio de trabajo</li><li>Evidencia ante auditorías del cliente o inspecciones de la STPS</li><li>Contrasta el marcaje declarado con la ubicación real — cierra la puerta a registros falsos</li></ul></div>');
+    if(showProy) indCandidates.push('<div class="sol-card"><span class="sol-tag yellow">Gestión</span><h4>Proyectos y Tareas</h4><ul><li>Asigna tareas a colaboradores o cuadrillas por turno, área u obra</li><li>Seguimiento de avance en tiempo real: completado, en proceso, pendiente</li><li>Visibilidad centralizada para el supervisor sin depender de reportes manuales</li><li>Historial de cumplimiento por colaborador, área o proyecto</li></ul></div>');
+    for(var ic=0;ic<indCandidates.length;ic++){
+      if(cards.length<baseMax) cards.push(indCandidates[ic]);
+    }
 
   } else {
     // Standalone comedor/acceso
