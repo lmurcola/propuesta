@@ -640,7 +640,6 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
       </tbody>
     </table>
     <button class="price-add-btn no-print" onclick="addPriceRow('tbody-recurrente','rec')">+ Agregar ítem</button> <button class="btn-pref no-print" onclick="applyDescuento(this,'tbody-recurrente')">+ Agregar descuento</button>
-    <div class="price-fn">El kick off se considera el hito de facturación inicial.</div>
   </div>
 
 
@@ -720,6 +719,15 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
       </table>
       <button class="price-add-btn no-print" onclick="addPriceRow('tbody-unico','uni')">+ Agregar ítem</button> <button class="btn-pref no-print" onclick="applyDescuento(this,'tbody-unico')">+ Agregar descuento</button>
     </div>
+  </div>
+
+  <!-- CONDICIONES COMERCIALES -->
+  <div id="sec-condiciones" style="margin-top:12px;">
+    <div style="font-size:11px;font-weight:700;color:#4a6080;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px;">Condiciones</div>
+    <ul id="condiciones-list" style="margin:0;padding-left:18px;font-size:12px;color:#4a6080;line-height:1.8;">
+      <li contenteditable="true" spellcheck="false" style="outline:none;">El kick off se considera el hito de facturación inicial.</li>
+    </ul>
+    <button class="no-print" onclick="addCondicion()" style="margin-top:6px;font-size:11px;color:#2fabe4;background:none;border:none;cursor:pointer;padding:0;">+ Agregar condición</button>
   </div>
 </div>
 
@@ -1197,6 +1205,17 @@ function addPriceRow(tbodyId, type){
 }
 
 // ── PAGO ÚNICO: collapse/expand ───────────────────────────────────────
+function addCondicion(){
+  var ul=document.getElementById('condiciones-list');
+  if(!ul) return;
+  var li=document.createElement('li');
+  li.contentEditable='true';
+  li.spellcheck=false;
+  li.style.outline='none';
+  li.innerText='';
+  ul.appendChild(li);
+  li.focus();
+}
 function togglePagoUnico(btn){
   var content=document.getElementById('pago-unico-content');
   var block=document.getElementById('block-pago-unico');
