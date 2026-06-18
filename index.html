@@ -1072,13 +1072,14 @@ function toggleOpt(id, openLabel){
 
 // ── PRICING: auto-calculate row totals and grand total ──────────────
 function parseNum(str){
-  // Handle range strings like "1-15": take the last numeric segment
-  var s=(str||'').trim();
-  var parts=s.split(/[^0-9.]+/);
-  var last='';
-  for(var i=parts.length-1;i>=0;i--){if(parts[i]!=''){last=parts[i];break;}}
-  var n=parseFloat(last);
+  var n=parseFloat((str||'').replace(/[^0-9.]/g,''));
   return isNaN(n)?0:n;
+}
+function parseQty(str){
+  // Handles plain numbers or ranges like "1-15" (takes last number)
+  var s=(str||'').trim();
+  var m=s.match(/([0-9]+(?:\.[0-9]+)?)\s*$/);
+  return m?parseFloat(m[1]):0;
 }
 function formatMXN(n){
   return '$'+n.toLocaleString('es-MX',{minimumFractionDigits:0,maximumFractionDigits:2})+' MXN';
@@ -1089,7 +1090,7 @@ function recalcTable(tbodyId, totalId){
   var rows=tbody.querySelectorAll('tr.price-row:not(.price-row-hidden)');
   var grand=0;
   rows.forEach(function(row){
-    var qty=parseNum(row.querySelector('.qty')?row.querySelector('.qty').innerText:'0');
+    var qty=parseQty(row.querySelector('.qty')?row.querySelector('.qty').innerText:'0');
     var unit=parseNum(row.querySelector('.unit')?row.querySelector('.unit').innerText:'0');
     var flatMin=parseNum(row.getAttribute('data-flat')||'0');
     var rowMod=row.getAttribute('data-mod');
