@@ -624,17 +624,15 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           </td>
         </tr>
         <tr class="subtotal">
-          <td colspan="3">Pago total mensual</td>
+          <td colspan="4" id="subtotal-rec-label">Pago total mensual</td>
           <td style="text-align:right;" id="subtotal-recurrente">$0 MXN</td>
-          <td class="dcto-col no-print" style="display:none;"></td>
-          <td class="pref-total-cell dcto-col" id="pref-sub-recurrente" style="display:none;"></td>
+          <td class="pref-total-cell dcto-col" id="pref-sub-recurrente" style="display:none;text-align:right;"></td>
           <td class="no-print"></td>
         </tr>
         <tr class="total">
-          <td colspan="3">Pago total mensual + IVA</td>
+          <td colspan="4" id="total-rec-label">Pago total mensual + IVA</td>
           <td style="color:#2fabe4;text-align:right;" id="total-recurrente">$0 MXN</td>
-          <td class="dcto-col no-print" style="display:none;"></td>
-          <td class="pref-total-cell dcto-col" id="pref-tot-recurrente" style="display:none;font-weight:700;"></td>
+          <td class="pref-total-cell dcto-col" id="pref-tot-recurrente" style="display:none;font-weight:700;text-align:right;"></td>
           <td class="no-print"></td>
         </tr>
       </tbody>
@@ -1685,6 +1683,7 @@ function showDctoColumns(tbodyId,show){
   if(tbl)tbl.querySelectorAll('.dcto-col').forEach(function(h){h.style.display=show?'table-cell':'none';});
   tb.querySelectorAll('.dcto-pct-cell,.dcto-total-cell').forEach(function(c){c.style.display=show?'table-cell':'none';});
   tb.querySelectorAll('.pref-total-cell').forEach(function(c){c.style.display=show?'table-cell':'none';});
+
   if(!show){
     tb.querySelectorAll('.row-total').forEach(function(c){c.classList.remove('price-original');});
     tb.querySelectorAll('.dcto-pct-cell').forEach(function(c){c.innerText='';});
@@ -1840,8 +1839,11 @@ function renderSolGrid(hasAsistencia,hasComedor,hasAcceso,mods,size,d){
       if(cards.indexOf(marcajeCard)<0){ cards.push(marcajeCard); filled=true; }
     }
     if(!filled){
-      if(size==='smb') cards.push(prenominaSolCard());
-      else cards.push(integracionSolCard());
+      var prenCard=prenominaSolCard();
+      var hasPren=cards.some(function(c){return c.indexOf('Prenómina automatizada')>=0;});
+      if(size==='smb'&&!hasPren) cards.push(prenCard);
+      else if(size!=='smb') cards.push(integracionSolCard());
+      else cards.push(integracionSolCard()); // SMB ya tiene prenómina, usar integración
     }
   }
 
@@ -1936,7 +1938,7 @@ function wizGenerate(){
     var subLabels={restaurantes:'restaurantes',tiendas:'tiendas',supermercados:'supermercados',farmacias:'farmacias'};
     var logoSetKey=(WZ.sub&&CASE_LOGOS[WZ.sub])?WZ.sub:(CASE_LOGOS[WZ.ind]?WZ.ind:null);
     if(logoSetKey){
-      var lbl=(logoSetKey==='no_aplica')?'Empresas que ya operan con GeoVictoria':(logoSetKey==='restaurantes')?'Clientes del rubro que ya operan con GeoVictoria':(logoSetKey==='supermercados')?'Clientes de la industria que ya operan con GeoVictoria':(logoSetKey==='farmacias')?'Clientes de tu industria que ya operan con GeoVictoria':(subLabels[logoSetKey]?('Clientes de '+subLabels[logoSetKey]+' que ya operan con GeoVictoria'):'Clientes retail que ya operan con GeoVictoria');
+      var lbl=(logoSetKey==='no_aplica')?'Empresas que ya operan con GeoVictoria':(logoSetKey==='restaurantes')?'Clientes del rubro que ya operan con GeoVictoria':(logoSetKey==='supermercados')?'Clientes de la industria que ya operan con GeoVictoria':(logoSetKey==='farmacias')?'Clientes de tu industria que ya operan con GeoVictoria':(subLabels[logoSetKey]?('Clientes de '+subLabels[logoSetKey]+' que ya operan con GeoVictoria'):('Clientes de '+(indLabels[WZ.ind]||'tu sector')+' que ya operan con GeoVictoria'));
       document.getElementById('cases-label').textContent=lbl;
       renderLogos(logoSetKey);
     } else {
