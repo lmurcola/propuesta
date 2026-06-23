@@ -624,13 +624,13 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           </td>
         </tr>
         <tr class="subtotal">
-          <td colspan="4" id="subtotal-rec-label">Pago total mensual</td>
+          <td colspan="3" id="subtotal-rec-label">Pago total mensual</td>
           <td style="text-align:right;" id="subtotal-recurrente">$0 MXN</td>
           <td class="pref-total-cell dcto-col" id="pref-sub-recurrente" style="display:none;text-align:right;"></td>
           <td class="no-print"></td>
         </tr>
         <tr class="total">
-          <td colspan="4" id="total-rec-label">Pago total mensual + IVA</td>
+          <td colspan="3" id="total-rec-label">Pago total mensual + IVA</td>
           <td style="color:#2fabe4;text-align:right;" id="total-recurrente">$0 MXN</td>
           <td class="pref-total-cell dcto-col" id="pref-tot-recurrente" style="display:none;font-weight:700;text-align:right;"></td>
           <td class="no-print"></td>
@@ -1681,6 +1681,13 @@ function showDctoColumns(tbodyId,show){
   var tb=document.getElementById(tbodyId);if(!tb)return;
   var tbl=tb.closest('table');
   if(tbl)tbl.querySelectorAll('.dcto-col').forEach(function(h){h.style.display=show?'table-cell':'none';});
+  // Adjust label colspan: 4 with discount (skips precio pref col), 3 without
+  if(tbodyId==='tbody-recurrente'){
+    var sl=document.getElementById('subtotal-rec-label');
+    var tl=document.getElementById('total-rec-label');
+    if(sl)sl.setAttribute('colspan',show?'4':'3');
+    if(tl)tl.setAttribute('colspan',show?'4':'3');
+  }
   tb.querySelectorAll('.dcto-pct-cell,.dcto-total-cell').forEach(function(c){c.style.display=show?'table-cell':'none';});
   tb.querySelectorAll('.pref-total-cell').forEach(function(c){c.style.display=show?'table-cell':'none';});
 
