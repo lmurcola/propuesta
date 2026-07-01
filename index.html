@@ -128,6 +128,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 .dcto-total-cell{color:#38a169;font-weight:700;text-align:right;}
 .dcto-pct-cell{text-align:center;color:#718096;min-width:52px;}
 .pref-total-cell{color:#38a169;font-weight:700;text-align:right;}
+.row-total[contenteditable="true"]:focus,#subtotal-recurrente:focus,#total-recurrente:focus,#subtotal-unico:focus,#total-unico:focus{outline:1px solid #2fabe4;border-radius:3px;background:rgba(47,171,228,.06);}
 .btn-pref{font-size:11px;font-weight:600;color:#38a169;background:none;border:1px dashed #38a169;border-radius:5px;padding:3px 12px;cursor:pointer;margin-top:8px;margin-left:6px;display:inline-block;}
 .btn-pref:hover{background:#f0fff4;}
 .btn-toggle-totals{font-size:10px;font-weight:600;color:#4a6080;background:transparent;border:1px solid #d0eaf8;border-radius:5px;padding:3px 10px;cursor:pointer;white-space:nowrap;margin-left:6px;}
@@ -591,7 +592,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           <td contenteditable="true" spellcheck="false">Control de asistencia</td>
           <td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>
           <td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>
-          <td style="text-align:right;" class="row-total">$0 MXN</td>
+          <td style="text-align:right;" class="row-total" contenteditable="true" spellcheck="false">$0 MXN</td>
           <td class="no-print" style="text-align:center;white-space:nowrap;">
             <button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button>
           </td>
@@ -600,7 +601,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           <td contenteditable="true" spellcheck="false">Planificador inteligente</td>
           <td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>
           <td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>
-          <td style="text-align:right;" class="row-total">$0 MXN</td>
+          <td style="text-align:right;" class="row-total" contenteditable="true" spellcheck="false">$0 MXN</td>
           <td class="no-print" style="text-align:center;white-space:nowrap;">
             <button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button>
           </td>
@@ -609,7 +610,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           <td contenteditable="true" spellcheck="false">Permisos y vacaciones</td>
           <td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>
           <td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>
-          <td style="text-align:right;" class="row-total">$0 MXN</td>
+          <td style="text-align:right;" class="row-total" contenteditable="true" spellcheck="false">$0 MXN</td>
           <td class="no-print" style="text-align:center;white-space:nowrap;">
             <button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button>
           </td>
@@ -618,21 +619,21 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           <td contenteditable="true" spellcheck="false">Renta de equipos</td>
           <td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>
           <td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>
-          <td style="text-align:right;" class="row-total">$0 MXN</td>
+          <td style="text-align:right;" class="row-total" contenteditable="true" spellcheck="false">$0 MXN</td>
           <td class="no-print" style="text-align:center;white-space:nowrap;">
             <button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button>
           </td>
         </tr>
         <tr class="subtotal">
           <td colspan="3" id="subtotal-rec-label">Pago total mensual</td>
-          <td style="text-align:right;" id="subtotal-recurrente">$0 MXN</td>
-          <td class="pref-total-cell dcto-col" id="pref-sub-recurrente" style="display:none;text-align:right;"></td>
+          <td style="text-align:right;" id="subtotal-recurrente" contenteditable="true" spellcheck="false">$0 MXN</td>
+          <td class="pref-total-cell dcto-col" id="pref-sub-recurrente" style="display:none;text-align:right;" contenteditable="true" spellcheck="false"></td>
           <td class="no-print"></td>
         </tr>
         <tr class="total">
           <td colspan="3" id="total-rec-label">Pago total mensual + IVA</td>
-          <td style="color:#2fabe4;text-align:right;" id="total-recurrente">$0 MXN</td>
-          <td class="pref-total-cell dcto-col" id="pref-tot-recurrente" style="display:none;font-weight:700;text-align:right;"></td>
+          <td style="color:#2fabe4;text-align:right;" id="total-recurrente" contenteditable="true" spellcheck="false">$0 MXN</td>
+          <td class="pref-total-cell dcto-col" id="pref-tot-recurrente" style="display:none;font-weight:700;text-align:right;" contenteditable="true" spellcheck="false"></td>
           <td class="no-print"></td>
         </tr>
       </tbody>
@@ -680,7 +681,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
             <td contenteditable="true" spellcheck="false">Reloj checador biométrico</td>
             <td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>
             <td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>
-            <td style="text-align:right;" class="row-total">$0 MXN</td>
+            <td style="text-align:right;" class="row-total" contenteditable="true" spellcheck="false">$0 MXN</td>
             <td class="no-print" style="text-align:center;white-space:nowrap;">
               <button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button>
             </td>
@@ -689,7 +690,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
             <td contenteditable="true" spellcheck="false">Envío</td>
             <td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">1</td>
             <td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>
-            <td style="text-align:right;" class="row-total">$0 MXN</td>
+            <td style="text-align:right;" class="row-total" contenteditable="true" spellcheck="false">$0 MXN</td>
             <td class="no-print" style="text-align:center;white-space:nowrap;">
               <button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button>
             </td>
@@ -698,19 +699,19 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
             <td contenteditable="true" spellcheck="false">Instalación</td>
             <td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>
             <td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>
-            <td style="text-align:right;" class="row-total">$0 MXN</td>
+            <td style="text-align:right;" class="row-total" contenteditable="true" spellcheck="false">$0 MXN</td>
             <td class="no-print" style="text-align:center;white-space:nowrap;">
               <button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button>
             </td>
           </tr>
           <tr class="subtotal">
             <td colspan="3">Pago total único</td>
-            <td style="text-align:right;" id="subtotal-unico">$0 MXN</td>
+            <td style="text-align:right;" id="subtotal-unico" contenteditable="true" spellcheck="false">$0 MXN</td>
             <td class="no-print"></td>
           </tr>
           <tr class="total">
             <td colspan="3">Pago total único + IVA</td>
-            <td style="color:#2fabe4;text-align:right;" id="total-unico">$0 MXN</td>
+            <td style="color:#2fabe4;text-align:right;" id="total-unico" contenteditable="true" spellcheck="false">$0 MXN</td>
             <td class="no-print"></td>
           </tr>
         </tbody>
@@ -1114,10 +1115,14 @@ function recalcTable(tbodyId, totalId){
     }
     grand+=subtotal;
     var totalCell=row.querySelector('.row-total');
-    if(totalCell) totalCell.innerText=formatMXN(subtotal);
+    if(totalCell&&!totalCell.dataset.manual) totalCell.innerText=formatMXN(subtotal);
+    else if(totalCell&&totalCell.dataset.manual) grand=grand-subtotal+parseNum(totalCell.innerText);
   });
   var grandCell=document.getElementById(totalId);
-  if(grandCell) grandCell.innerText=formatMXN(grand*1.16);
+  var subId=totalId==='total-recurrente'?'subtotal-recurrente':'subtotal-unico';
+  var subCell=document.getElementById(subId);
+  if(subCell&&!subCell.dataset.manual) subCell.innerText=formatMXN(grand);
+  if(grandCell&&!grandCell.dataset.manual) grandCell.innerText=formatMXN(grand*1.16);
   var prefSum=0;
   rows.forEach(function(row){
     var prefUnit=row.querySelector('.dcto-pct-cell');
@@ -1161,6 +1166,18 @@ function bindPricingEvents(tbody, totalId){
   tbody.addEventListener('input',function(e){
     var cell=e.target;
     if(cell.classList.contains('qty')||cell.classList.contains('unit')||cell.classList.contains('dcto-pct-cell')){
+      // qty/unit edited: clear manual flags on totals so they recalculate
+      tbody.querySelectorAll('.row-total').forEach(function(c){delete c.dataset.manual;});
+      var subId=totalId==='total-recurrente'?'subtotal-recurrente':'subtotal-unico';
+      var subCell=document.getElementById(subId);
+      var totCell=document.getElementById(totalId);
+      if(subCell) delete subCell.dataset.manual;
+      if(totCell) delete totCell.dataset.manual;
+      recalcTable(tbody.id, totalId);
+      if(tbody.id==='tbody-recurrente' && typeof syncFeeFromTable==='function'){ syncFeeFromTable(); }
+    } else if(cell.classList.contains('row-total')){
+      // manual row total edit: flag it and recalc grand totals only
+      cell.dataset.manual='1';
       recalcTable(tbody.id, totalId);
       if(tbody.id==='tbody-recurrente' && typeof syncFeeFromTable==='function'){ syncFeeFromTable(); }
     }
@@ -1171,6 +1188,14 @@ document.addEventListener('DOMContentLoaded',function(){
   var tu=document.getElementById('tbody-unico');
   if(tr) bindPricingEvents(tr,'total-recurrente');
   if(tu) bindPricingEvents(tu,'total-unico');
+  // Mark grand total/subtotal cells as manual when directly edited
+  ['subtotal-recurrente','total-recurrente','subtotal-unico','total-unico'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.addEventListener('input',function(){
+      el.dataset.manual='1';
+      if(typeof syncFeeFromTable==='function'&&(id==='subtotal-recurrente'||id==='total-recurrente')) syncFeeFromTable();
+    });
+  });
 });
 
 // ── PRICING ROWS: toggle visibility / delete / add ───────────────────
@@ -1195,7 +1220,7 @@ function addPriceRow(tbodyId, type){
   newRow.innerHTML='<td contenteditable="true" spellcheck="false">Nuevo servicio</td>'
     +'<td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>'
     +'<td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>'
-    +'<td style="text-align:right;" class="row-total">$0 MXN</td>'
+    +'<td style="text-align:right;" class="row-total" contenteditable="true" spellcheck="false">$0 MXN</td>'
     +'<td class="no-print" style="text-align:center;white-space:nowrap;">'
     +' '
     +'<button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)">✕</button></td>';
@@ -1992,7 +2017,7 @@ function wizGenerate(){
           +'<td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">'+qtyVal+'</td>'
           +'<td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">'+unitVal+'</td>'
           +'<td class="dcto-pct-cell" contenteditable="true" spellcheck="false" style="display:none;text-align:right;" inputmode="numeric"></td>'
-          +'<td style="text-align:right;" class="row-total">$0 MXN</td>'
+          +'<td style="text-align:right;" class="row-total" contenteditable="true" spellcheck="false">$0 MXN</td>'
           +'<td class="dcto-total-cell" style="display:none;"></td>'
           +'<td class="no-print" style="text-align:center;white-space:nowrap;"><button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button></td>';
         tb.insertBefore(tr,insAnchor);
@@ -2119,7 +2144,7 @@ function addDeviceRow(tbodyId,devKey,label,qty,unit,rowType){
     +'<td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">'+qty+'</td>'
     +'<td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">'+unit+'</td>'
     +'<td class="dcto-pct-cell" contenteditable="true" spellcheck="false" style="display:'+_dd+';text-align:right;" inputmode="numeric"></td>'
-    +'<td style="text-align:right;" class="row-total">$0 MXN</td>'
+    +'<td style="text-align:right;" class="row-total" contenteditable="true" spellcheck="false">$0 MXN</td>'
     +'<td class="dcto-total-cell" style="display:'+_dd+';"></td>'
     +'<td class="no-print" style="text-align:center;white-space:nowrap;"><button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button></td>';
   tb.insertBefore(tr,totalRow||null);
@@ -2199,7 +2224,7 @@ function addUnicoItem(label){
     +'<td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>'
     +'<td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>'
     +'<td class="dcto-pct-cell" contenteditable="true" spellcheck="false" style="display:none;text-align:right;" inputmode="numeric"></td>'
-    +'<td style="text-align:right;" class="row-total">$0 MXN</td>'
+    +'<td style="text-align:right;" class="row-total" contenteditable="true" spellcheck="false">$0 MXN</td>'
     +'<td class="dcto-total-cell" style="display:none;"></td>'
     +'<td class="no-print" style="text-align:center;white-space:nowrap;"><button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button></td>';
   tb.insertBefore(tr,totalRow||null);
@@ -2214,7 +2239,7 @@ function addRecurrenteItem(label){
     +'<td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>'
     +'<td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>'
     +'<td class="dcto-pct-cell" contenteditable="true" spellcheck="false" style="display:none;text-align:right;" inputmode="numeric"></td>'
-    +'<td style="text-align:right;" class="row-total">$0 MXN</td>'
+    +'<td style="text-align:right;" class="row-total" contenteditable="true" spellcheck="false">$0 MXN</td>'
     +'<td class="dcto-total-cell" style="display:none;"></td>'
     +'<td class="no-print" style="text-align:center;white-space:nowrap;"><button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button></td>';
   tb.insertBefore(tr,totalRow);
