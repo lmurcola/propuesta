@@ -279,6 +279,8 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 .fas-table th{padding:7px 6px;}
 .fas-precio-n,.fas-pct,.fas-acum,.fas-impl,.fas-addon-n{display:inline-block;min-width:18px;}
 .fas-table.addon-hidden .fas-addon-col{display:none;}
+.fas-table.fas-dcto-hidden .fas-dcto-col{display:none;}
+.fas-table.fas-equipo-hidden .fas-equipo-col{display:none;}
 .fas-table{font-size:12px;}
 .fas-table th{font-size:10px;line-height:1.3;}
 .fas-table td{vertical-align:top;padding:9px 8px;}
@@ -647,21 +649,23 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
     <h4>Cronograma de implementación por etapas</h4>
     <p style="font-size:12px;color:#4a6080;line-height:1.6;margin-bottom:1rem;">El proyecto se implementa y factura conforme al cronograma acordado. La primera factura se genera desde el kick off; las posteriores a mes vencido, los primeros 5 días del mes, con crédito a 30 días.</p>
         <div style="overflow-x:auto;">
-    <table class="price-table fas-table" id="tbl-faseado">
+    <table class="price-table fas-table fas-dcto-hidden fas-equipo-hidden" id="tbl-faseado">
       <thead><tr>
-        <th style="width:11%;"><span contenteditable="true" spellcheck="false">Mes</span></th>
-        <th style="text-align:center;width:19%;"><span contenteditable="true" spellcheck="false">Usuarios</span><br><span style="font-weight:400;text-transform:none;letter-spacing:0;">mes / acum.</span></th>
-        <th style="text-align:center;width:11%;"><span contenteditable="true" spellcheck="false">Sedes</span></th>
-        <th style="text-align:right;width:13%;"><span contenteditable="true" spellcheck="false">Inv. x usuario</span></th>
-        <th style="text-align:center;width:13%;"><span contenteditable="true" spellcheck="false">Descuento</span></th>
-        <th class="fas-addon-col" style="text-align:center;width:15%;"><span id="fas-addon-name" contenteditable="true" spellcheck="false" style="display:inline-block;min-width:60px;border-bottom:1px dashed rgba(255,255,255,0.4);">Módulo adicional</span><br><span style="font-weight:400;text-transform:none;letter-spacing:0;">$/usuario</span> <button class="no-print" onclick="quitarAddonCol()" title="Quitar columna" style="border:none;background:rgba(192,57,43,0.12);color:#c0392b;border-radius:3px;font-size:10px;font-weight:700;padding:1px 5px;cursor:pointer;vertical-align:middle;">✕</button></th>
-        <th style="text-align:right;width:17%;"><span contenteditable="true" spellcheck="false">Total mensual</span></th>
+        <th style="width:9%;"><span contenteditable="true" spellcheck="false">Mes</span></th>
+        <th style="text-align:center;width:15%;"><span contenteditable="true" spellcheck="false">Usuarios</span><br><span style="font-weight:400;text-transform:none;letter-spacing:0;">mes / acum.</span></th>
+        <th style="text-align:center;width:9%;"><span id="fas-sedes-label" contenteditable="true" spellcheck="false">Sedes</span></th>
+        <th style="text-align:right;width:10%;"><span contenteditable="true" spellcheck="false">Inv. x<br>usuario</span></th>
+        <th class="fas-equipo-col" style="text-align:right;width:10%;display:none;"><span contenteditable="true" spellcheck="false">Inv. x<br>equipo</span></th>
+        <th class="fas-dcto-col" style="text-align:center;width:11%;display:none;"><span contenteditable="true" spellcheck="false">Descuento</span></th>
+        <th class="fas-addon-col" style="text-align:center;width:13%;"><span id="fas-addon-name" contenteditable="true" spellcheck="false" style="display:inline-block;min-width:60px;border-bottom:1px dashed rgba(255,255,255,0.4);">Módulo adicional</span><br><span style="font-weight:400;text-transform:none;letter-spacing:0;">$/usuario</span> <button class="no-print" onclick="quitarAddonCol()" title="Quitar columna" style="border:none;background:rgba(192,57,43,0.12);color:#c0392b;border-radius:3px;font-size:10px;font-weight:700;padding:1px 5px;cursor:pointer;vertical-align:middle;">✕</button></th>
+        <th style="text-align:right;width:13%;"><span contenteditable="true" spellcheck="false">Total mensual</span></th>
         <th class="no-print" style="width:4%;"></th>
       </tr></thead>
       <tbody id="tbody-faseado"></tbody>
     </table>
     </div>
     <button class="price-add-btn no-print" onclick="addFasedRow()">+ Agregar etapa</button> <button class="no-print" id="btn-readd-addon" onclick="agregarAddonCol()" style="display:none;font-size:11px;font-weight:700;color:#1a2332;background:#fabb0c;border:none;border-radius:5px;padding:6px 14px;cursor:pointer;margin-left:8px;">&#8617; Recuperar columna Módulo adicional</button>
+    <button class="no-print" id="btn-fas-dcto" onclick="toggleFasDcto()" style="font-size:11px;font-weight:700;color:#1a2332;background:#fabb0c;border:none;border-radius:5px;padding:6px 14px;cursor:pointer;margin-left:8px;">+ Agregar descuento</button>
     <div class="price-fn no-print">Edita los campos en blanco. El precio con descuento y los totales (con y sin add-on) se calculan automáticamente. Los montos no incluyen IVA. Los descuentos por volumen se validan con gerencia comercial.</div>
   </div>
   </div>
@@ -1988,6 +1992,7 @@ function wizGenerate(){
     hideBlock('block-recurrente');
     showBlock('block-faseado');
     fasInitRows();
+    toggleFasEquipo(WZ.marcaje.indexOf('reloj')>=0&&WZ.modalidad&&WZ.modalidad!=='tiene');
     hideBlock('impl-steps'); showBlock('impl-faseado');
   } else if(WZ.modalidad==='venta' && WZ.mods.filter(function(m){return m!=='comedor'&&m!=='acceso';}).length===0){
     hideBlock('block-recurrente'); // compra sin SaaS: sin costos recurrentes
@@ -2263,7 +2268,8 @@ function fasRowHTML(mes, sedes){
     +'<td style="text-align:center;white-space:nowrap;"><span class="fas-impl" contenteditable="true" spellcheck="false">0</span><span style="color:#b8c4d0;">&nbsp;/&nbsp;</span><span class="fas-acum" style="color:#1a2332;font-weight:600;">0</span></td>'
     +'<td style="text-align:center;" class="fas-sedes" contenteditable="true" spellcheck="false">'+sedes+'</td>'
     +'<td style="text-align:right;">$<span class="fas-precio-n" contenteditable="true" spellcheck="false">0</span></td>'
-    +'<td style="text-align:center;"><span class="fas-pct" contenteditable="true" spellcheck="false">0</span>%<span class="fas-disc-sub"></span></td>'
+    +'<td class="fas-equipo-col" style="text-align:right;display:none;">$<span class="fas-precio-eq" contenteditable="true" spellcheck="false">0</span></td>'
+    +'<td class="fas-dcto-col" style="text-align:center;display:none;"><span class="fas-pct" contenteditable="true" spellcheck="false">0</span>%<span class="fas-disc-sub"></span></td>'
     +'<td class="fas-addon-col" style="text-align:center;">+$<span class="fas-addon-n" contenteditable="true" spellcheck="false">0</span></td>'
     +'<td style="text-align:right;"><span class="fas-total-main">$0</span><span class="fas-total-addon"></span></td>'
     +'<td class="no-print" style="text-align:center;"><button class="row-ctrl btn-del-row" onclick="deletePriceRow(this);recalcFaseado();" title="Eliminar">✕</button></td>';
@@ -2289,6 +2295,27 @@ function fasInitRows(){
   recalcFaseado();
 }
 
+function toggleFasDcto(){
+  var t=document.getElementById('tbl-faseado');
+  if(!t) return;
+  var show=t.classList.toggle('fas-dcto-hidden');
+  // toggle all fas-dcto-col cells
+  t.querySelectorAll('.fas-dcto-col').forEach(function(c){c.style.display=show?'none':'';});
+  var btn=document.getElementById('btn-fas-dcto');
+  if(btn) btn.textContent=show?'+ Agregar descuento':'✕ Quitar descuento';
+  recalcFaseado();
+}
+function toggleFasEquipo(hasEquipo){
+  var t=document.getElementById('tbl-faseado');
+  if(!t) return;
+  t.querySelectorAll('.fas-equipo-col').forEach(function(c){c.style.display=hasEquipo?'':'none';});
+  if(hasEquipo) t.classList.remove('fas-equipo-hidden');
+  else t.classList.add('fas-equipo-hidden');
+  // update sedes/equipos label
+  var lbl=document.getElementById('fas-sedes-label');
+  if(lbl) lbl.textContent=hasEquipo?'Equipos':'Sedes';
+  recalcFaseado();
+}
 function quitarAddonCol(){
   var t=document.getElementById('tbl-faseado');
   if(t) t.classList.add('addon-hidden');
@@ -2307,6 +2334,8 @@ function recalcFaseado(){
   var rows=document.querySelectorAll('#tbody-faseado tr.price-row');
   var t=document.getElementById('tbl-faseado');
   var addonHidden=t && t.classList.contains('addon-hidden');
+  var dctoHidden=t && t.classList.contains('fas-dcto-hidden');
+  var equipoHidden=t && t.classList.contains('fas-equipo-hidden');
   var gEl=document.getElementById('fas-addon-name');
   var addonName=gEl?(gEl.innerText||'').trim():'';
   var running=0;
@@ -2317,16 +2346,21 @@ function recalcFaseado(){
     acumEl.textContent=running.toLocaleString('es-MX');
     var acum=running;
     var precio=parseNum(r.querySelector('.fas-precio-n').innerText);
-    var pct=parseNum(r.querySelector('.fas-pct').innerText);
+    var pctEl=r.querySelector('.fas-pct');
+    var pct=(!dctoHidden&&pctEl)?parseNum(pctEl.innerText):0;
     var addon=parseNum(r.querySelector('.fas-addon-n').innerText);
+    var precioEqEl=r.querySelector('.fas-precio-eq');
+    var precioEq=(!equipoHidden&&precioEqEl)?parseNum(precioEqEl.innerText):0;
+    var sedesEl=r.querySelector('.fas-sedes');
+    var equipos=precioEq>0?parseNum(sedesEl?sedesEl.innerText:'0'):0;
     if(pct>100)pct=100; if(pct<0)pct=0;
     var neto=precio*(1-pct/100);
-    // discount sub-line: "-60% · $7.20"
+    // discount sub-line
     var sub=r.querySelector('.fas-disc-sub');
-    sub.textContent = pct>0 ? ('$'+neto.toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2})) : '';
-    // totals (IVA included = *1.16)
-    var totBase=acum*neto;
-    var totAddon=acum*(neto+addon);
+    if(sub) sub.textContent = pct>0 ? ('$'+neto.toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2})) : '';
+    // totals: (usuarios × inv.usuario) + (equipos × inv.equipo)
+    var totBase=acum*neto + equipos*precioEq;
+    var totAddon=acum*(neto+addon) + equipos*precioEq;
     r.querySelector('.fas-total-main').textContent='$'+totBase.toLocaleString('es-MX',{maximumFractionDigits:0})+' MXN';
     var addonEl=r.querySelector('.fas-total-addon');
     if(addon>0 && addonName && !addonHidden){
