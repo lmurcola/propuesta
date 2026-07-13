@@ -1860,6 +1860,27 @@ function rangoInitRows(){
   tb.appendChild(tt);
   recalcRango();
 }
+function addDeviceRowsToRango(){
+  var tb=document.getElementById('tbody-rango'); if(!tb)return;
+  var mod=WZ.modalidad;
+  if(!mod||mod==='tiene'||mod==='venta')return;   // sólo renta o ambos
+  var keys=WZ.devices||[];
+  if(keys.length===0)return;
+  var qty=WZ.equipQty||1;
+  var anchorRow=tb.querySelector('tr.subtotal');
+  keys.forEach(function(k){
+    var p=DEVICE_PRICES[k];
+    if(!p||p.renta===null||p.renta===undefined)return;
+    var name=getDeviceName(k);
+    var total=(p.renta||0)*qty;
+    var tr=document.createElement('tr');
+    tr.className='price-row';
+    tr.setAttribute('data-device',k);
+    tr.innerHTML=rangoRowHTML('Renta — '+name, qty+(qty===1?' equipo':' equipos'), formatMXN(total));
+    tb.insertBefore(tr,anchorRow||null);
+  });
+  recalcRango();
+}
 function recalcRango(){
   var tb=document.getElementById('tbody-rango'); if(!tb)return;
   var sum=0;
@@ -2469,22 +2490,29 @@ function wizGenerate(){
   // (cubre solo-equipos en venta, torniquetes sin renta, SaaS + equipo en venta, etc.)
   var recH4=document.querySelector('#block-recurrente h4');
   if(altBilling){
-    // El software va dentro del paquete / rango fijo. Los recurrentes sólo sirven
-    // para la RENTA DE EQUIPOS, que es un cargo mensual independiente.
+    // El software ya está dentro del paquete / rango fijo: las filas SaaS de
+    // recurrentes sobran (se cobrarían dos veces).
     var tbRec=document.getElementById('tbody-recurrente');
-    if(tbRec){
-      // Quita las filas de módulos SaaS: su costo ya está incluido en el plan
-      tbRec.querySelectorAll('tr.price-row:not([data-device])').forEach(function(r){r.remove();});
-    }
-    var devRows=document.querySelectorAll('#tbody-recurrente tr.price-row[data-device]').length;
-    if(devRows>0){
-      showBlock('block-recurrente');
-      if(recH4) recH4.textContent='Renta de equipos (mensual)';
-      if(typeof recalcTable==='function')recalcTable('tbody-recurrente','total-recurrente');
-    } else {
+    if(tbRec) tbRec.querySelectorAll('tr.price-row:not([data-device])').forEach(function(r){r.remove();});
+
+    if(WZ.billing==='rango'){
+      // RANGO FIJO: la renta de equipos entra en la MISMA tabla → un solo total.
       hideBlock('block-recurrente');
+      hideBlock('block-resumen');
+      addDeviceRowsToRango();
+    } else {
+      // PAQUETE: el plan es una tarjeta, no una tabla. La renta va en su propio
+      // bloque y el resumen consolida ambos.
+      var devRows=document.querySelectorAll('#tbody-recurrente tr.price-row[data-device]').length;
+      if(devRows>0){
+        showBlock('block-recurrente');
+        if(recH4) recH4.textContent='Renta de equipos (mensual)';
+        if(typeof recalcTable==='function')recalcTable('tbody-recurrente','total-recurrente');
+      } else {
+        hideBlock('block-recurrente');
+      }
+      renderResumen();
     }
-    renderResumen();
   }
   else if(!WZ.phased){
     hideBlock('block-resumen');
