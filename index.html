@@ -280,6 +280,29 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 .fas-precio-n,.fas-pct,.fas-acum,.fas-impl,.fas-addon-n{display:inline-block;min-width:18px;}
 .fas-table.addon-hidden .fas-addon-col{display:none;}
 .fas-table.fas-dcto-hidden .fas-dcto-col{display:none;}
+/* ── Paquete card ── */
+.paq-card{border:2px solid #2fabe4;border-radius:12px;padding:1.25rem 1.4rem;background:#fff;}
+.paq-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;border-bottom:1px solid #e3eef7;padding-bottom:0.9rem;}
+.paq-name{font-size:22px;font-weight:800;color:#1a2332;letter-spacing:1px;}
+.paq-tag{font-size:12px;color:#2fabe4;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+.paq-price-wrap{text-align:right;white-space:nowrap;}
+.paq-price{font-size:26px;font-weight:800;color:#1a2332;line-height:1;}
+.paq-price-lbl{font-size:10px;color:#7b8ba3;text-transform:uppercase;letter-spacing:.5px;margin-top:3px;}
+.paq-sub{font-size:13px;color:#4a6080;margin:0.8rem 0 0.9rem;}
+.paq-feats{margin:0;padding:0;list-style:none;}
+.paq-feats li{position:relative;padding-left:22px;font-size:12.5px;color:#4a6080;line-height:1.9;}
+.paq-feats li:before{content:'✓';position:absolute;left:0;top:0;color:#2fabe4;font-weight:800;}
+.paq-totals{margin-top:1rem;padding-top:0.9rem;border-top:1px solid #e3eef7;}
+.paq-total-row{display:flex;justify-content:space-between;font-size:13px;color:#4a6080;padding:5px 0;}
+.paq-total-row span:last-child{font-weight:700;color:#1a2332;}
+.paq-total-iva{border-top:1px solid #e3eef7;margin-top:5px;padding-top:9px;font-weight:700;}
+.paq-total-iva span:last-child{color:#2fabe4;font-size:15px;}
+/* ── Tramo actual destacado ── */
+#tbody-tramos tr.tramo-actual td{background:#eaf7fd;font-weight:700;color:#1a2332;}
+#tbody-tramos tr.tramo-actual td:first-child:before{content:'▸ ';color:#2fabe4;font-weight:800;}
+/* ── Faseado: columnas custom ── */
+.fas-table th .col-del{border:none;background:rgba(192,57,43,.12);color:#c0392b;border-radius:3px;font-size:10px;font-weight:700;padding:1px 5px;cursor:pointer;margin-left:4px;}
+@media print{.fas-table th .col-del{display:none !important;}}
 .fas-table.fas-equipo-hidden .fas-equipo-col{display:none;}
 .fas-table{font-size:12px;}
 .fas-table th{font-size:10px;line-height:1.3;}
@@ -432,6 +455,28 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
         <div class="wiz-tog" id="wt-faseado">
           <div class="wt-txt"><label>Proyecto faseado</label><span>Reemplaza "Costos recurrentes" por un cronograma de implementación por etapas</span></div>
           <button class="wt-switch" id="sw-phased" onclick="wizToggle('phased')"></button>
+        </div>
+
+        <div id="wt-billing" style="background:#f0f9fe;border:1px solid #b8dff5;border-radius:8px;padding:13px 15px;margin:10px 0;">
+          <label style="color:#1a6989;letter-spacing:1px;font-size:11px;font-weight:700;text-transform:uppercase;">Modalidad de cobro</label>
+          <div class="wiz-chips" id="wc-billing" style="margin-top:8px;">
+            <button class="wiz-chip on" data-bill="estandar">Estándar (por usuario)</button>
+            <button class="wiz-chip" data-bill="rango">Costo fijo por rango</button>
+            <button class="wiz-chip" data-bill="paquete">Paquete</button>
+          </div>
+          <div id="wc-paquete-box" style="display:none;margin-top:10px;padding-top:10px;border-top:1px dashed #b8dff5;">
+            <label style="color:#1a6989;letter-spacing:1px;font-size:11px;font-weight:700;text-transform:uppercase;">¿Cuál paquete?</label>
+            <div class="wiz-chips" id="wc-paquete" style="margin-top:8px;">
+              <button class="wiz-chip yel" data-paq="starter">STARTER</button>
+              <button class="wiz-chip yel" data-paq="pro">PRO</button>
+              <button class="wiz-chip yel" data-paq="enterprise">ENTERPRISE</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="wiz-tog" id="wt-tramos">
+          <div class="wt-txt"><label>Rangos de costo por usuario</label><span>Agrega una tabla escalonada que muestra cómo baja el precio al sumar usuarios</span></div>
+          <button class="wt-switch" id="sw-tramos" onclick="wizToggle('tramos')"></button>
         </div>
       </div>
 
@@ -655,8 +700,8 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
       <thead><tr>
         <th style="width:9%;"><span contenteditable="true" spellcheck="false">Mes</span></th>
         <th style="text-align:center;width:15%;"><span contenteditable="true" spellcheck="false">Usuarios</span><br><span style="font-weight:400;text-transform:none;letter-spacing:0;">mes / acum.</span></th>
-        <th style="text-align:center;width:9%;"><span id="fas-sedes-label" contenteditable="true" spellcheck="false">Sedes</span></th>
-        <th style="text-align:right;width:10%;"><span contenteditable="true" spellcheck="false">Inv. x<br>usuario</span></th>
+        <th style="text-align:center;width:9%;" data-fcol="sedes"><span id="fas-sedes-label" contenteditable="true" spellcheck="false">Sedes</span><button class="no-print col-del" onclick="delFasCol('sedes')" title="Quitar columna">✕</button></th>
+        <th style="text-align:right;width:10%;" data-fcol="precio"><span contenteditable="true" spellcheck="false">Inv. x<br>usuario</span></th>
         <th class="fas-equipo-col" style="text-align:right;width:10%;display:none;"><span contenteditable="true" spellcheck="false">Inv. x<br>equipo</span></th>
         <th class="fas-dcto-col" style="text-align:center;width:11%;display:none;"><span contenteditable="true" spellcheck="false">Descuento</span></th>
         <th class="fas-addon-col" style="text-align:center;width:13%;"><span id="fas-addon-name" contenteditable="true" spellcheck="false" style="display:inline-block;min-width:60px;border-bottom:1px dashed rgba(255,255,255,0.4);">Módulo adicional</span><br><span style="font-weight:400;text-transform:none;letter-spacing:0;">$/usuario</span> <button class="no-print" onclick="quitarAddonCol()" title="Quitar columna" style="border:none;background:rgba(192,57,43,0.12);color:#c0392b;border-radius:3px;font-size:10px;font-weight:700;padding:1px 5px;cursor:pointer;vertical-align:middle;">✕</button></th>
@@ -668,6 +713,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
     </div>
     <button class="price-add-btn no-print" onclick="addFasedRow()">+ Agregar etapa</button> <button class="no-print" id="btn-readd-addon" onclick="agregarAddonCol()" style="display:none;font-size:11px;font-weight:700;color:#1a2332;background:#fabb0c;border:none;border-radius:5px;padding:6px 14px;cursor:pointer;margin-left:8px;">&#8617; Recuperar columna Módulo adicional</button>
     <button class="no-print" id="btn-fas-dcto" onclick="toggleFasDcto()" style="font-size:11px;font-weight:700;color:#1a2332;background:#fabb0c;border:none;border-radius:5px;padding:6px 14px;cursor:pointer;margin-left:8px;">+ Agregar descuento</button>
+    <button class="no-print" onclick="addFasCol()" style="font-size:11px;font-weight:700;color:#2fabe4;background:#f0f9fe;border:1px solid #b8dff5;border-radius:5px;padding:6px 14px;cursor:pointer;margin-left:8px;">+ Agregar columna</button>
     <div class="price-fn no-print">Edita los campos en blanco. El precio con descuento y los totales (con y sin add-on) se calculan automáticamente. Los montos no incluyen IVA. Los descuentos por volumen se validan con gerencia comercial.</div>
   </div>
   </div>
@@ -723,6 +769,65 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
         </tbody>
       </table>
       <button class="price-add-btn no-print" onclick="addPriceRow('tbody-unico','uni')">+ Agregar ítem</button> <button class="btn-pref no-print" onclick="applyDescuento(this,'tbody-unico')">+ Agregar descuento</button>
+    </div>
+  </div>
+
+  <!-- COSTO FIJO POR RANGO (modalidad: rango) -->
+  <div class="price-block wiz-hide" id="block-rango">
+    <h4>Costos recurrentes (mensual)</h4>
+    <div class="price-sub"><span class="bb">MXN + IVA</span></div>
+    <table class="price-table" id="tbl-rango">
+      <thead><tr>
+        <th contenteditable="true" spellcheck="false">Servicio</th>
+        <th style="text-align:center;" contenteditable="true" spellcheck="false">Rango</th>
+        <th style="text-align:right;" contenteditable="true" spellcheck="false">Valor fijo mensual</th>
+        <th class="no-print" style="width:60px;"></th>
+      </tr></thead>
+      <tbody id="tbody-rango"></tbody>
+    </table>
+    <button class="price-add-btn no-print" onclick="addRangoRow()">+ Agregar ítem</button>
+    <div class="price-fn no-print">Edita el servicio, el rango de usuarios y el valor fijo mensual. Los montos no incluyen IVA.</div>
+  </div>
+
+  <!-- RANGOS DE COSTO POR USUARIO (sección opcional, complementa recurrentes) -->
+  <div class="price-block wiz-hide" id="block-tramos">
+    <h4>Rangos de costo por usuario</h4>
+    <div class="price-sub"><span class="bb">MXN + IVA</span></div>
+    <table class="price-table" id="tbl-tramos">
+      <thead><tr>
+        <th contenteditable="true" spellcheck="false">Rango de usuarios</th>
+        <th style="text-align:right;" contenteditable="true" spellcheck="false">Valor por usuario</th>
+        <th class="no-print" style="width:60px;"></th>
+      </tr></thead>
+      <tbody id="tbody-tramos"></tbody>
+    </table>
+    <button class="price-add-btn no-print" onclick="addTramoRow()">+ Agregar rango</button>
+    <div class="price-fn">El precio por usuario disminuye a medida que se incorporan más colaboradores. El tramo destacado corresponde a la dotación actual.</div>
+  </div>
+
+  <!-- PAQUETE (modalidad: paquete) -->
+  <div class="price-block wiz-hide" id="block-paquete">
+    <h4>Plan propuesto</h4>
+    <div class="price-sub"><span class="bb">MXN + IVA</span></div>
+    <div class="paq-card" id="paq-card">
+      <div class="paq-head">
+        <div>
+          <div class="paq-name" id="paq-name" contenteditable="true" spellcheck="false">STARTER</div>
+          <div class="paq-tag" id="paq-tag" contenteditable="true" spellcheck="false">Control y Cumplimiento</div>
+        </div>
+        <div class="paq-price-wrap">
+          <div class="paq-price">$<span id="paq-price" contenteditable="true" spellcheck="false" inputmode="numeric">0</span></div>
+          <div class="paq-price-lbl">MXN / usuario / mes</div>
+        </div>
+      </div>
+      <div class="paq-sub" id="paq-sub" contenteditable="true" spellcheck="false">Ordena lo básico y deja de apagar incendios</div>
+      <ul class="paq-feats" id="paq-feats"></ul>
+      <button class="no-print" onclick="addPaqFeat()" style="margin-top:8px;font-size:11px;color:#2fabe4;background:none;border:none;cursor:pointer;padding:0;">+ Agregar característica</button>
+      <div class="paq-totals">
+        <div class="paq-total-row"><span>Colaboradores</span><span id="paq-users" contenteditable="true" spellcheck="false" inputmode="numeric">0</span></div>
+        <div class="paq-total-row"><span>Total mensual</span><span id="paq-total">$0 MXN</span></div>
+        <div class="paq-total-row paq-total-iva"><span>Total mensual + IVA</span><span id="paq-total-iva">$0 MXN</span></div>
+      </div>
     </div>
   </div>
 
@@ -1217,6 +1322,19 @@ document.addEventListener('DOMContentLoaded',function(){
       if(typeof syncFeeFromTable==='function'&&(id==='subtotal-recurrente'||id==='total-recurrente')) syncFeeFromTable();
     });
   });
+  // ── Rango fijo: recalcular al editar valores ──
+  var tbr=document.getElementById('tbody-rango');
+  if(tbr) tbr.addEventListener('input',function(e){
+    if(e.target.classList.contains('rango-val')) recalcRango();
+    if(e.target.id==='subtotal-rango'||e.target.id==='total-rango') e.target.dataset.manual='1';
+  });
+  // ── Paquete: recalcular al editar precio o usuarios ──
+  var pc=document.getElementById('paq-card');
+  if(pc) pc.addEventListener('input',function(e){
+    if(e.target.id==='paq-price'||e.target.id==='paq-users') recalcPaquete();
+    if(e.target.id==='paq-total'||e.target.id==='paq-total-iva') e.target.dataset.manual='1';
+  });
+  syncBillingChips(); updateBillingUI();
 });
 
 // ── PRICING ROWS: toggle visibility / delete / add ───────────────────
@@ -1520,7 +1638,7 @@ function updateSegHint(){
 }
 
 // ── Wizard state ──
-var WZ = {ind:null,sub:null,size:null,colab:0,mods:[],marcaje:[],devices:[],devicesTouched:false,equipQty:1,soloEquipo:false,modalidad:null,reform:false,phased:false,step:1};
+var WZ = {ind:null,sub:null,size:null,colab:0,mods:[],marcaje:[],devices:[],devicesTouched:false,equipQty:1,soloEquipo:false,modalidad:null,reform:false,phased:false,billing:'estandar',paquete:'starter',tramos:false,step:1};
 
 document.querySelectorAll('#wc-ind .wiz-chip').forEach(function(b){b.onclick=function(){
   document.querySelectorAll('#wc-ind .wiz-chip').forEach(function(x){x.classList.remove('on');});
@@ -1652,9 +1770,166 @@ document.querySelectorAll('#wc-modalidad .wiz-chip').forEach(function(b){b.oncli
   updateWizDeviceSelector();
 };});
 
+// ══════════════════════════════════════════════
+// MODALIDADES DE COBRO (billing)
+// ══════════════════════════════════════════════
+var PAQUETES={
+  starter:{name:'STARTER',tag:'Control y Cumplimiento',sub:'Ordena lo básico y deja de apagar incendios',
+    feats:['Asistencia y métodos de marcaje','Reportería básica','Reportes programados','Planificador inteligente','Cambio de turno básico','Acceso a API','Soporte Lunes a Viernes · 8:30 a 18:30']},
+  pro:{name:'PRO',tag:'Operación Retail Inteligente',sub:'Anticípate a los problemas antes de que impacten tus tiendas',
+    feats:['Todo lo del STARTER, más:','2 reportes a la medida','Alertas por email','Planificador inteligente con notificaciones','Cambio de turnos avanzado','Integración estándar','Soporte extendido Lunes a Domingo']},
+  enterprise:{name:'ENTERPRISE',tag:'Retail a Escala',sub:'Planifica, ajusta y reacciona desde un solo tablero',
+    feats:['Todo lo del PRO, más:','Reportería avanzada','Alertas por WhatsApp','Optimizador de turnos','Banca de reemplazo','Integración personalizada','Soporte 24/7']}
+};
+
+// ── Wizard chip handlers ──
+function syncBillingChips(){
+  document.querySelectorAll('#wc-billing .wiz-chip').forEach(function(x){
+    x.classList.toggle('on', x.dataset.bill===WZ.billing);
+  });
+  document.querySelectorAll('#wc-paquete .wiz-chip').forEach(function(x){
+    x.classList.toggle('on', x.dataset.paq===WZ.paquete);
+  });
+}
+function updateBillingUI(){
+  var pb=document.getElementById('wc-paquete-box');
+  if(pb) pb.style.display=(WZ.billing==='paquete')?'block':'none';
+  // "Rangos de costo por usuario" sólo aplica en modalidad estándar sin faseado
+  var wt=document.getElementById('wt-tramos');
+  var showTramos=(WZ.billing==='estandar' && !WZ.phased && !WZ.soloEquipo);
+  if(wt) wt.style.display=showTramos?'':'none';
+  if(!showTramos && WZ.tramos){
+    WZ.tramos=false;
+    var sw=document.getElementById('sw-tramos'); if(sw)sw.classList.remove('on');
+  }
+  // Faseado y modalidades alternativas son mutuamente excluyentes
+  var wtf=document.getElementById('wt-faseado');
+  if(wtf && !WZ.soloEquipo) wtf.style.display=(WZ.billing==='estandar')?'':'none';
+}
+document.querySelectorAll('#wc-billing .wiz-chip').forEach(function(b){b.onclick=function(){
+  WZ.billing=b.dataset.bill;
+  if(WZ.billing!=='estandar'){
+    WZ.phased=false;
+    var sp=document.getElementById('sw-phased'); if(sp)sp.classList.remove('on');
+  }
+  syncBillingChips(); updateBillingUI();
+};});
+document.querySelectorAll('#wc-paquete .wiz-chip').forEach(function(b){b.onclick=function(){
+  WZ.paquete=b.dataset.paq; syncBillingChips();
+};});
+
+// ── 4a. Costo fijo por rango ──
+function rangoRowHTML(serv,rango,valor){
+  return '<td contenteditable="true" spellcheck="false">'+serv+'</td>'
+    +'<td style="text-align:center;" contenteditable="true" spellcheck="false">'+rango+'</td>'
+    +'<td style="text-align:right;" class="rango-val" contenteditable="true" spellcheck="false">'+valor+'</td>'
+    +'<td class="no-print" style="text-align:center;"><button class="row-ctrl btn-del-row" onclick="deletePriceRow(this);recalcRango();" title="Eliminar">✕</button></td>';
+}
+function addRangoRow(){
+  var tb=document.getElementById('tbody-rango'); if(!tb)return;
+  var tr=document.createElement('tr'); tr.className='price-row';
+  tr.innerHTML=rangoRowHTML('','','$0 MXN');
+  tb.appendChild(tr); recalcRango();
+}
+function rangoInitRows(){
+  var tb=document.getElementById('tbody-rango'); if(!tb)return;
+  tb.querySelectorAll('tr').forEach(function(r){r.remove();});
+  // Una fila de ejemplo editable — el AE define el rango y el valor negociado
+  var tr=document.createElement('tr'); tr.className='price-row';
+  var servLbl=(WZ.mods.length>0)?'Plataforma GeoVictoria (todos los módulos)':'Plataforma GeoVictoria';
+  tr.innerHTML=rangoRowHTML(servLbl,'1 - 100 usuarios','$0 MXN');
+  tb.appendChild(tr);
+  // Filas de totales
+  var st=document.createElement('tr'); st.className='subtotal';
+  st.innerHTML='<td colspan="2">Pago total mensual</td><td style="text-align:right;" id="subtotal-rango" contenteditable="true" spellcheck="false">$0 MXN</td><td class="no-print"></td>';
+  tb.appendChild(st);
+  var tt=document.createElement('tr'); tt.className='total';
+  tt.innerHTML='<td colspan="2">Pago total mensual + IVA</td><td style="color:#2fabe4;text-align:right;" id="total-rango" contenteditable="true" spellcheck="false">$0 MXN</td><td class="no-print"></td>';
+  tb.appendChild(tt);
+  recalcRango();
+}
+function recalcRango(){
+  var tb=document.getElementById('tbody-rango'); if(!tb)return;
+  var sum=0;
+  tb.querySelectorAll('tr.price-row .rango-val').forEach(function(c){ sum+=parseNum(c.innerText); });
+  var st=document.getElementById('subtotal-rango');
+  var tt=document.getElementById('total-rango');
+  if(st&&!st.dataset.manual) st.innerText=formatMXN(sum);
+  if(tt&&!tt.dataset.manual) tt.innerText=formatMXN(sum*1.16);
+}
+
+// ── 4b. Rangos de costo por usuario (tramos escalonados) ──
+function tramoRowHTML(rango,valor,actual){
+  return '<td contenteditable="true" spellcheck="false">'+rango+'</td>'
+    +'<td style="text-align:right;" contenteditable="true" spellcheck="false">'+valor+'</td>'
+    +'<td class="no-print" style="text-align:center;"><button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button></td>';
+}
+function addTramoRow(){
+  var tb=document.getElementById('tbody-tramos'); if(!tb)return;
+  var tr=document.createElement('tr'); tr.className='price-row';
+  tr.innerHTML=tramoRowHTML('','$0 MXN',false);
+  tb.appendChild(tr);
+}
+function tramosInitRows(){
+  var tb=document.getElementById('tbody-tramos'); if(!tb)return;
+  tb.querySelectorAll('tr').forEach(function(r){r.remove();});
+  var tabla=PRICING.asistencia||[];
+  var colab=WZ.colab||0;
+  // Localiza el índice del tramo actual
+  var idx=-1;
+  for(var i=0;i<tabla.length;i++){ if(colab>=tabla[i][0]&&colab<=tabla[i][1]){ idx=i; break; } }
+  if(idx<0) idx=0;
+  // Muestra 4 tramos: el actual y los 3 siguientes (o retrocede si no alcanzan)
+  var start=idx;
+  if(start+4>tabla.length) start=Math.max(0,tabla.length-4);
+  var slice=tabla.slice(start,start+4);
+  slice.forEach(function(t,k){
+    var esTotal=t[3]===true;
+    var rangoTxt=(t[1]>=999999)?(t[0].toLocaleString('es-MX')+' o más'):(t[0].toLocaleString('es-MX')+' - '+t[1].toLocaleString('es-MX'));
+    var valTxt=esTotal?(formatMXN(t[2])+' (total)'):formatMXN(t[2]);
+    var tr=document.createElement('tr'); tr.className='price-row';
+    if(start+k===idx) tr.classList.add('tramo-actual');
+    tr.innerHTML=tramoRowHTML(rangoTxt,valTxt,start+k===idx);
+    tb.appendChild(tr);
+  });
+}
+
+// ── 4c. Paquete ──
+function paqFeatHTML(txt){
+  return '<li contenteditable="true" spellcheck="false" style="outline:none;">'+txt+'</li>';
+}
+function addPaqFeat(){
+  var ul=document.getElementById('paq-feats'); if(!ul)return;
+  var li=document.createElement('li');
+  li.contentEditable='true'; li.spellcheck=false; li.style.outline='none'; li.innerText='';
+  ul.appendChild(li); li.focus();
+}
+function paqInit(){
+  var p=PAQUETES[WZ.paquete]||PAQUETES.starter;
+  var set=function(id,val){var e=document.getElementById(id); if(e)e.innerText=val;};
+  set('paq-name',p.name); set('paq-tag',p.tag); set('paq-sub',p.sub);
+  set('paq-users',(WZ.colab||0).toLocaleString('es-MX'));
+  set('paq-price','0');
+  var ul=document.getElementById('paq-feats');
+  if(ul) ul.innerHTML=p.feats.map(paqFeatHTML).join('');
+  recalcPaquete();
+}
+function recalcPaquete(){
+  var pr=parseNum((document.getElementById('paq-price')||{}).innerText||'0');
+  var us=parseNum((document.getElementById('paq-users')||{}).innerText||'0');
+  var tot=pr*us;
+  var t=document.getElementById('paq-total');
+  var ti=document.getElementById('paq-total-iva');
+  if(t&&!t.dataset.manual) t.innerText=formatMXN(tot);
+  if(ti&&!ti.dataset.manual) ti.innerText=formatMXN(tot*1.16);
+}
+
 function wizToggle(w){
   if(w==='reform'){WZ.reform=!WZ.reform;document.getElementById('sw-reform').classList.toggle('on',WZ.reform);}
-  if(w==='phased'){WZ.phased=!WZ.phased;document.getElementById('sw-phased').classList.toggle('on',WZ.phased);}
+  if(w==='phased'){WZ.phased=!WZ.phased;document.getElementById('sw-phased').classList.toggle('on',WZ.phased);
+    if(WZ.phased){WZ.billing='estandar';syncBillingChips();}
+    updateBillingUI();}
+  if(w==='tramos'){WZ.tramos=!WZ.tramos;document.getElementById('sw-tramos').classList.toggle('on',WZ.tramos);}
 }
 function wizFill(){document.getElementById('wiz-fill').style.width=(WZ.step/4*100)+'%';document.getElementById('wb-step').textContent='Paso '+WZ.step+' de 4';}
 
@@ -2012,8 +2287,19 @@ function wizGenerate(){
   if(!standaloneMode && WZ.reform){showFixed('sec-regulatorio');showFixed('sec-escenarios');}
   else{hideSec('sec-regulatorio');hideSec('sec-escenarios');}
 
+  // ── Modalidad de cobro: rango fijo / paquete (reemplazan recurrentes) ──
+  hideBlock('block-rango'); hideBlock('block-tramos'); hideBlock('block-paquete');
+  var altBilling = (!WZ.soloEquipo && (WZ.billing==='rango' || WZ.billing==='paquete'));
+
+  if(altBilling){
+    hideBlock('block-recurrente');
+    hideBlock('block-faseado');
+    showBlock('impl-steps'); hideBlock('impl-faseado');
+    if(WZ.billing==='rango'){ showBlock('block-rango'); rangoInitRows(); }
+    else { showBlock('block-paquete'); paqInit(); }
+  }
   // ── Faseado / Modalidad controla recurrentes ──
-  if(WZ.phased){
+  else if(WZ.phased){
     hideBlock('block-recurrente');
     showBlock('block-faseado');
     fasInitRows();
@@ -2131,12 +2417,14 @@ function wizGenerate(){
 
   // ── Final pass: recurrentes visible sólo si realmente tiene filas ──
   // (cubre solo-equipos en venta, torniquetes sin renta, SaaS + equipo en venta, etc.)
-  if(!WZ.phased){
+  if(!WZ.phased && !altBilling){
     var recRows=document.querySelectorAll('#tbody-recurrente tr.price-row:not(.price-row-hidden)').length;
     if(recRows>0) showBlock('block-recurrente');
     else hideBlock('block-recurrente');
     if(typeof recalcTable==='function')recalcTable('tbody-recurrente','total-recurrente');
     if(typeof syncFeeFromTable==='function')syncFeeFromTable();
+    // Sección opcional: rangos escalonados de costo por usuario
+    if(WZ.tramos){ showBlock('block-tramos'); tramosInitRows(); }
   }
 
   document.getElementById('wiz-overlay').classList.add('hidden');
@@ -2303,8 +2591,8 @@ function fasNextMonthName(){
 function fasRowHTML(mes, sedes){
   return '<td class="fas-mes" contenteditable="true" spellcheck="false">'+mes+'</td>'
     +'<td style="text-align:center;white-space:nowrap;"><span class="fas-impl" contenteditable="true" spellcheck="false">0</span><span style="color:#b8c4d0;">&nbsp;/&nbsp;</span><span class="fas-acum" style="color:#1a2332;font-weight:600;">0</span></td>'
-    +'<td style="text-align:center;" class="fas-sedes" contenteditable="true" spellcheck="false">'+sedes+'</td>'
-    +'<td style="text-align:right;">$<span class="fas-precio-n" contenteditable="true" spellcheck="false">0</span></td>'
+    +'<td style="text-align:center;" class="fas-sedes" data-fcol="sedes" contenteditable="true" spellcheck="false">'+sedes+'</td>'
+    +'<td style="text-align:right;" data-fcol="precio">$<span class="fas-precio-n" contenteditable="true" spellcheck="false">0</span></td>'
     +'<td class="fas-equipo-col" style="text-align:right;display:none;">$<span class="fas-precio-eq" contenteditable="true" spellcheck="false">0</span></td>'
     +'<td class="fas-dcto-col" style="text-align:center;display:none;"><span class="fas-pct" contenteditable="true" spellcheck="false">0</span>%<span class="fas-disc-sub"></span></td>'
     +'<td class="fas-addon-col" style="text-align:center;">+$<span class="fas-addon-n" contenteditable="true" spellcheck="false">0</span></td>'
@@ -2351,6 +2639,38 @@ function toggleFasEquipo(hasEquipo){
   // update sedes/equipos label
   var lbl=document.getElementById('fas-sedes-label');
   if(lbl) lbl.textContent=hasEquipo?'Equipos':'Sedes';
+  recalcFaseado();
+}
+// ── Faseado: columnas flexibles (agregar / eliminar) ──
+var FAS_CUSTOM_COLS=0;
+function addFasCol(){
+  var t=document.getElementById('tbl-faseado'); if(!t)return;
+  FAS_CUSTOM_COLS++;
+  var key='custom'+FAS_CUSTOM_COLS;
+  // Header: se inserta antes de la columna "Total mensual" (penúltima visible)
+  var hr=t.querySelector('thead tr');
+  var ths=hr.querySelectorAll('th');
+  var totalTh=ths[ths.length-2]; // antes de la col de acciones (no-print)
+  var th=document.createElement('th');
+  th.style.textAlign='center';
+  th.setAttribute('data-fcol',key);
+  th.innerHTML='<span contenteditable="true" spellcheck="false">Nueva columna</span><button class="no-print col-del" onclick="delFasCol(\''+key+'\')" title="Quitar columna">✕</button>';
+  hr.insertBefore(th,totalTh);
+  // Celdas en cada fila
+  t.querySelectorAll('#tbody-faseado tr.price-row').forEach(function(r){
+    var tds=r.querySelectorAll('td');
+    var totalTd=tds[tds.length-2];
+    var td=document.createElement('td');
+    td.style.textAlign='center';
+    td.setAttribute('data-fcol',key);
+    td.contentEditable='true'; td.spellcheck=false;
+    td.innerText='—';
+    r.insertBefore(td,totalTd);
+  });
+}
+function delFasCol(key){
+  var t=document.getElementById('tbl-faseado'); if(!t)return;
+  t.querySelectorAll('[data-fcol="'+key+'"]').forEach(function(el){el.remove();});
   recalcFaseado();
 }
 function quitarAddonCol(){
