@@ -1615,7 +1615,7 @@ document.querySelectorAll('#wc-mods .wiz-mod').forEach(function(b){b.onclick=fun
   if(i>=0)WZ.mods.splice(i,1);
   else{
     WZ.mods.push(m);
-    var childMods=['vacaciones','planificador','bi','connect','reporte','victoria','supervisor','alertas'];
+    var childMods=['vacaciones','planificador','bi','connect','reporte','optimizador','victoria','supervisor','alertas'];
     if(childMods.indexOf(m)>=0&&WZ.mods.indexOf('asistencia')<0){
       WZ.mods.unshift('asistencia');
       var ac=document.querySelector('#wc-mods .wiz-mod[data-mod="asistencia"]');
