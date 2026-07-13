@@ -1903,10 +1903,27 @@ function addTramoRow(){
   tr.innerHTML=tramoRowHTML('','$0 MXN',false);
   tb.appendChild(tr);
 }
+function tramosModulo(){
+  // El escalonado se basa en el módulo principal cotizado, no siempre en asistencia.
+  // Prioriza asistencia; si no está, toma el primer módulo con tabla de tramos real (>1 tramo).
+  if(WZ.mods.indexOf('asistencia')>=0) return 'asistencia';
+  for(var i=0;i<WZ.mods.length;i++){
+    var m=WZ.mods[i];
+    if(PRICING[m] && PRICING[m].length>1) return m;
+  }
+  return null;
+}
 function tramosInitRows(){
   var tb=document.getElementById('tbody-tramos'); if(!tb)return;
   tb.querySelectorAll('tr').forEach(function(r){r.remove();});
-  var tabla=PRICING.asistencia||[];
+  var modKey=tramosModulo();
+  if(!modKey){ hideBlock('block-tramos'); return; }
+  // Rotula la tabla con el módulo al que corresponde el escalonado
+  var th=document.querySelector('#tbl-tramos thead th');
+  if(th) th.textContent='Rango de usuarios';
+  var h4=document.querySelector('#block-tramos h4');
+  if(h4) h4.textContent='Rangos de costo por usuario — '+(MOD_LABEL[modKey]||modKey);
+  var tabla=PRICING[modKey]||[];
   var colab=WZ.colab||0;
   // Localiza el índice del tramo actual
   var idx=-1;
