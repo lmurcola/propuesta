@@ -628,6 +628,49 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
   <div class="sec-label">Oferta económica</div>
   <div class="edit-hint">✏️ Haz clic en cualquier campo para editarlo</div>
 
+  <!-- COSTO FIJO POR RANGO (modalidad: rango) -->
+  <div class="price-block wiz-hide" id="block-rango">
+    <h4>Costos recurrentes (mensual)</h4>
+    <div class="price-sub"><span class="bb">MXN + IVA</span></div>
+    <table class="price-table" id="tbl-rango">
+      <thead><tr>
+        <th contenteditable="true" spellcheck="false">Servicio</th>
+        <th style="text-align:center;" contenteditable="true" spellcheck="false">Rango</th>
+        <th style="text-align:right;" contenteditable="true" spellcheck="false">Valor fijo mensual</th>
+        <th class="no-print" style="width:60px;"></th>
+      </tr></thead>
+      <tbody id="tbody-rango"></tbody>
+    </table>
+    <button class="price-add-btn no-print" onclick="addRangoRow()">+ Agregar ítem</button>
+    <div class="price-fn no-print">Edita el servicio, el rango de usuarios y el valor fijo mensual. Los montos no incluyen IVA.</div>
+  </div>
+
+  <!-- PAQUETE (modalidad: paquete) -->
+  <div class="price-block wiz-hide" id="block-paquete">
+    <h4>Plan propuesto</h4>
+    <div class="price-sub"><span class="bb">MXN + IVA</span></div>
+    <div class="paq-card" id="paq-card">
+      <div class="paq-head">
+        <div>
+          <div class="paq-name" id="paq-name" contenteditable="true" spellcheck="false">STARTER</div>
+          <div class="paq-tag" id="paq-tag" contenteditable="true" spellcheck="false">Control y Cumplimiento</div>
+        </div>
+        <div class="paq-price-wrap">
+          <div class="paq-price">$<span id="paq-price" contenteditable="true" spellcheck="false" inputmode="numeric">0</span></div>
+          <div class="paq-price-lbl">MXN / usuario / mes</div>
+        </div>
+      </div>
+      <div class="paq-sub" id="paq-sub" contenteditable="true" spellcheck="false">Ordena lo básico y deja de apagar incendios</div>
+      <ul class="paq-feats" id="paq-feats"></ul>
+      <button class="no-print" onclick="addPaqFeat()" style="margin-top:8px;font-size:11px;color:#2fabe4;background:none;border:none;cursor:pointer;padding:0;">+ Agregar característica</button>
+      <div class="paq-totals">
+        <div class="paq-total-row"><span>Colaboradores</span><span id="paq-users" contenteditable="true" spellcheck="false" inputmode="numeric">0</span></div>
+        <div class="paq-total-row"><span>Total mensual</span><span id="paq-total">$0 MXN</span></div>
+        <div class="paq-total-row paq-total-iva"><span>Total mensual + IVA</span><span id="paq-total-iva">$0 MXN</span></div>
+      </div>
+    </div>
+  </div>
+
   <!-- COSTOS RECURRENTES -->
   <div class="price-block" id="block-recurrente">
     <h4>Costos recurrentes (mensual)</h4><button class="btn-toggle-totals no-print wiz-hide" id="btn-toggle-rec" onclick="toggleTotals(this,'tbody-recurrente')">Ocultar totales</button>
@@ -772,23 +815,6 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
     </div>
   </div>
 
-  <!-- COSTO FIJO POR RANGO (modalidad: rango) -->
-  <div class="price-block wiz-hide" id="block-rango">
-    <h4>Costos recurrentes (mensual)</h4>
-    <div class="price-sub"><span class="bb">MXN + IVA</span></div>
-    <table class="price-table" id="tbl-rango">
-      <thead><tr>
-        <th contenteditable="true" spellcheck="false">Servicio</th>
-        <th style="text-align:center;" contenteditable="true" spellcheck="false">Rango</th>
-        <th style="text-align:right;" contenteditable="true" spellcheck="false">Valor fijo mensual</th>
-        <th class="no-print" style="width:60px;"></th>
-      </tr></thead>
-      <tbody id="tbody-rango"></tbody>
-    </table>
-    <button class="price-add-btn no-print" onclick="addRangoRow()">+ Agregar ítem</button>
-    <div class="price-fn no-print">Edita el servicio, el rango de usuarios y el valor fijo mensual. Los montos no incluyen IVA.</div>
-  </div>
-
   <!-- RANGOS DE COSTO POR USUARIO (sección opcional, complementa recurrentes) -->
   <div class="price-block wiz-hide" id="block-tramos">
     <h4>Rangos de costo por usuario</h4>
@@ -805,30 +831,12 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
     <div class="price-fn">El precio por usuario disminuye a medida que se incorporan más colaboradores. El tramo destacado corresponde a la dotación actual.</div>
   </div>
 
-  <!-- PAQUETE (modalidad: paquete) -->
-  <div class="price-block wiz-hide" id="block-paquete">
-    <h4>Plan propuesto</h4>
-    <div class="price-sub"><span class="bb">MXN + IVA</span></div>
-    <div class="paq-card" id="paq-card">
-      <div class="paq-head">
-        <div>
-          <div class="paq-name" id="paq-name" contenteditable="true" spellcheck="false">STARTER</div>
-          <div class="paq-tag" id="paq-tag" contenteditable="true" spellcheck="false">Control y Cumplimiento</div>
-        </div>
-        <div class="paq-price-wrap">
-          <div class="paq-price">$<span id="paq-price" contenteditable="true" spellcheck="false" inputmode="numeric">0</span></div>
-          <div class="paq-price-lbl">MXN / usuario / mes</div>
-        </div>
-      </div>
-      <div class="paq-sub" id="paq-sub" contenteditable="true" spellcheck="false">Ordena lo básico y deja de apagar incendios</div>
-      <ul class="paq-feats" id="paq-feats"></ul>
-      <button class="no-print" onclick="addPaqFeat()" style="margin-top:8px;font-size:11px;color:#2fabe4;background:none;border:none;cursor:pointer;padding:0;">+ Agregar característica</button>
-      <div class="paq-totals">
-        <div class="paq-total-row"><span>Colaboradores</span><span id="paq-users" contenteditable="true" spellcheck="false" inputmode="numeric">0</span></div>
-        <div class="paq-total-row"><span>Total mensual</span><span id="paq-total">$0 MXN</span></div>
-        <div class="paq-total-row paq-total-iva"><span>Total mensual + IVA</span><span id="paq-total-iva">$0 MXN</span></div>
-      </div>
-    </div>
+  <!-- RESUMEN MENSUAL (modalidad paquete / rango con equipos en renta) -->
+  <div class="price-block wiz-hide" id="block-resumen">
+    <h4>Resumen mensual</h4>
+    <table class="price-table" id="tbl-resumen">
+      <tbody id="tbody-resumen"></tbody>
+    </table>
   </div>
 
   <!-- CONDICIONES COMERCIALES -->
@@ -1325,14 +1333,19 @@ document.addEventListener('DOMContentLoaded',function(){
   // ── Rango fijo: recalcular al editar valores ──
   var tbr=document.getElementById('tbody-rango');
   if(tbr) tbr.addEventListener('input',function(e){
-    if(e.target.classList.contains('rango-val')) recalcRango();
-    if(e.target.id==='subtotal-rango'||e.target.id==='total-rango') e.target.dataset.manual='1';
+    if(e.target.classList.contains('rango-val')){ recalcRango(); renderResumen(); }
+    if(e.target.id==='subtotal-rango'||e.target.id==='total-rango'){ e.target.dataset.manual='1'; renderResumen(); }
   });
   // ── Paquete: recalcular al editar precio o colaboradores ──
   var pc=document.getElementById('paq-card');
   if(pc) pc.addEventListener('input',function(e){
-    if(e.target.id==='paq-price'||e.target.id==='paq-users') recalcPaquete();
-    if(e.target.id==='paq-total'||e.target.id==='paq-total-iva') e.target.dataset.manual='1';
+    if(e.target.id==='paq-price'||e.target.id==='paq-users'){ recalcPaquete(); renderResumen(); }
+    if(e.target.id==='paq-total'||e.target.id==='paq-total-iva'){ e.target.dataset.manual='1'; renderResumen(); }
+  });
+  // Editar la renta de equipos o el rango fijo re-calcula el resumen
+  var tbRecEl=document.getElementById('tbody-recurrente');
+  if(tbRecEl) tbRecEl.addEventListener('input',function(){
+    if(WZ.billing==='paquete'||WZ.billing==='rango') setTimeout(renderResumen,0);
   });
   syncBillingChips(); updateBillingUI();
 });
@@ -1923,6 +1936,43 @@ function recalcPaquete(){
   if(ti&&!ti.dataset.manual) ti.innerText=formatMXN(tot*1.16);
 }
 
+// ── Resumen mensual consolidado (paquete / rango + renta de equipos) ──
+function renderResumen(){
+  var tb=document.getElementById('tbody-resumen');
+  if(!tb) return;
+  tb.innerHTML='';
+
+  var planLbl='', planVal=0;
+  if(WZ.billing==='paquete'){
+    var pn=document.getElementById('paq-name');
+    planLbl='Plan '+((pn?pn.innerText:'')||'').trim();
+    planVal=parseNum((document.getElementById('paq-total')||{}).innerText||'0');
+  } else if(WZ.billing==='rango'){
+    planLbl='Plataforma (costo fijo)';
+    planVal=parseNum((document.getElementById('subtotal-rango')||{}).innerText||'0');
+  } else { hideBlock('block-resumen'); return; }
+
+  // Renta de equipos: sólo si el bloque está visible con filas de equipo
+  var recBlock=document.getElementById('block-recurrente');
+  var recVisible=recBlock && !recBlock.classList.contains('wiz-hide');
+  var rentaVal=recVisible?parseNum((document.getElementById('subtotal-recurrente')||{}).innerText||'0'):0;
+
+  // Si no hay renta de equipos, el plan ya muestra su propio total: no hace falta resumen
+  if(rentaVal<=0){ hideBlock('block-resumen'); return; }
+
+  var row=function(lbl,val,cls){
+    return '<tr class="'+(cls||'price-row')+'"><td>'+lbl+'</td>'
+      +'<td style="text-align:right;">'+formatMXN(val)+'</td></tr>';
+  };
+  var total=planVal+rentaVal;
+  var html =row(planLbl,planVal);
+  html+=row('Renta de equipos',rentaVal);
+  html+='<tr class="subtotal"><td>Pago total mensual</td><td style="text-align:right;" id="resumen-sub">'+formatMXN(total)+'</td></tr>';
+  html+='<tr class="total"><td>Pago total mensual + IVA</td><td style="color:#2fabe4;text-align:right;" id="resumen-tot">'+formatMXN(total*1.16)+'</td></tr>';
+  tb.innerHTML=html;
+  showBlock('block-resumen');
+}
+
 function wizToggle(w){
   if(w==='reform'){WZ.reform=!WZ.reform;document.getElementById('sw-reform').classList.toggle('on',WZ.reform);}
   if(w==='phased'){WZ.phased=!WZ.phased;document.getElementById('sw-phased').classList.toggle('on',WZ.phased);
@@ -2300,6 +2350,7 @@ function wizGenerate(){
   // ── Faseado / Modalidad controla recurrentes ──
   else if(WZ.phased){
     hideBlock('block-recurrente');
+    hideBlock('block-resumen');
     showBlock('block-faseado');
     fasInitRows();
     toggleFasEquipo(WZ.marcaje.indexOf('reloj')>=0&&WZ.modalidad&&WZ.modalidad!=='tiene');
@@ -2416,7 +2467,28 @@ function wizGenerate(){
 
   // ── Final pass: recurrentes visible sólo si realmente tiene filas ──
   // (cubre solo-equipos en venta, torniquetes sin renta, SaaS + equipo en venta, etc.)
-  if(!WZ.phased && !altBilling){
+  var recH4=document.querySelector('#block-recurrente h4');
+  if(altBilling){
+    // El software va dentro del paquete / rango fijo. Los recurrentes sólo sirven
+    // para la RENTA DE EQUIPOS, que es un cargo mensual independiente.
+    var tbRec=document.getElementById('tbody-recurrente');
+    if(tbRec){
+      // Quita las filas de módulos SaaS: su costo ya está incluido en el plan
+      tbRec.querySelectorAll('tr.price-row:not([data-device])').forEach(function(r){r.remove();});
+    }
+    var devRows=document.querySelectorAll('#tbody-recurrente tr.price-row[data-device]').length;
+    if(devRows>0){
+      showBlock('block-recurrente');
+      if(recH4) recH4.textContent='Renta de equipos (mensual)';
+      if(typeof recalcTable==='function')recalcTable('tbody-recurrente','total-recurrente');
+    } else {
+      hideBlock('block-recurrente');
+    }
+    renderResumen();
+  }
+  else if(!WZ.phased){
+    hideBlock('block-resumen');
+    if(recH4) recH4.textContent='Costos recurrentes (mensual)';
     var recRows=document.querySelectorAll('#tbody-recurrente tr.price-row:not(.price-row-hidden)').length;
     if(recRows>0) showBlock('block-recurrente');
     else hideBlock('block-recurrente');
