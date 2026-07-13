@@ -366,6 +366,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           <div class="wiz-mod" data-mod="connect"><div class="wm-ic"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg></div><span>Victoria Connect</span></div>
           <div class="wiz-mod" data-mod="reporte"><div class="wm-ic"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><span>Reporte Personalizado</span></div>
           
+          <div class="wiz-mod" data-mod="optimizador"><div class="wm-ic"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg></div><span>Optimizador de Turnos</span></div>
           <div class="wiz-mod" data-mod="victoria"><div class="wm-ic"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></div><span>VictorIA</span></div>
           <div class="wiz-mod" data-mod="supervisor"><div class="wm-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M3 21v-1a7 7 0 0114 0v1"/><path d="M17.5 10l2 2 3.5-3.5"/></svg></div><span>APP Supervisor</span></div>
           <div class="wiz-mod" data-mod="alertas"><div class="wm-ic"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div><span>Alertas</span></div>
@@ -405,6 +406,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
             <button class="hw-sel-btn" data-dev="senseface4a" data-modes="asistencia,acceso" onclick="wizToggleDevice('senseface4a',this)">SenseFace 4A</button>
             <button class="hw-sel-btn" data-dev="senseface3a" data-modes="asistencia,acceso" onclick="wizToggleDevice('senseface3a',this)">SenseFace 3A</button>
             <button class="hw-sel-btn" data-dev="senseface7a" data-modes="asistencia,acceso" onclick="wizToggleDevice('senseface7a',this)">SenseFace 7A</button>
+            <button class="hw-sel-btn" data-dev="profacex" data-modes="asistencia,acceso" onclick="wizToggleDevice('profacex',this)">ProFace X</button>
             <button class="hw-sel-btn" data-dev="s922" data-modes="asistencia" onclick="wizToggleDevice('s922',this)">S922</button>
             <button class="hw-sel-btn" data-dev="ts2000pro" data-modes="acceso" onclick="wizToggleDevice('ts2000pro',this)">Torniquete TS2000 Pro</button>
             <button class="hw-sel-btn" data-dev="ts2000plus" data-modes="acceso" onclick="wizToggleDevice('ts2000plus',this)">Torniquete TS2000 Plus</button>
@@ -588,7 +590,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
       <span class="bb">MXN + IVA</span>
     </div>
     <table class="price-table" id="tbl-recurrente">
-      <thead><tr><th>Servicio</th><th style="text-align:center;">Cantidad</th><th style="text-align:right;">Precio unitario</th><th class="dcto-col" contenteditable="true" spellcheck="false" style="text-align:right;color:#718096;display:none;">Precio pref.</th><th style="text-align:right;">Total mensual</th><th class="dcto-col" contenteditable="true" spellcheck="false" style="text-align:right;color:#38a169;display:none;">Total pref.</th><th class="no-print" style="width:80px;"></th></tr></thead>
+      <thead><tr><th contenteditable="true" spellcheck="false">Servicio</th><th style="text-align:center;" contenteditable="true" spellcheck="false">Cantidad</th><th style="text-align:right;" contenteditable="true" spellcheck="false">Precio unitario</th><th class="dcto-col" contenteditable="true" spellcheck="false" style="text-align:right;color:#718096;display:none;">Precio pref.</th><th style="text-align:right;" contenteditable="true" spellcheck="false">Total mensual</th><th class="dcto-col" contenteditable="true" spellcheck="false" style="text-align:right;color:#38a169;display:none;">Total pref.</th><th class="no-print" style="width:80px;"></th></tr></thead>
       <tbody id="tbody-recurrente">
         <tr class="price-row" data-row="rec">
           <td contenteditable="true" spellcheck="false">Control de asistencia</td>
@@ -679,7 +681,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
     <div class="price-sub"><span class="bb">MXN + IVA</span></div>
     <div id="pago-unico-content">
       <table class="price-table" id="tbl-unico">
-        <thead><tr><th>Concepto</th><th style="text-align:center;">Cantidad</th><th style="text-align:right;">Precio unitario</th><th class="dcto-col" contenteditable="true" spellcheck="false" style="text-align:right;color:#718096;display:none;">Precio pref.</th><th style="text-align:right;">Total</th><th class="dcto-col" contenteditable="true" spellcheck="false" style="text-align:right;color:#38a169;display:none;">Total pref.</th><th class="no-print" style="width:80px;"></th></tr></thead>
+        <thead><tr><th contenteditable="true" spellcheck="false">Concepto</th><th style="text-align:center;" contenteditable="true" spellcheck="false">Cantidad</th><th style="text-align:right;" contenteditable="true" spellcheck="false">Precio unitario</th><th class="dcto-col" contenteditable="true" spellcheck="false" style="text-align:right;color:#718096;display:none;">Precio pref.</th><th style="text-align:right;" contenteditable="true" spellcheck="false">Total</th><th class="dcto-col" contenteditable="true" spellcheck="false" style="text-align:right;color:#38a169;display:none;">Total pref.</th><th class="no-print" style="width:80px;"></th></tr></thead>
         <tbody id="tbody-unico">
           <tr class="price-row" data-row="uni">
             <td contenteditable="true" spellcheck="false">Reloj checador biométrico</td>
@@ -749,6 +751,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
       <button class="hw-sel-btn" data-dev="senseface4a" data-modes="asistencia,acceso" onclick="toggleReloj('senseface4a',this)">SenseFace 4A</button>
       <button class="hw-sel-btn" data-dev="senseface3a" data-modes="asistencia,acceso" onclick="toggleReloj('senseface3a',this)">SenseFace 3A</button>
       <button class="hw-sel-btn" data-dev="senseface7a" data-modes="asistencia,acceso" onclick="toggleReloj('senseface7a',this)">SenseFace 7A</button>
+      <button class="hw-sel-btn" data-dev="profacex" data-modes="asistencia,acceso" onclick="toggleReloj('profacex',this)">ProFace X</button>
       <button class="hw-sel-btn" data-dev="s922" data-modes="asistencia" onclick="toggleReloj('s922',this)">S922</button>
       <button class="hw-sel-btn" data-dev="ts2000pro" data-modes="acceso" onclick="toggleReloj('ts2000pro',this)">Torniquete TS2000 Pro</button>
       <button class="hw-sel-btn" data-dev="ts2000plus" data-modes="acceso" onclick="toggleReloj('ts2000plus',this)">Torniquete TS2000 Plus</button>
@@ -863,6 +866,20 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg></div><div class="hw-spec-text"><h5>Temperatura operativa</h5><p>-20°C a 45°C</p></div></div>
           <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg></div><div class="hw-spec-text"><h5>Humedad</h5><p>10% – 90%</p></div></div>
           <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><div class="hw-spec-text"><h5>Ideal para</h5><p>Alta seguridad · Exteriores semicubiertos · IP65, IK06</p></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="hw-layout wiz-hide" id="hw-profacex">
+      <div class="hw-img-wrap"><img class="hw-img" src="relojes/reloj-12.jpg" alt="ProFace X"></div>
+      <div class="hw-content">
+        <div class="hw-name">ProFace X</div>
+        <div class="hw-specs">
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><circle cx="12" cy="8" r="4"/><path d="M3 21v-1a4 4 0 014-4h1"/><path d="M21 21v-1a4 4 0 00-4-4h-1"/></svg></div><div class="hw-spec-text"><h5>Métodos de validación</h5><p>Rostro, Palma, Tarjeta ID, Contraseña · Verificación facial en 0.3s</p></div></div>
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0114 0"/><path d="M1.42 9a16 16 0 0121 0"/><path d="M8.53 16.11a6 6 0 016.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg></div><div class="hw-spec-text"><h5>Conexión</h5><p>TCP/IP, RS485, RS232, Wi-Fi (opcional) · Entrada y salida Wiegand</p></div></div>
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div><div class="hw-spec-text"><h5>Capacidad</h5><p>50,000 usuarios · 30,000 rostros · 50,000 tarjetas · 1,000,000 eventos</p></div></div>
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg></div><div class="hw-spec-text"><h5>Temperatura operativa</h5><p>-30°C a 60°C</p></div></div>
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg></div><div class="hw-spec-text"><h5>Humedad</h5><p>Hasta 93% de humedad relativa</p></div></div>
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><div class="hw-spec-text"><h5>Ideal para</h5><p>Exteriores e intemperie · Antivandálico IP68 / IK04 · Anti-suplantación (foto y video)</p></div></div>
         </div>
       </div>
     </div>
@@ -1341,7 +1358,7 @@ function modSolCard(mod, georetail){
     acceso:{tag:'Seguridad',cls:'',title:'Control de acceso',bul:['Control en tiempo real de quién entra y sale, por puerta o área','Biometría, app, tarjeta o QR — con antipassback y modo esclusa','Gestión de visitantes y contratistas con bitácora y alertas automáticas']},
     connect:{tag:'Integración',cls:'',title:'Victoria Connect',bul:['Integración bidireccional automática con tu ERP — sin escribir código','Compatible con la mayoría de ERPs del mercado','Sincroniza usuarios, permisos y asistencia: datos consistentes en días, no meses']},
     reporte:{tag:'Reportería',cls:'',title:'Reportes personalizados',bul:['Reporte a Medida (RAM) con los conceptos exactos que tu empresa necesita','Visualización diaria, consolidada o diaria-consolidada con filtros de la plataforma','Descargable en Excel y PDF — listo para nómina y auditoría']},
-    optimizador:{tag:'Eficiencia',cls:'',title:'Optimizador de turnos',bul:['Sugerencia de turnos según demanda real de cada punto','Reduce sobre y subdotación en cada franja horaria','Optimiza el costo de mano de obra sin perder cobertura']},
+    optimizador:{tag:'Eficiencia',cls:'yellow',title:'Optimizador de turnos',badge:true,bul:['Genera la malla completa de turnos automáticamente — de 40 horas de trabajo manual a minutos','Calcula la dotación óptima por día y bloque horario según la demanda real de cada punto','Cumplimiento legal asegurado: respeta las reglas de planificación antes de publicar','Conectado a GeoVictoria — mismos turnos, mismos grupos, sin curva de aprendizaje']},
     victoria:{tag:'Flexibilidad',cls:'',title:'VictorIA (WhatsApp)',bul:['Consulta y marca asistencia por WhatsApp — el canal que tu equipo ya usa','Registro en tiempo real, integrado directo con la plataforma','Reportes y consultas al instante, sin abrir el sistema']},
     supervisor:{tag:'Supervisión',cls:'',title:'APP Supervisor',bul:['Consulta en tiempo real quién está presente desde cualquier dispositivo','Autoriza cambios de turno, HE y permisos desde el móvil sin estar en la oficina','Recibe alertas de dotación crítica al instante y actúa sin estar en la oficina','Disponible para iOS y Android — sin licencia adicional de hardware']},
   alertas:{tag:'Control',cls:'',title:'Alertas en tiempo real',bul:['Atrasos, inasistencias, HE excedidas y marcas incorrectas detectadas al instante','Notificación por WhatsApp, correo o app al supervisor que corresponda','Define límites de HE para frenar el pago excesivo antes de que ocurra']}
@@ -1382,7 +1399,8 @@ var PRICING={
   victoria:[[0,999999,7]],
   alertas:[[0,999999,18]],
   connect:[[0,999999,9]],
-  reporte:[[0,999999,2000,true]]
+  reporte:[[0,999999,2000,true]],
+  optimizador:[[0,999999,18]]
 };
 function precioSugerido(mod,colab){
   var t=PRICING[mod]; if(!t) return 0;
@@ -2191,8 +2209,8 @@ function updateDevicePricing(key,isActive){
     if(typeof syncFeeFromTable==='function')syncFeeFromTable();
   }
 }
-var DEV_MAP={senseface:'hw-senseface',mb360:'hw-mb360',in05:'hw-in05',f22:'hw-f22',speedface_v5lp:'hw-speedface_v5lp',senseface4a:'hw-senseface4a',senseface3a:'hw-senseface3a',senseface7a:'hw-senseface7a',s922:'hw-s922',ts2000pro:'hw-ts2000pro',ts2000plus:'hw-ts2000plus'};
-var DEVICE_PRICES={f22:{compra:4500,renta:700},speedface_v5lp:{compra:7000,renta:1000},senseface4a:{compra:3500,renta:550},senseface3a:{compra:3500,renta:550},senseface7a:{compra:3500,renta:550},s922:{compra:6000,renta:900},ts2000pro:{compra:17500,renta:null},ts2000plus:{compra:17500,renta:null},in05:{compra:5000,renta:750},mb360:{compra:4000,renta:600},senseface:{compra:2500,renta:300}};
+var DEV_MAP={senseface:'hw-senseface',mb360:'hw-mb360',in05:'hw-in05',f22:'hw-f22',speedface_v5lp:'hw-speedface_v5lp',senseface4a:'hw-senseface4a',senseface3a:'hw-senseface3a',senseface7a:'hw-senseface7a',profacex:'hw-profacex',s922:'hw-s922',ts2000pro:'hw-ts2000pro',ts2000plus:'hw-ts2000plus'};
+var DEVICE_PRICES={f22:{compra:4500,renta:700},speedface_v5lp:{compra:7000,renta:1000},senseface4a:{compra:3500,renta:550},senseface3a:{compra:3500,renta:550},senseface7a:{compra:3500,renta:550},s922:{compra:6000,renta:900},ts2000pro:{compra:17500,renta:null},ts2000plus:{compra:17500,renta:null},in05:{compra:5000,renta:750},mb360:{compra:4000,renta:600},senseface:{compra:2500,renta:300},profacex:{compra:20000,renta:2900}};
 function updateSelectorModes(mods){
   document.querySelectorAll('.hw-sel-btn').forEach(function(b){
     var bm=(b.getAttribute('data-modes')||'').split(',');
