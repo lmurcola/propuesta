@@ -824,7 +824,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
       <ul class="paq-feats" id="paq-feats"></ul>
       <button class="no-print" onclick="addPaqFeat()" style="margin-top:8px;font-size:11px;color:#2fabe4;background:none;border:none;cursor:pointer;padding:0;">+ Agregar característica</button>
       <div class="paq-totals">
-        <div class="paq-total-row"><span>Colaboradores</span><span id="paq-users" contenteditable="true" spellcheck="false" inputmode="numeric">0</span></div>
+        <div class="paq-total-row"><span>Colaboradores</span><span id="paq-users">0</span></div>
         <div class="paq-total-row"><span>Total mensual</span><span id="paq-total">$0 MXN</span></div>
         <div class="paq-total-row paq-total-iva"><span>Total mensual + IVA</span><span id="paq-total-iva">$0 MXN</span></div>
       </div>
@@ -1328,11 +1328,16 @@ document.addEventListener('DOMContentLoaded',function(){
     if(e.target.classList.contains('rango-val')) recalcRango();
     if(e.target.id==='subtotal-rango'||e.target.id==='total-rango') e.target.dataset.manual='1';
   });
-  // ── Paquete: recalcular al editar precio o usuarios ──
+  // ── Paquete: recalcular al editar el precio ──
   var pc=document.getElementById('paq-card');
   if(pc) pc.addEventListener('input',function(e){
-    if(e.target.id==='paq-price'||e.target.id==='paq-users') recalcPaquete();
+    if(e.target.id==='paq-price') recalcPaquete();
     if(e.target.id==='paq-total'||e.target.id==='paq-total-iva') e.target.dataset.manual='1';
+  });
+  // Cambiar "Colaboradores" en la portada re-sincroniza el paquete automáticamente
+  var cc=document.getElementById('cover-colab');
+  if(cc) cc.addEventListener('input',function(){
+    if(typeof recalcPaquete==='function') recalcPaquete();
   });
   syncBillingChips(); updateBillingUI();
 });
@@ -1836,8 +1841,7 @@ function rangoInitRows(){
   tb.querySelectorAll('tr').forEach(function(r){r.remove();});
   // Una fila de ejemplo editable — el AE define el rango y el valor negociado
   var tr=document.createElement('tr'); tr.className='price-row';
-  var servLbl=(WZ.mods.length>0)?'Plataforma GeoVictoria (todos los módulos)':'Plataforma GeoVictoria';
-  tr.innerHTML=rangoRowHTML(servLbl,'1 - 100 usuarios','$0 MXN');
+  tr.innerHTML=rangoRowHTML('Plataforma GeoVictoria','1 - 100 usuarios','$0 MXN');
   tb.appendChild(tr);
   // Filas de totales
   var st=document.createElement('tr'); st.className='subtotal';
@@ -1908,15 +1912,23 @@ function paqInit(){
   var p=PAQUETES[WZ.paquete]||PAQUETES.starter;
   var set=function(id,val){var e=document.getElementById(id); if(e)e.innerText=val;};
   set('paq-name',p.name); set('paq-tag',p.tag); set('paq-sub',p.sub);
-  set('paq-users',(WZ.colab||0).toLocaleString('es-MX'));
+  set('paq-users',(getColabCount()||0).toLocaleString('es-MX'));
   set('paq-price','0');
   var ul=document.getElementById('paq-feats');
   if(ul) ul.innerHTML=p.feats.map(paqFeatHTML).join('');
   recalcPaquete();
 }
+function getColabCount(){
+  // Fuente única de verdad: el campo "Colaboradores" de la portada; si está vacío, el wizard
+  var cc=document.getElementById('cover-colab');
+  var n=cc?parseNum(cc.innerText):0;
+  return n>0?n:(WZ.colab||0);
+}
 function recalcPaquete(){
   var pr=parseNum((document.getElementById('paq-price')||{}).innerText||'0');
-  var us=parseNum((document.getElementById('paq-users')||{}).innerText||'0');
+  var us=getColabCount();
+  var ue=document.getElementById('paq-users');
+  if(ue) ue.innerText=us.toLocaleString('es-MX');
   var tot=pr*us;
   var t=document.getElementById('paq-total');
   var ti=document.getElementById('paq-total-iva');
