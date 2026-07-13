@@ -2129,6 +2129,16 @@ function wizGenerate(){
   }
   // mod==='tiene' o sin reloj/comedor → ya oculto
 
+  // ── Final pass: recurrentes visible sólo si realmente tiene filas ──
+  // (cubre solo-equipos en venta, torniquetes sin renta, SaaS + equipo en venta, etc.)
+  if(!WZ.phased){
+    var recRows=document.querySelectorAll('#tbody-recurrente tr.price-row:not(.price-row-hidden)').length;
+    if(recRows>0) showBlock('block-recurrente');
+    else hideBlock('block-recurrente');
+    if(typeof recalcTable==='function')recalcTable('tbody-recurrente','total-recurrente');
+    if(typeof syncFeeFromTable==='function')syncFeeFromTable();
+  }
+
   document.getElementById('wiz-overlay').classList.add('hidden');
   window.scrollTo(0,0);
 }
