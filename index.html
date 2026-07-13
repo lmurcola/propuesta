@@ -1520,7 +1520,7 @@ function updateSegHint(){
 }
 
 // ── Wizard state ──
-var WZ = {ind:null,sub:null,size:null,colab:0,mods:[],marcaje:[],devices:[],equipQty:1,soloEquipo:false,modalidad:null,reform:false,phased:false,step:1};
+var WZ = {ind:null,sub:null,size:null,colab:0,mods:[],marcaje:[],devices:[],devicesTouched:false,equipQty:1,soloEquipo:false,modalidad:null,reform:false,phased:false,step:1};
 
 document.querySelectorAll('#wc-ind .wiz-chip').forEach(function(b){b.onclick=function(){
   document.querySelectorAll('#wc-ind .wiz-chip').forEach(function(x){x.classList.remove('on');});
@@ -1538,7 +1538,7 @@ document.querySelectorAll('.wiz-sub .wiz-chip').forEach(function(b){b.onclick=fu
 function wizSoloEquipo(btn){
   WZ.soloEquipo=!WZ.soloEquipo;
   if(WZ.soloEquipo){
-    WZ.mods=[];WZ.devices=[];WZ.equipQty=1;WZ.phased=false;
+    WZ.mods=[];WZ.devices=[];WZ.devicesTouched=false;WZ.equipQty=1;WZ.phased=false;
     document.getElementById('sw-phased').classList.remove('on');
     var tieneChip=document.querySelector('#wc-modalidad [data-modal="tiene"]');
     if(tieneChip)tieneChip.style.display='none';
@@ -1554,6 +1554,13 @@ function wizSoloEquipo(btn){
   var qi=document.getElementById('wiz-equip-qty');if(qi)qi.value=1;
 }
 function wizToggleDevice(key,btn){
+  // First explicit pick wipes the auto-applied default selection
+  if(!WZ.devicesTouched){
+    WZ.devicesTouched=true;
+    WZ.devices=[];
+    document.querySelectorAll('#wiz-dev-btns .hw-sel-btn').forEach(function(x){x.classList.remove('active');});
+    if(btn)btn.classList.remove('active');
+  }
   var wasOn=btn&&btn.classList.contains('active');
   if(wasOn){var i=WZ.devices.indexOf(key);if(i>=0)WZ.devices.splice(i,1);}
   else{if(WZ.devices.indexOf(key)<0)WZ.devices.push(key);}
@@ -1577,8 +1584,8 @@ function updateWizDeviceSelector(){
     var bm=(b.getAttribute('data-modes')||'').split(',');
     b.style.display=bm.some(function(m){return WZ.mods.indexOf(m)>=0||(hasRelojMar&&m==='asistencia');})?'':'none';
   });
-  // Default selection if none chosen yet
-  if(WZ.devices.length===0){
+  // Default selection only if the AE has not picked devices explicitly
+  if(WZ.devices.length===0 && !WZ.devicesTouched){
     var def=WZ.mods.indexOf('comedor')>=0?['senseface','in05']:['senseface'];
     def.forEach(function(k){
       WZ.devices.push(k);
@@ -1599,7 +1606,7 @@ function updateWiz3ForStandalone(sa){
     if(tiles)tiles.style.display='none';
     if(wm){wm.classList.add('show');if(lbl)lbl.textContent='Modalidad del equipo';}
     WZ.marcaje=[];document.querySelectorAll('#wc-marcaje .wiz-mod').forEach(function(x){x.classList.remove('on');});
-    WZ.devices=[];WZ.equipQty=1;
+    WZ.devices=[];WZ.devicesTouched=false;WZ.equipQty=1;
     var qi=document.getElementById('wiz-equip-qty');if(qi)qi.value=1;
     document.querySelectorAll('#wiz-dev-btns .hw-sel-btn').forEach(function(x){x.classList.remove('active');});
   } else {
@@ -1636,7 +1643,7 @@ document.querySelectorAll('#wc-marcaje .wiz-mod').forEach(function(b){b.onclick=
   if(WZ.marcaje.indexOf('reloj')>=0){document.getElementById('wmodal').classList.add('show');}
   else{document.getElementById('wmodal').classList.remove('show');WZ.modalidad=null;
     document.querySelectorAll('#wc-modalidad .wiz-chip').forEach(function(x){x.classList.remove('on');});
-    WZ.devices=[];document.querySelectorAll('#wiz-dev-btns .hw-sel-btn').forEach(function(x){x.classList.remove('active');});}
+    WZ.devices=[];WZ.devicesTouched=false;document.querySelectorAll('#wiz-dev-btns .hw-sel-btn').forEach(function(x){x.classList.remove('active');});}
   updateWizDeviceSelector();
 };});
 document.querySelectorAll('#wc-modalidad .wiz-chip').forEach(function(b){b.onclick=function(){
