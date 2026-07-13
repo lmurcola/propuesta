@@ -743,7 +743,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
   </div>
   <div id="hw-reloj-selector" class="hw-selector wiz-hide" style="padding:10px 16px 4px;">
     <div style="font-size:11px;font-weight:700;color:#4a6080;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;">Selecciona el equipo a incluir</div>
-      <button class="hw-sel-btn active" data-dev="senseface" data-modes="asistencia,acceso" onclick="toggleReloj('senseface',this)">SenseFace 2A</button>
+      <button class="hw-sel-btn" data-dev="senseface" data-modes="asistencia,acceso" onclick="toggleReloj('senseface',this)">SenseFace 2A</button>
       <button class="hw-sel-btn" data-dev="mb360" data-modes="asistencia,acceso" onclick="toggleReloj('mb360',this)">MB360 ID</button>
       <button class="hw-sel-btn" data-dev="in05" data-modes="asistencia,acceso,comedor" onclick="toggleReloj('in05',this)">IN05</button>
       <button class="hw-sel-btn" data-dev="f22" data-modes="asistencia,acceso" onclick="toggleReloj('f22',this)">F22</button>
@@ -757,7 +757,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
       <button class="hw-sel-btn" data-dev="ts2000plus" data-modes="acceso" onclick="toggleReloj('ts2000plus',this)">Torniquete TS2000 Plus</button>
   </div>
   <div class="opt-content" id="content-sec-hardware">
-    <div class="hw-layout" id="hw-senseface">
+    <div class="hw-layout wiz-hide" id="hw-senseface">
       <div class="hw-img-wrap"><img class="hw-img" src="relojes/reloj-01.jpg" alt="SenseFace 2A"></div>
       <div class="hw-content">
         <div class="hw-name">SenseFace 2A</div>
@@ -2229,10 +2229,12 @@ function toggleReloj(key,btn){
 function setRelojSelection(keys){
   Object.keys(DEV_MAP).forEach(function(k){
     var el=document.getElementById(DEV_MAP[k]);
-    var btn=document.querySelector('.hw-sel-btn[data-dev="'+k+'"]');
     var on=keys.indexOf(k)>=0;
     if(el)el.classList[on?'remove':'add']('wiz-hide');
-    if(btn)btn.classList[on?'add':'remove']('active');
+    // sync every button with this data-dev (wizard selector + hardware section)
+    document.querySelectorAll('.hw-sel-btn[data-dev="'+k+'"]').forEach(function(btn){
+      btn.classList[on?'add':'remove']('active');
+    });
   });
 }
 function clearUnicoRows(){
