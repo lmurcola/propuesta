@@ -800,13 +800,15 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
             </td>
           </tr>
           <tr class="subtotal">
-            <td colspan="3">Pago total único</td>
+            <td colspan="3" id="subtotal-uni-label">Pago total único</td>
             <td style="text-align:right;" id="subtotal-unico" contenteditable="true" spellcheck="false">$0 MXN</td>
+            <td class="pref-total-cell dcto-col" id="pref-sub-unico" style="display:none;text-align:right;"></td>
             <td class="no-print"></td>
           </tr>
           <tr class="total">
-            <td colspan="3">Pago total único + IVA</td>
+            <td colspan="3" id="total-uni-label">Pago total único + IVA</td>
             <td style="color:#2fabe4;text-align:right;" id="total-unico" contenteditable="true" spellcheck="false">$0 MXN</td>
+            <td class="pref-total-cell dcto-col" id="pref-tot-unico" style="display:none;font-weight:700;text-align:right;"></td>
             <td class="no-print"></td>
           </tr>
         </tbody>
@@ -2177,12 +2179,12 @@ function showDctoColumns(tbodyId,show){
   var tbl=tb.closest('table');
   if(tbl)tbl.querySelectorAll('.dcto-col').forEach(function(h){h.style.display=show?'table-cell':'none';});
   // Adjust label colspan: 4 with discount (skips precio pref col), 3 without
-  if(tbodyId==='tbody-recurrente'){
-    var sl=document.getElementById('subtotal-rec-label');
-    var tl=document.getElementById('total-rec-label');
-    if(sl)sl.setAttribute('colspan',show?'4':'3');
-    if(tl)tl.setAttribute('colspan',show?'4':'3');
-  }
+  var lblIds = tbodyId==='tbody-recurrente' ? ['subtotal-rec-label','total-rec-label']
+             : tbodyId==='tbody-unico'      ? ['subtotal-uni-label','total-uni-label'] : [];
+  lblIds.forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.setAttribute('colspan',show?'4':'3');
+  });
   tb.querySelectorAll('.dcto-pct-cell,.dcto-total-cell').forEach(function(c){c.style.display=show?'table-cell':'none';});
   tb.querySelectorAll('.pref-total-cell').forEach(function(c){c.style.display=show?'table-cell':'none';});
 
