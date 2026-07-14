@@ -631,7 +631,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
   <!-- COSTO FIJO POR RANGO (modalidad: rango) -->
   <div class="price-block wiz-hide" id="block-rango">
     <h4>Costos recurrentes (mensual)</h4>
-    <div class="price-sub"><span class="bb">MXN + IVA</span></div>
+    <div class="price-sub"><span class="bb" contenteditable="true" spellcheck="false" title="Edita la moneda (ej. COP + IVA)">MXN + IVA</span></div>
     <table class="price-table" id="tbl-rango">
       <thead><tr>
         <th contenteditable="true" spellcheck="false">Servicio</th>
@@ -648,7 +648,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
   <!-- PAQUETE (modalidad: paquete) -->
   <div class="price-block wiz-hide" id="block-paquete">
     <h4>Plan propuesto</h4>
-    <div class="price-sub"><span class="bb">MXN + IVA</span></div>
+    <div class="price-sub"><span class="bb" contenteditable="true" spellcheck="false" title="Edita la moneda (ej. COP + IVA)">MXN + IVA</span></div>
     <div class="paq-card" id="paq-card">
       <div class="paq-head">
         <div>
@@ -675,7 +675,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
   <div class="price-block" id="block-recurrente">
     <h4>Costos recurrentes (mensual)</h4><button class="btn-toggle-totals no-print wiz-hide" id="btn-toggle-rec" onclick="toggleTotals(this,'tbody-recurrente')">Ocultar totales</button>
     <div class="price-sub">
-      <span class="bb">MXN + IVA</span>
+      <span class="bb" contenteditable="true" spellcheck="false" title="Edita la moneda (ej. COP + IVA)">MXN + IVA</span>
     </div>
     <table class="price-table" id="tbl-recurrente">
       <thead><tr><th contenteditable="true" spellcheck="false">Servicio</th><th style="text-align:center;" contenteditable="true" spellcheck="false">Cantidad</th><th style="text-align:right;" contenteditable="true" spellcheck="false">Precio unitario</th><th class="dcto-col" contenteditable="true" spellcheck="false" style="text-align:right;color:#718096;display:none;">Precio pref.</th><th style="text-align:right;" contenteditable="true" spellcheck="false">Total mensual</th><th class="dcto-col" contenteditable="true" spellcheck="false" style="text-align:right;color:#38a169;display:none;">Total pref.</th><th class="no-print" style="width:80px;"></th></tr></thead>
@@ -767,7 +767,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
       <h4 style="font-size:14px;">Costos de pago único</h4><button class="btn-toggle-totals no-print wiz-hide" id="btn-toggle-uni" onclick="toggleTotals(this,'tbody-unico')">Ocultar totales</button>
       <button class="btn-collapse-block no-print" onclick="togglePagoUnico(this)">— Ocultar</button>
     </div>
-    <div class="price-sub"><span class="bb">MXN + IVA</span></div>
+    <div class="price-sub"><span class="bb" contenteditable="true" spellcheck="false" title="Edita la moneda (ej. COP + IVA)">MXN + IVA</span></div>
     <div id="pago-unico-content">
       <table class="price-table" id="tbl-unico">
         <thead><tr><th contenteditable="true" spellcheck="false">Concepto</th><th style="text-align:center;" contenteditable="true" spellcheck="false">Cantidad</th><th style="text-align:right;" contenteditable="true" spellcheck="false">Precio unitario</th><th class="dcto-col" contenteditable="true" spellcheck="false" style="text-align:right;color:#718096;display:none;">Precio pref.</th><th style="text-align:right;" contenteditable="true" spellcheck="false">Total</th><th class="dcto-col" contenteditable="true" spellcheck="false" style="text-align:right;color:#38a169;display:none;">Total pref.</th><th class="no-print" style="width:80px;"></th></tr></thead>
@@ -818,7 +818,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
   <!-- RANGOS DE COSTO POR USUARIO (sección opcional, complementa recurrentes) -->
   <div class="price-block wiz-hide" id="block-tramos">
     <h4>Rangos de costo por usuario</h4>
-    <div class="price-sub"><span class="bb">MXN + IVA</span></div>
+    <div class="price-sub"><span class="bb" contenteditable="true" spellcheck="false" title="Edita la moneda (ej. COP + IVA)">MXN + IVA</span></div>
     <table class="price-table" id="tbl-tramos">
       <thead><tr>
         <th contenteditable="true" spellcheck="false">Rango de usuarios</th>
@@ -1169,12 +1169,27 @@ document.querySelectorAll('.cover-iso svg').forEach(s=>{s.setAttribute('width','
 function fmt(n){return '$'+Math.round(n).toLocaleString('es-MX');}
 
 function syncFeeFromTable(){
-  var totalEl=document.getElementById('total-recurrente');
-  if(!totalEl) return;
-  var subEl=document.getElementById('subtotal-recurrente');
-  var fee=subEl?parseNum(subEl.innerText):parseNum(totalEl.innerText)/1.16;
+  // La calculadora de ROI usa la mensualidad ANTES de IVA. De dónde sale ese número
+  // depende de la modalidad de cobro vigente.
+  var fee=0;
+  var val=function(id){var e=document.getElementById(id);return e?parseNum(e.innerText):0;};
+  var visible=function(id){var e=document.getElementById(id);return e&&!e.classList.contains('wiz-hide');};
+
+  if(WZ.billing==='paquete'){
+    // Plan + renta de equipos (si el bloque de renta está visible)
+    fee=val('paq-total');
+    if(visible('block-recurrente')) fee+=val('subtotal-recurrente');
+  } else if(WZ.billing==='rango'){
+    // La tabla de rango ya incluye la renta de equipos integrada
+    fee=val('subtotal-rango');
+  } else {
+    var subEl=document.getElementById('subtotal-recurrente');
+    var totalEl=document.getElementById('total-recurrente');
+    if(!totalEl) return;
+    fee=subEl?parseNum(subEl.innerText):parseNum(totalEl.innerText)/1.16;
+  }
   var feeInput=document.getElementById('fee');
-  if(feeInput){ feeInput.value=Math.round(fee); calc(); }
+  if(feeInput){ feeInput.value=Math.round(fee); if(typeof calc==='function')calc(); }
 }
 function quitarRoi(){
   document.getElementById('sec-roi').classList.add('wiz-hide');
@@ -1224,8 +1239,36 @@ function parseQty(str){
   var m=s.match(/([0-9]+(?:\.[0-9]+)?)\s*$/);
   return m?parseFloat(m[1]):0;
 }
+var CUR='MXN';           // código de moneda mostrado en todos los montos
+var CUR_LOCALE='es-MX';  // formato de miles/decimales
 function formatMXN(n){
-  return '$'+n.toLocaleString('es-MX',{minimumFractionDigits:0,maximumFractionDigits:2})+' MXN';
+  return '$'+n.toLocaleString(CUR_LOCALE,{minimumFractionDigits:0,maximumFractionDigits:2})+' '+CUR;
+}
+// Recalcula TODAS las tablas para que los montos se regeneren con la moneda vigente
+function recalcAll(){
+  try{
+    if(typeof recalcTable==='function'){
+      recalcTable('tbody-recurrente','total-recurrente');
+      recalcTable('tbody-unico','total-unico');
+    }
+    if(typeof recalcRango==='function')    recalcRango();
+    if(typeof recalcPaquete==='function')  recalcPaquete();
+    if(typeof recalcFaseado==='function')  recalcFaseado();
+    if(typeof renderResumen==='function')  renderResumen();
+    if(typeof syncFeeFromTable==='function') syncFeeFromTable();
+  }catch(e){}
+}
+// Cambiar la moneda en cualquier badge ("MXN + IVA") la propaga a toda la propuesta
+function setCurrency(code){
+  code=(code||'').trim();
+  if(!code) return;
+  CUR=code;
+  document.querySelectorAll('.bb').forEach(function(b){
+    var txt=(b.innerText||'').trim();
+    var resto=txt.replace(/^[^\s+]+/,'').trim();       // conserva " + IVA"
+    b.innerText=code+(resto?' '+resto:'');
+  });
+  recalcAll();
 }
 function recalcTable(tbodyId, totalId){
   var tbody=document.getElementById(tbodyId);
@@ -1348,6 +1391,16 @@ document.addEventListener('DOMContentLoaded',function(){
   var tbRecEl=document.getElementById('tbody-recurrente');
   if(tbRecEl) tbRecEl.addEventListener('input',function(){
     if(WZ.billing==='paquete'||WZ.billing==='rango') setTimeout(renderResumen,0);
+  });
+  // ── Moneda: editar cualquier badge la propaga a toda la propuesta ──
+  document.querySelectorAll('.bb').forEach(function(b){
+    b.addEventListener('blur',function(){
+      var code=((b.innerText||'').trim().split(/[\s+]+/)[0]||'').trim();
+      if(code && code!==CUR) setCurrency(code);
+    });
+    b.addEventListener('keydown',function(e){
+      if(e.key==='Enter'){ e.preventDefault(); b.blur(); }
+    });
   });
   syncBillingChips(); updateBillingUI();
 });
@@ -1891,6 +1944,7 @@ function recalcRango(){
   var tt=document.getElementById('total-rango');
   if(st&&!st.dataset.manual) st.innerText=formatMXN(sum);
   if(tt&&!tt.dataset.manual) tt.innerText=formatMXN(sum*1.16);
+  if(typeof syncFeeFromTable==='function') syncFeeFromTable();
 }
 
 // ── 4b. Rangos de costo por usuario (tramos escalonados) ──
@@ -1974,6 +2028,7 @@ function recalcPaquete(){
   var ti=document.getElementById('paq-total-iva');
   if(t&&!t.dataset.manual) t.innerText=formatMXN(tot);
   if(ti&&!ti.dataset.manual) ti.innerText=formatMXN(tot*1.16);
+  if(typeof syncFeeFromTable==='function') syncFeeFromTable();
 }
 
 // ── Resumen mensual consolidado (paquete / rango + renta de equipos) ──
