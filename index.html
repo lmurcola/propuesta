@@ -880,6 +880,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div><div class="hw-spec-text"><h5>Capacidad</h5><p>3,000 usuarios · 1,500 rostros · 3,000 huellas · 3,000 tarjetas</p></div></div>
           <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg></div><div class="hw-spec-text"><h5>Temperatura operativa</h5><p>-5°C a 45°C</p></div></div>
           <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg></div><div class="hw-spec-text"><h5>Humedad</h5><p>20% – 80%</p></div></div>
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><div class="hw-spec-text"><h5>Ideal para</h5><p>Interiores · Oficinas, tiendas y puntos de venta · Multibiometría en un solo equipo</p></div></div>
         </div>
       </div>
     </div>
@@ -909,6 +910,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="16" height="11" rx="2"/><path d="M22 11v3"/><path d="M7 7V5a2 2 0 012-2h2a2 2 0 012 2v2"/></svg></div><div class="hw-spec-text"><h5>Autonomía</h5><p>Hasta 4 horas · Batería de respaldo integrada · Puerto RS232 para impresora</p></div></div>
           <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg></div><div class="hw-spec-text"><h5>Temperatura operativa</h5><p>0°C a 45°C</p></div></div>
           <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg></div><div class="hw-spec-text"><h5>Humedad</h5><p>20% – 80%</p></div></div>
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><div class="hw-spec-text"><h5>Ideal para</h5><p>Comedor y casino · Impresión de tickets vía RS232 · Batería de respaldo ante cortes de energía</p></div></div>
         </div>
       </div>
     </div>
@@ -2256,18 +2258,25 @@ function renderSolGrid(hasAsistencia,hasComedor,hasAcceso,mods,size,d){
   var max=cards.length<=4?4:6;
   cards=cards.slice(0,max);
   if(cards.length%2!==0&&cards.length>0){
-    var filled=false;
-    if((WZ.marcaje||[]).length>=3){
-      var marcajeCard=marcajeSolCard(WZ.marcaje);
-      if(cards.indexOf(marcajeCard)<0){ cards.push(marcajeCard); filled=true; }
+    // Candidatos de relleno, en orden. Se descarta cualquiera cuyo tema ya esté
+    // cubierto por un card cotizado (evita "Integración" duplicada con Victoria
+    // Connect, o dos cards de Prenómina).
+    var has=function(txt){ return cards.some(function(c){return c.indexOf(txt)>=0;}); };
+    var yaIntegracion = has('Victoria Connect') || has('Conectado con tu ecosistema');
+    var yaPrenomina   = has('Prenómina automatizada');
+    var yaMarcaje     = has('Métodos de marcaje');
+
+    var candidatos=[];
+    if((WZ.marcaje||[]).length>=3 && !yaMarcaje) candidatos.push(marcajeSolCard(WZ.marcaje));
+    if(size==='smb'){
+      if(!yaPrenomina)   candidatos.push(prenominaSolCard());
+      if(!yaIntegracion) candidatos.push(integracionSolCard());
+    } else {
+      if(!yaIntegracion) candidatos.push(integracionSolCard());
+      if(!yaPrenomina)   candidatos.push(prenominaSolCard());
     }
-    if(!filled){
-      var prenCard=prenominaSolCard();
-      var hasPren=cards.some(function(c){return c.indexOf('Prenómina automatizada')>=0;});
-      if(size==='smb'&&!hasPren) cards.push(prenCard);
-      else if(size!=='smb') cards.push(integracionSolCard());
-      else cards.push(integracionSolCard()); // SMB ya tiene prenómina, usar integración
-    }
+    if(candidatos.length>0) cards.push(candidatos[0]);
+    else cards.pop(); // sin relleno disponible: mejor par que impar
   }
 
   document.getElementById('sol-grid').innerHTML=cards.join('');
