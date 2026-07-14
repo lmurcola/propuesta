@@ -1417,21 +1417,43 @@ function deletePriceRow(btn){
 }
 function addPriceRow(tbodyId, type){
   var tbody=document.getElementById(tbodyId);
-  var totalId=type==='rec'?'total-recurrente':'total-unico';
-  var totalRow=tbody.querySelector('tr.total');
-  var insertRef=tbody.querySelector('tr.subtotal')||totalRow;
-  var newRow=document.createElement('tr');
+  if(!tbody) return;
+  var insertRef=tbody.querySelector('tr.subtotal')||tbody.querySelector('tr.total');
+  var newRow;
+  // Clona la estructura de una fila existente: así la fila nueva SIEMPRE tiene las
+  // mismas columnas que la tabla (incluidas las de descuento si están activas).
+  var model=tbody.querySelector('tr.price-row');
+  if(model){
+    newRow=model.cloneNode(true);
+    newRow.removeAttribute('data-device');
+    newRow.removeAttribute('data-mod');
+    newRow.removeAttribute('data-flat');
+    var tds=newRow.querySelectorAll('td');
+    if(tds[0]) tds[0].innerText='Nuevo servicio';
+    newRow.querySelectorAll('.qty,.unit,.dcto-pct-cell').forEach(function(c){
+      c.innerText=c.classList.contains('dcto-pct-cell')?'':'0';
+    });
+    newRow.querySelectorAll('.row-total,.dcto-total-cell').forEach(function(c){
+      c.innerText=c.classList.contains('row-total')?formatMXN(0):'';
+      c.classList.remove('price-original');
+      delete c.dataset.manual;
+    });
+  } else {
+    // No hay filas: construye desde cero respetando el estado del descuento
+    var _dc=dctoActive(tbodyId)?'':'none';
+    newRow=document.createElement('tr');
+    newRow.innerHTML='<td contenteditable="true" spellcheck="false">Nuevo servicio</td>'
+      +'<td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>'
+      +'<td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>'
+      +'<td class="dcto-pct-cell" contenteditable="true" spellcheck="false" style="display:'+_dc+';text-align:right;" inputmode="numeric"></td>'
+      +'<td style="text-align:right;" class="row-total" contenteditable="true" spellcheck="false">'+formatMXN(0)+'</td>'
+      +'<td class="dcto-total-cell" style="display:'+_dc+';"></td>'
+      +'<td class="no-print" style="text-align:center;white-space:nowrap;"><button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button></td>';
+  }
   newRow.className='price-row';
   newRow.setAttribute('data-row',type);
-  var _dc=dctoActive(tbody.id)?'':'none';
-  newRow.innerHTML='<td contenteditable="true" spellcheck="false">Nuevo servicio</td>'
-    +'<td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">0</td>'
-    +'<td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit" inputmode="numeric">0</td>'
-    +'<td style="text-align:right;" class="row-total" contenteditable="true" spellcheck="false">$0 MXN</td>'
-    +'<td class="no-print" style="text-align:center;white-space:nowrap;">'
-    +' '
-    +'<button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)">✕</button></td>';
-  tbody.insertBefore(newRow,insertRef);
+  tbody.insertBefore(newRow,insertRef||null);
+  recalcTable(tbodyId, type==='rec'?'total-recurrente':'total-unico');
 }
 
 // ── PAGO ÚNICO: collapse/expand ───────────────────────────────────────
@@ -2788,12 +2810,42 @@ function fasRowHTML(mes, sedes){
     +'<td style="text-align:right;"><span class="fas-total-main">$0</span><span class="fas-total-addon"></span></td>'
     +'<td class="no-print" style="text-align:center;"><button class="row-ctrl btn-del-row" onclick="deletePriceRow(this);recalcFaseado();" title="Eliminar">✕</button></td>';
 }
+function fasSyncRowCols(tr){
+  // Alinea una fila del faseado con las columnas que HOY tiene la tabla:
+  // elimina las que se borraron y agrega las columnas personalizadas.
+  var t=document.getElementById('tbl-faseado'); if(!t||!tr) return;
+  var ths=[...t.querySelectorAll('thead th')];
+  var headKeys=ths.map(function(th){return th.getAttribute('data-fcol');});
+  // 1. Quita celdas cuya columna ya no existe en el encabezado
+  tr.querySelectorAll('td[data-fcol]').forEach(function(td){
+    if(headKeys.indexOf(td.getAttribute('data-fcol'))<0) td.remove();
+  });
+  // 2. Agrega celdas para columnas personalizadas que la fila no tiene
+  var totalTd=tr.querySelectorAll('td');
+  totalTd=totalTd[totalTd.length-2];
+  ths.forEach(function(th){
+    var k=th.getAttribute('data-fcol');
+    if(!k||k==='sedes'||k==='precio') return;
+    if(tr.querySelector('td[data-fcol="'+k+'"]')) return;
+    var td=document.createElement('td');
+    td.style.textAlign='center';
+    td.setAttribute('data-fcol',k);
+    td.contentEditable='true'; td.spellcheck=false; td.innerText='—';
+    tr.insertBefore(td,totalTd||null);
+  });
+  // 3. Respeta el estado de las columnas opcionales (descuento / inv. x equipo)
+  var dctoOff=t.classList.contains('fas-dcto-hidden');
+  var equipoOff=t.classList.contains('fas-equipo-hidden');
+  tr.querySelectorAll('.fas-dcto-col').forEach(function(c){c.style.display=dctoOff?'none':'';});
+  tr.querySelectorAll('.fas-equipo-col').forEach(function(c){c.style.display=equipoOff?'none':'';});
+}
 function addFasedRow(){
   var tb=document.getElementById('tbody-faseado');
   var mes=fasNextMonthName();
   var tr=document.createElement('tr');tr.className='price-row';tr.setAttribute('data-row','fas');
   tr.innerHTML=fasRowHTML(mes,'Por definir');
   tb.appendChild(tr);
+  fasSyncRowCols(tr);   // alinea con las columnas activas (borradas / personalizadas)
   recalcFaseado();
 }
 function fasInitRows(){
@@ -2805,6 +2857,7 @@ function fasInitRows(){
     var tr=document.createElement('tr');tr.className='price-row';tr.setAttribute('data-row','fas');
     tr.innerHTML=fasRowHTML(FAS_MESES[(m0+i)%12], i===0?'0 sedes':'Por definir');
     tb.appendChild(tr);
+    fasSyncRowCols(tr);
   }
   recalcFaseado();
 }
