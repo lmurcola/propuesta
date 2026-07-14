@@ -2267,7 +2267,8 @@ function renderSolGrid(hasAsistencia,hasComedor,hasAcceso,mods,size,d){
     var yaMarcaje     = has('Métodos de marcaje');
 
     var candidatos=[];
-    if((WZ.marcaje||[]).length>=3 && !yaMarcaje) candidatos.push(marcajeSolCard(WZ.marcaje));
+    var usaMarcajeCard = (WZ.marcaje||[]).length>=3 && !yaMarcaje;
+    if(usaMarcajeCard) candidatos.push(marcajeSolCard(WZ.marcaje));
     if(size==='smb'){
       if(!yaPrenomina)   candidatos.push(prenominaSolCard());
       if(!yaIntegracion) candidatos.push(integracionSolCard());
@@ -2275,7 +2276,15 @@ function renderSolGrid(hasAsistencia,hasComedor,hasAcceso,mods,size,d){
       if(!yaIntegracion) candidatos.push(integracionSolCard());
       if(!yaPrenomina)   candidatos.push(prenominaSolCard());
     }
-    if(candidatos.length>0) cards.push(candidatos[0]);
+    if(candidatos.length>0){
+      var elegido=candidatos[0];
+      cards.push(elegido);
+      // Si el relleno es el card dedicado de "Métodos de marcaje", el bullet de
+      // Marcaje en el card de Plataforma queda redundante: se elimina.
+      if(usaMarcajeCard && elegido.indexOf('Métodos de marcaje')>=0 && cards.length>0){
+        cards[0]=cards[0].replace(/<li><strong>Marcaje:<\/strong>[^<]*<\/li>/,'');
+      }
+    }
     else cards.pop(); // sin relleno disponible: mejor par que impar
   }
 
