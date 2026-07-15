@@ -1920,8 +1920,10 @@ function rangoRowHTML(serv,rango,valor){
 function addRangoRow(){
   var tb=document.getElementById('tbody-rango'); if(!tb)return;
   var tr=document.createElement('tr'); tr.className='price-row';
-  tr.innerHTML=rangoRowHTML('','','$0 MXN');
-  tb.appendChild(tr); recalcRango();
+  tr.innerHTML=rangoRowHTML('','',formatMXN(0));
+  var ref=tb.querySelector('tr.subtotal')||tb.querySelector('tr.total');
+  tb.insertBefore(tr, ref||null);   // antes de los totales, no al final
+  recalcRango();
 }
 function rangoInitRows(){
   var tb=document.getElementById('tbody-rango'); if(!tb)return;
