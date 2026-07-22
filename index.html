@@ -630,7 +630,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 
   <!-- COSTO FIJO POR RANGO (modalidad: rango) -->
   <div class="price-block wiz-hide" id="block-rango">
-    <h4>Costos recurrentes (mensual)</h4>
+    <h4>Costos recurrentes</h4>
     <div class="price-sub"><span class="bb" contenteditable="true" spellcheck="false" title="Edita la moneda (ej. COP + IVA)">MXN + IVA</span></div>
     <table class="price-table" id="tbl-rango">
       <thead><tr>
@@ -673,7 +673,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 
   <!-- COSTOS RECURRENTES -->
   <div class="price-block" id="block-recurrente">
-    <h4>Costos recurrentes (mensual)</h4><button class="btn-toggle-totals no-print wiz-hide" id="btn-toggle-rec" onclick="toggleTotals(this,'tbody-recurrente')">Ocultar totales</button>
+    <h4>Costos recurrentes</h4><button class="btn-toggle-totals no-print wiz-hide" id="btn-toggle-rec" onclick="toggleTotals(this,'tbody-recurrente')">Ocultar totales</button>
     <div class="price-sub">
       <span class="bb" contenteditable="true" spellcheck="false" title="Edita la moneda (ej. COP + IVA)">MXN + IVA</span>
     </div>
@@ -2632,7 +2632,7 @@ function wizGenerate(){
   }
   else if(!WZ.phased){
     hideBlock('block-resumen');
-    if(recH4) recH4.textContent='Costos recurrentes (mensual)';
+    if(recH4) recH4.textContent='Costos recurrentes';
     var recRows=document.querySelectorAll('#tbody-recurrente tr.price-row:not(.price-row-hidden)').length;
     if(recRows>0) showBlock('block-recurrente');
     else hideBlock('block-recurrente');
