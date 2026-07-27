@@ -2552,6 +2552,7 @@ function wizGenerate(){
     if(hwLbl)hwLbl.textContent='Equipo biométrico';
     var defSA=isComedorOnly?['in05']:(hasComedorMod?['senseface','in05']:['senseface']);
     var selSA=WZ.devices.length>0?WZ.devices:defSA;
+    if(mod==='tiene') selSA=[]; // reloj preexistente: no mostrar ninguna ficha de equipo
     if(hwSel)hwSel.classList.add('wiz-hide'); // selector en wizard, no en propuesta
     setRelojSelection(selSA);
     clearUnicoRows();clearDeviceRecurrenteRows();
@@ -2573,6 +2574,8 @@ function wizGenerate(){
     if(hwSel)hwSel.classList.add('wiz-hide'); // selector en wizard, no en propuesta
     var defNS=hasReloj?(hasComedorMod?['senseface','in05']:['senseface']):(hasComedorMod?['in05']:[]);
     var selDef=WZ.devices.length>0?WZ.devices:defNS;
+    // Reloj preexistente ('tiene'): sin ficha de equipo. Si hay comedor, sólo el IN05.
+    if(mod==='tiene') selDef=hasComedorMod?['in05']:[];
     setRelojSelection(selDef);
     clearDeviceRecurrenteRows();
     var needsHW=(hasReloj&&mod&&mod!=='tiene')||hasComedorMod;
