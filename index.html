@@ -297,6 +297,15 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 .paq-total-row span:last-child{font-weight:700;color:#1a2332;}
 .paq-total-iva{border-top:1px solid #e3eef7;margin-top:5px;padding-top:9px;font-weight:700;}
 .paq-total-iva span:last-child{color:#2fabe4;font-size:15px;}
+/* ── Kit Reforma card ── */
+.kit-card{border:2px solid #fabb0c;position:relative;}
+.kit-badge{position:absolute;top:-11px;left:18px;background:#fabb0c;color:#1a2332;font-size:10px;font-weight:800;letter-spacing:.5px;padding:3px 10px;border-radius:4px;}
+.kit-feats{margin:0.4rem 0 0;padding:0;list-style:none;}
+.kit-feats li{position:relative;padding:8px 0 8px 26px;font-size:12.5px;color:#4a6080;line-height:1.5;border-bottom:1px solid #f0f4f8;}
+.kit-feats li:last-child{border-bottom:none;}
+.kit-feats li:before{content:'\2713';position:absolute;left:0;top:8px;width:17px;height:17px;background:#fabb0c;color:#1a2332;border-radius:50%;font-size:11px;font-weight:800;text-align:center;line-height:17px;}
+.kit-feats li strong{color:#1a2332;display:block;margin-bottom:1px;}
+.kit-foot{margin-top:1rem;padding-top:0.9rem;border-top:1px solid #e3eef7;font-size:12px;color:#1a6989;font-style:italic;}
 /* ── Tramo actual destacado ── */
 #tbody-tramos tr.tramo-actual td{background:#eaf7fd;font-weight:700;color:#1a2332;}
 #tbody-tramos tr.tramo-actual td:first-child:before{content:'▸ ';color:#2fabe4;font-weight:800;}
@@ -463,6 +472,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
             <button class="wiz-chip on" data-bill="estandar">Estándar (por usuario)</button>
             <button class="wiz-chip" data-bill="rango">Costo fijo por rango</button>
             <button class="wiz-chip" data-bill="paquete">Paquete</button>
+            <button class="wiz-chip" data-bill="kit">Kit Reforma</button>
           </div>
           <div id="wc-paquete-box" style="display:none;margin-top:10px;padding-top:10px;border-top:1px dashed #b8dff5;">
             <label style="color:#1a6989;letter-spacing:1px;font-size:11px;font-weight:700;text-transform:uppercase;">¿Cuál paquete?</label>
@@ -668,6 +678,34 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
         <div class="paq-total-row"><span>Total mensual</span><span id="paq-total">$0 MXN</span></div>
         <div class="paq-total-row paq-total-iva"><span>Total mensual + IVA</span><span id="paq-total-iva">$0 MXN</span></div>
       </div>
+    </div>
+  </div>
+
+  <!-- KIT DIGITAL: REFORMA LABORAL (modalidad: kit) -->
+  <div class="price-block wiz-hide" id="block-kit">
+    <h4>Plan propuesto</h4>
+    <div class="price-sub"><span class="bb" contenteditable="true" spellcheck="false" title="Edita la moneda (ej. COP + IVA)">MXN + IVA</span></div>
+    <div class="paq-card kit-card" id="kit-card">
+      <div class="kit-badge">CUMPLIMIENTO LFT</div>
+      <div class="paq-head">
+        <div>
+          <div class="paq-name" id="kit-name" contenteditable="true" spellcheck="false">Kit Digital: Reforma Laboral</div>
+          <div class="paq-tag" id="kit-tag" contenteditable="true" spellcheck="false">Cumple con las nuevas obligaciones de la LFT sin complicaciones</div>
+        </div>
+        <div class="paq-price-wrap">
+          <div class="paq-price">$<span id="kit-price" contenteditable="true" spellcheck="false" inputmode="numeric">2000</span></div>
+          <div class="paq-price-lbl" id="kit-price-lbl">MXN / mes · hasta 20 usuarios</div>
+        </div>
+      </div>
+      <div class="paq-sub" id="kit-sub" contenteditable="true" spellcheck="false">Todo lo que la nueva ley exige, en una sola herramienta que tu equipo puede administrar sin ayuda.</div>
+      <ul class="kit-feats" id="kit-feats"></ul>
+      <button class="no-print" onclick="addKitFeat()" style="margin-top:8px;font-size:11px;color:#2fabe4;background:none;border:none;cursor:pointer;padding:0;">+ Agregar módulo</button>
+      <div class="paq-totals">
+        <div class="paq-total-row"><span>Colaboradores</span><span id="kit-users" contenteditable="true" spellcheck="false" inputmode="numeric">0</span></div>
+        <div class="paq-total-row"><span>Total mensual</span><span id="kit-total" contenteditable="true" spellcheck="false">$0 MXN</span></div>
+        <div class="paq-total-row paq-total-iva"><span>Total mensual + IVA</span><span id="kit-total-iva" contenteditable="true" spellcheck="false">$0 MXN</span></div>
+      </div>
+      <div class="kit-foot" id="kit-foot" contenteditable="true" spellcheck="false">Todo en una sola herramienta: cumple con la reforma de forma simple y ahorra desde el primer mes en el proceso.</div>
     </div>
   </div>
 
@@ -1154,6 +1192,9 @@ function syncFeeFromTable(){
     // Plan + renta de equipos (si el bloque de renta está visible)
     fee=val('paq-total');
     if(visible('block-recurrente')) fee+=val('subtotal-recurrente');
+  } else if(WZ.billing==='kit'){
+    fee=val('kit-total');
+    if(visible('block-recurrente')) fee+=val('subtotal-recurrente');
   } else if(WZ.billing==='rango'){
     // La tabla de rango ya incluye la renta de equipos integrada
     fee=val('subtotal-rango');
@@ -1362,10 +1403,16 @@ document.addEventListener('DOMContentLoaded',function(){
     if(e.target.id==='paq-price'||e.target.id==='paq-users'){ recalcPaquete(); renderResumen(); }
     if(e.target.id==='paq-total'||e.target.id==='paq-total-iva'){ e.target.dataset.manual='1'; renderResumen(); }
   });
+  // ── Kit Reforma: recalcular al editar precio o colaboradores ──
+  var kc=document.getElementById('kit-card');
+  if(kc) kc.addEventListener('input',function(e){
+    if(e.target.id==='kit-price'||e.target.id==='kit-users'){ recalcKit(); renderResumen(); }
+    if(e.target.id==='kit-total'||e.target.id==='kit-total-iva'){ e.target.dataset.manual='1'; renderResumen(); }
+  });
   // Editar la renta de equipos o el rango fijo re-calcula el resumen
   var tbRecEl=document.getElementById('tbody-recurrente');
   if(tbRecEl) tbRecEl.addEventListener('input',function(){
-    if(WZ.billing==='paquete'||WZ.billing==='rango') setTimeout(renderResumen,0);
+    if(WZ.billing==='paquete'||WZ.billing==='rango'||WZ.billing==='kit') setTimeout(renderResumen,0);
   });
   // ── Moneda: editar cualquier badge la propaga a toda la propuesta ──
   document.querySelectorAll('.bb').forEach(function(b){
@@ -1999,6 +2046,57 @@ function tramosInitRows(){
   });
 }
 
+// ── 4d. Kit Digital: Reforma Laboral ──
+var KIT_FEATS=[
+  {t:'Control de asistencia', d:'Registro electrónico de jornada, obligatorio desde 2026. Evidencia digital e inmutable lista para inspecciones de la STPS.'},
+  {t:'Permisos y Vacaciones', d:'Control formal de descansos y ausencias, con respaldo documental de cada solicitud y aprobación.'},
+  {t:'Planificador Inteligente', d:'Amigable e indispensable para hacer que la reducción progresiva de jornada sea simple: alertas y bloqueos cuando se planifican más de las horas semanales máximas permitidas.'}
+];
+var KIT_BASE_PRICE=2000;   // fijo hasta 20 usuarios
+var KIT_MAX_USERS=20;
+function kitFeatHTML(f){
+  return '<li contenteditable="true" spellcheck="false" style="outline:none;"><strong>'+f.t+'</strong>'+f.d+'</li>';
+}
+function addKitFeat(){
+  var ul=document.getElementById('kit-feats'); if(!ul)return;
+  var li=document.createElement('li');
+  li.contentEditable='true'; li.spellcheck=false; li.style.outline='none';
+  li.innerHTML='<strong>Nuevo módulo</strong>Describe cómo apoya el cumplimiento.';
+  ul.appendChild(li);
+  var r=document.createRange(); r.selectNodeContents(li.querySelector('strong'));
+  var s=window.getSelection(); s.removeAllRanges(); s.addRange(r);
+}
+function kitInit(){
+  var set=function(id,val){var e=document.getElementById(id); if(e)e.innerText=val;};
+  var users=WZ.colab||0;
+  var ul=document.getElementById('kit-feats');
+  if(ul) ul.innerHTML=KIT_FEATS.map(kitFeatHTML).join('');
+  set('kit-users', users.toLocaleString('es-MX'));
+  var lbl=document.getElementById('kit-price-lbl');
+  var priceEl=document.getElementById('kit-price');
+  if(users>KIT_MAX_USERS){
+    // Más de 20 usuarios: sin precio predeterminado, el AE lo digita
+    if(priceEl){ priceEl.innerText='0'; }
+    if(lbl) lbl.innerText='MXN / mes';
+  } else {
+    if(priceEl){ priceEl.innerText=String(KIT_BASE_PRICE); }
+    if(lbl) lbl.innerText='MXN / mes · hasta '+KIT_MAX_USERS+' usuarios';
+  }
+  recalcKit();
+}
+function recalcKit(){
+  var users=parseNum((document.getElementById('kit-users')||{}).innerText||'0');
+  var price=parseNum((document.getElementById('kit-price')||{}).innerText||'0');
+  // Kit fijo (≤20 usuarios): el precio ES el total mensual, no se multiplica.
+  // Más de 20: también es un total mensual que el AE digita a mano.
+  var tot=price;
+  var t=document.getElementById('kit-total');
+  var ti=document.getElementById('kit-total-iva');
+  if(t&&!t.dataset.manual) t.innerText=formatMXN(tot);
+  if(ti&&!ti.dataset.manual) ti.innerText=formatMXN(tot*1.16);
+  if(typeof syncFeeFromTable==='function') syncFeeFromTable();
+}
+
 // ── 4c. Paquete ──
 function paqFeatHTML(txt){
   return '<li contenteditable="true" spellcheck="false" style="outline:none;">'+txt+'</li>';
@@ -2041,6 +2139,9 @@ function renderResumen(){
     var pn=document.getElementById('paq-name');
     planLbl='Plan '+((pn?pn.innerText:'')||'').trim();
     planVal=parseNum((document.getElementById('paq-total')||{}).innerText||'0');
+  } else if(WZ.billing==='kit'){
+    planLbl='Kit Digital: Reforma Laboral';
+    planVal=parseNum((document.getElementById('kit-total')||{}).innerText||'0');
   } else if(WZ.billing==='rango'){
     planLbl='Plataforma (costo fijo)';
     planVal=parseNum((document.getElementById('subtotal-rango')||{}).innerText||'0');
@@ -2448,13 +2549,14 @@ function wizGenerate(){
 
   // ── Modalidad de cobro: rango fijo / paquete (reemplazan recurrentes) ──
   hideBlock('block-rango'); hideBlock('block-tramos'); hideBlock('block-paquete');
-  var altBilling = (!WZ.soloEquipo && (WZ.billing==='rango' || WZ.billing==='paquete'));
+  var altBilling = (!WZ.soloEquipo && (WZ.billing==='rango' || WZ.billing==='paquete' || WZ.billing==='kit'));
 
   if(altBilling){
     hideBlock('block-recurrente');
     hideBlock('block-faseado');
     showBlock('impl-steps'); hideBlock('impl-faseado');
     if(WZ.billing==='rango'){ showBlock('block-rango'); rangoInitRows(); }
+    else if(WZ.billing==='kit'){ showBlock('block-kit'); kitInit(); }
     else { showBlock('block-paquete'); paqInit(); }
   }
   // ── Faseado / Modalidad controla recurrentes ──
@@ -2596,6 +2698,7 @@ function wizGenerate(){
       hideBlock('block-resumen');
       addDeviceRowsToRango();
     } else {
+      // PAQUETE y KIT: la tarjeta no es tabla. Renta va aparte + resumen consolida.
       // PAQUETE: el plan es una tarjeta, no una tabla. La renta va en su propio
       // bloque y el resumen consolida ambos.
       var devRows=document.querySelectorAll('#tbody-recurrente tr.price-row[data-device]').length;
