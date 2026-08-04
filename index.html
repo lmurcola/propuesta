@@ -2517,7 +2517,14 @@ function wizGenerate(){
   document.getElementById('dotacion-card').style.display=(d.semaforo&&!standaloneMode&&WZ.ind!=='no_aplica')?'':'none';
 
   // ── Solution cards ──
-  renderSolGrid(hasAsistencia,hasComedor,hasAcceso,WZ.mods,WZ.size,d);
+  // En modalidad Kit Reforma, la tarjeta del kit ya detalla los módulos con su
+  // ángulo de cumplimiento: ocultamos la sección "Solución" para no duplicar.
+  if(WZ.billing==='kit'){
+    hideSec('sec-solucion');
+  } else {
+    showFixed('sec-solucion');
+    renderSolGrid(hasAsistencia,hasComedor,hasAcceso,WZ.mods,WZ.size,d);
+  }
 
   // Success cases — standalone shows module-specific logos
   var logosSec=document.getElementById('sec-casos');
