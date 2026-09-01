@@ -1828,13 +1828,26 @@ function wizToggleImpresora(btn){
     btn.style.borderStyle=WZ.impresora?'solid':'dashed';
   }
 }
+// ¿Se puede ofrecer la impresora? Requisito: Comedor cotizado + IN05 en la
+// selección. NO exige que el marcaje sea reloj: con Asistencia + Comedor el
+// IN05 se cotiza igual aunque el marcaje sea app, web o WhatsApp.
+function impresoraAplica(){
+  if(WZ.mods.indexOf('comedor')<0) return false;
+  var mod=WZ.modalidad;
+  var in05Elegido=WZ.devices.indexOf('in05')>=0;
+  // Con reloj preexistente sólo aplica si el AE eligió el IN05 explícitamente
+  if(mod==='tiene') return in05Elegido;
+  if(isStandaloneWiz()){
+    // Comedor/Acceso solos: sin modalidad no se cotiza ningún equipo
+    if(!mod) return false;
+    return in05Elegido||!WZ.devicesTouched;
+  }
+  // Asistencia + Comedor (+ lo que sea): el IN05 del comedor va por defecto
+  return in05Elegido||!WZ.devicesTouched;
+}
 function updateImpresoraToggle(){
   var box=document.getElementById('wiz-impresora-box');if(!box)return;
-  var hasComedor=WZ.mods.indexOf('comedor')>=0;
-  var hasIn05=WZ.devices.indexOf('in05')>=0;
-  // Comedor standalone sin selector visible: el IN05 es el equipo por defecto
-  var comedorOnlyDefault=hasComedor&&!WZ.devicesTouched&&WZ.modalidad&&WZ.modalidad!=='tiene';
-  var show=hasComedor&&(hasIn05||comedorOnlyDefault)&&WZ.modalidad&&WZ.modalidad!=='tiene';
+  var show=impresoraAplica();
   box.style.display=show?'block':'none';
   if(!show&&WZ.impresora){
     WZ.impresora=false;
@@ -2252,6 +2265,7 @@ function wizNext(){
     document.getElementById('ws'+WZ.step).classList.remove('active');
     WZ.step++;document.getElementById('ws'+WZ.step).classList.add('active');
     document.getElementById('wb-prev').style.visibility='visible';wizFill();
+    if(WZ.step===3){updateWizDeviceSelector();updateImpresoraToggle();}
   }
   if(WZ.step===4){
     var wtRef=document.getElementById('wt-reforma');
@@ -2926,7 +2940,8 @@ function applyImpresora(){
   document.querySelectorAll('#tbody-unico tr[data-device="impresora"]').forEach(function(r){r.remove();});
   var in05Card=document.getElementById('hw-in05');
   var in05On=in05Card&&!in05Card.classList.contains('wiz-hide');
-  var on=WZ.impresora&&in05On&&WZ.mods.indexOf('comedor')>=0&&WZ.modalidad&&WZ.modalidad!=='tiene';
+  // Al generar, el IN05 visible es la señal fiable de que quedó cotizado
+  var on=WZ.impresora&&in05On&&WZ.mods.indexOf('comedor')>=0;
   if(card)card.classList[on?'remove':'add']('wiz-hide');
   if(!on){
     if(typeof recalcTable==='function')recalcTable('tbody-unico','total-unico');
