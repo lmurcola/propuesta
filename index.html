@@ -450,6 +450,9 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
             oninput="WZ.equipQty=Math.max(1,parseInt(this.value)||1)">
         </div>
         </div>
+        <div id="wiz-impresora-box" style="display:none;margin-top:10px;">
+            <div id="btn-impresora" class="wiz-solo-btn" onclick="wizToggleImpresora(this)" style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border:1.5px dashed #b8dff5;border-radius:999px;cursor:pointer;font-size:12px;font-weight:700;color:#2fabe4;background:#f0f9fe;width:fit-content;transition:all .15s;" onmouseover="if(!this.classList.contains('on')){this.style.background='#2fabe4';this.style.color='#fff'}" onmouseout="if(!this.classList.contains('on')){this.style.background='#f0f9fe';this.style.color='#2fabe4'}"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2"><rect x="6" y="9" width="12" height="7" rx="1"/><path d="M6 9V4h12v5"/><path d="M8 13h8v7H8z"/></svg> Incluir impresora de tickets (venta · $3,100 MXN + IVA)</div>
+        </div>
       </div>
 
       <!-- STEP 4: opciones del documento -->
@@ -640,7 +643,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 
   <!-- COSTO FIJO POR RANGO (modalidad: rango) -->
   <div class="price-block wiz-hide" id="block-rango">
-    <h4>Costos recurrentes</h4>
+    <h4 contenteditable="true" spellcheck="false">Costos recurrentes</h4>
     <div class="price-sub"><span class="bb" contenteditable="true" spellcheck="false" title="Edita la moneda (ej. COP + IVA)">MXN + IVA</span></div>
     <table class="price-table" id="tbl-rango">
       <thead><tr>
@@ -711,7 +714,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 
   <!-- COSTOS RECURRENTES -->
   <div class="price-block" id="block-recurrente">
-    <h4>Costos recurrentes</h4><button class="btn-toggle-totals no-print wiz-hide" id="btn-toggle-rec" onclick="toggleTotals(this,'tbody-recurrente')">Ocultar totales</button>
+    <h4 contenteditable="true" spellcheck="false">Costos recurrentes</h4><button class="btn-toggle-totals no-print wiz-hide" id="btn-toggle-rec" onclick="toggleTotals(this,'tbody-recurrente')">Ocultar totales</button>
     <div class="price-sub">
       <span class="bb" contenteditable="true" spellcheck="false" title="Edita la moneda (ej. COP + IVA)">MXN + IVA</span>
     </div>
@@ -802,7 +805,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
   <!-- COSTOS DE PAGO ÚNICO (colapsable) -->
   <div class="price-block" id="block-pago-unico">
     <div class="price-block-toggle">
-      <h4 style="font-size:14px;">Costos de pago único</h4><button class="btn-toggle-totals no-print wiz-hide" id="btn-toggle-uni" onclick="toggleTotals(this,'tbody-unico')">Ocultar totales</button>
+      <h4 style="font-size:14px;" contenteditable="true" spellcheck="false">Costos de pago único</h4><button class="btn-toggle-totals no-print wiz-hide" id="btn-toggle-uni" onclick="toggleTotals(this,'tbody-unico')">Ocultar totales</button>
       <button class="btn-collapse-block no-print" onclick="togglePagoUnico(this)">— Ocultar</button>
     </div>
     <div class="price-sub"><span class="bb" contenteditable="true" spellcheck="false" title="Edita la moneda (ej. COP + IVA)">MXN + IVA</span></div>
@@ -1048,6 +1051,22 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div><div class="hw-spec-text"><h5>Dirección</h5><p>Bidireccional · Brazo de caída automática sin energía</p></div></div>
           <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg></div><div class="hw-spec-text"><h5>Temperatura operativa</h5><p>-20°C a 55°C</p></div></div>
           <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><div class="hw-spec-text"><h5>Ideal para</h5><p>Museos, escuelas, fábricas · Lector RFID y QR integrado</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hw-layout wiz-hide" id="hw-impresora">
+      <div class="hw-img-wrap"><img class="hw-img" src="relojes/reloj-13.jpg" alt="Impresora ZKP8001"></div>
+      <div class="hw-content">
+        <div class="hw-name">Impresora ZKP8001<span class="new-badge">COMPLEMENTO</span></div>
+        <div class="hw-specs">
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><rect x="6" y="9" width="12" height="7" rx="1"/><path d="M6 9V4h12v5"/><path d="M8 13h8v7H8z"/></svg></div><div class="hw-spec-text"><h5>Tipo de impresión</h5><p>Térmica directa · Sin cartuchos de tinta · Cortador automático</p></div></div>
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="hw-spec-text"><h5>Velocidad</h5><p>300 mm/s · Alta estabilidad y bajo nivel de ruido</p></div></div>
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="hw-spec-text"><h5>Papel</h5><p>Rollo térmico de 80 mm de ancho · Grosor 0.06 – 0.08 mm</p></div></div>
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><line x1="4" y1="4" x2="4" y2="20"/><line x1="8" y1="4" x2="8" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/><line x1="17" y1="4" x2="17" y2="20"/><line x1="21" y1="4" x2="21" y2="20"/></svg></div><div class="hw-spec-text"><h5>Códigos soportados</h5><p>1D y 2D · QR Code, Code 39/93/128, EAN13, UPC-A/E, ITF, Codabar</p></div></div>
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0114 0"/><path d="M1.42 9a16 16 0 0121 0"/><path d="M8.53 16.11a6 6 0 016.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg></div><div class="hw-spec-text"><h5>Conexión</h5><p>RS232, USB y puerto de red · Compatible con el puerto RS232 del IN05</p></div></div>
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="16" height="11" rx="2"/><path d="M22 11v3"/></svg></div><div class="hw-spec-text"><h5>Alimentación y durabilidad</h5><p>CC 24 V · Cabezal con vida útil de 100 km de impresión</p></div></div>
+          <div class="hw-spec-row"><div class="hw-spec-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><div class="hw-spec-text"><h5>Ideal para</h5><p>Comedor y casino · Comprobante impreso de cada ración entregada</p></div></div>
         </div>
       </div>
     </div>
@@ -1750,7 +1769,7 @@ function updateSegHint(){
 }
 
 // ── Wizard state ──
-var WZ = {ind:null,sub:null,size:null,colab:0,mods:[],marcaje:[],devices:[],devicesTouched:false,equipQty:1,soloEquipo:false,modalidad:null,reform:false,phased:false,billing:'estandar',paquete:'starter',tramos:false,step:1};
+var WZ = {ind:null,sub:null,size:null,colab:0,mods:[],marcaje:[],devices:[],devicesTouched:false,equipQty:1,soloEquipo:false,modalidad:null,reform:false,phased:false,billing:'estandar',paquete:'starter',tramos:false,step:1,impresora:false};
 
 document.querySelectorAll('#wc-ind .wiz-chip').forEach(function(b){b.onclick=function(){
   document.querySelectorAll('#wc-ind .wiz-chip').forEach(function(x){x.classList.remove('on');});
@@ -1768,7 +1787,7 @@ document.querySelectorAll('.wiz-sub .wiz-chip').forEach(function(b){b.onclick=fu
 function wizSoloEquipo(btn){
   WZ.soloEquipo=!WZ.soloEquipo;
   if(WZ.soloEquipo){
-    WZ.mods=[];WZ.devices=[];WZ.devicesTouched=false;WZ.equipQty=1;WZ.phased=false;
+    WZ.mods=[];WZ.devices=[];WZ.devicesTouched=false;WZ.equipQty=1;WZ.phased=false;WZ.impresora=false;
     document.getElementById('sw-phased').classList.remove('on');
     var tieneChip=document.querySelector('#wc-modalidad [data-modal="tiene"]');
     if(tieneChip)tieneChip.style.display='none';
@@ -1781,6 +1800,7 @@ function wizSoloEquipo(btn){
     if(tieneChip2)tieneChip2.style.display='';
   }
   updateWiz3ForStandalone(isStandaloneWiz());
+  updateImpresoraToggle();
   var qi=document.getElementById('wiz-equip-qty');if(qi)qi.value=1;
 }
 function wizToggleDevice(key,btn){
@@ -1795,6 +1815,32 @@ function wizToggleDevice(key,btn){
   if(wasOn){var i=WZ.devices.indexOf(key);if(i>=0)WZ.devices.splice(i,1);}
   else{if(WZ.devices.indexOf(key)<0)WZ.devices.push(key);}
   if(btn)btn.classList[wasOn?'remove':'add']('active');
+  updateImpresoraToggle();
+}
+// ── Impresora de tickets: sólo aplica con Comedor + IN05 ──
+function wizToggleImpresora(btn){
+  WZ.impresora=!WZ.impresora;
+  if(!btn)btn=document.getElementById('btn-impresora');
+  if(btn){
+    btn.classList[WZ.impresora?'add':'remove']('on');
+    btn.style.background=WZ.impresora?'#2fabe4':'#f0f9fe';
+    btn.style.color=WZ.impresora?'#fff':'#2fabe4';
+    btn.style.borderStyle=WZ.impresora?'solid':'dashed';
+  }
+}
+function updateImpresoraToggle(){
+  var box=document.getElementById('wiz-impresora-box');if(!box)return;
+  var hasComedor=WZ.mods.indexOf('comedor')>=0;
+  var hasIn05=WZ.devices.indexOf('in05')>=0;
+  // Comedor standalone sin selector visible: el IN05 es el equipo por defecto
+  var comedorOnlyDefault=hasComedor&&!WZ.devicesTouched&&WZ.modalidad&&WZ.modalidad!=='tiene';
+  var show=hasComedor&&(hasIn05||comedorOnlyDefault)&&WZ.modalidad&&WZ.modalidad!=='tiene';
+  box.style.display=show?'block':'none';
+  if(!show&&WZ.impresora){
+    WZ.impresora=false;
+    var b=document.getElementById('btn-impresora');
+    if(b){b.classList.remove('on');b.style.background='#f0f9fe';b.style.color='#2fabe4';b.style.borderStyle='dashed';}
+  }
 }
 function updateWizDeviceSelector(){
   var sel=document.getElementById('wiz-device-sel');if(!sel)return;
@@ -1807,7 +1853,7 @@ function updateWizDeviceSelector(){
   var qtyBox=document.getElementById('wiz-qty-box');
   var showQty=show||(comedorOnly&&WZ.modalidad&&WZ.modalidad!=='tiene');
   if(qtyBox)qtyBox.style.display=showQty?'block':'none';
-  if(!show)return;
+  if(!show){updateImpresoraToggle();return;}
   // Filter buttons (soloEquipo muestra todo)
   document.querySelectorAll('#wiz-dev-btns .hw-sel-btn').forEach(function(b){
     if(WZ.soloEquipo){b.style.display='';return;}
@@ -1823,6 +1869,7 @@ function updateWizDeviceSelector(){
       if(b)b.classList.add('active');
     });
   }
+  updateImpresoraToggle();
 }
 function isStandaloneWiz(){return WZ.soloEquipo||WZ.mods.indexOf('asistencia')<0&&(WZ.mods.indexOf('comedor')>=0||WZ.mods.indexOf('acceso')>=0);}
 function updateWiz3ForStandalone(sa){
@@ -1865,6 +1912,7 @@ document.querySelectorAll('#wc-mods .wiz-mod').forEach(function(b){b.onclick=fun
     if(sb){sb.classList.remove('on');sb.style.background='#f0f9fe';sb.style.color='#2fabe4';}
   }
   updateWiz3ForStandalone(isStandaloneWiz());
+  updateImpresoraToggle();
 }});
 document.querySelectorAll('#wc-marcaje .wiz-mod').forEach(function(b){b.onclick=function(){
   b.classList.toggle('on');var m=b.dataset.mar,i=WZ.marcaje.indexOf(m);
@@ -2381,6 +2429,7 @@ function renderSolGrid(hasAsistencia,hasComedor,hasAcceso,mods,size,d){
       if(mods.indexOf(m)>=0) cards.push(modSolCard(m,d.georetail));
     });
     if(hasAcceso) cards.push('<div class="sol-card"><span class="sol-tag yellow">Control de Acceso</span><h4>Control de acceso físico</h4><ul><li>Control de entradas y salidas por torniquete, lector biométrico o app</li><li>Restricción por horario, turno y perfil de colaborador — configurable por sede</li><li>Bitácora digital e inmutable: quién entró, cuándo y desde qué punto</li><li>Compatible con tarjeta, PIN, facial o huella sin hardware obligatorio adicional</li></ul></div>');
+    if(hasComedor) cards.push('<div class="sol-card"><span class="sol-tag yellow">Comedor</span><h4>Control de comedor y alimentación</h4><ul><li>Asignación automática por turno y marca de entrada — hasta 6 servicios configurables</li><li>Límites de consumo por colaborador según políticas internas</li><li>Reportes descargables: Totales, Consolidado, Detallado y Detallado por Marca</li><li>Sincronizado con Asistencia — un colaborador, un registro, sin doble captura</li></ul></div>');
 
     // ── Prenómina: only for SMB with ≤1 add-ons ──
     if(size==='smb'&&addons.length<=1) cards.push('<div class="sol-card"><span class="sol-tag">Eficiencia</span><h4>Prenómina automatizada</h4><ul><li>Cálculo automático de HE simples y dobles conforme a la LFT</li><li>Exportable directo a tu proceso de nómina — sin capturas manuales</li><li>Menos carga en RRHH y menos aclaraciones con colaboradores</li></ul></div>');
@@ -2690,6 +2739,10 @@ function wizGenerate(){
   }
   // mod==='tiene' o sin reloj/comedor → ya oculto
 
+  // ── Impresora de tickets (Comedor + IN05): sólo venta → fuerza pago único ──
+  applyImpresora();
+  updateHardwareLabel();
+
   // ── Final pass: recurrentes visible sólo si realmente tiene filas ──
   // (cubre solo-equipos en venta, torniquetes sin renta, SaaS + equipo en venta, etc.)
   var recH4=document.querySelector('#block-recurrente h4');
@@ -2819,8 +2872,8 @@ function updateDevicePricing(key,isActive){
     if(typeof syncFeeFromTable==='function')syncFeeFromTable();
   }
 }
-var DEV_MAP={senseface:'hw-senseface',mb360:'hw-mb360',in05:'hw-in05',f22:'hw-f22',speedface_v5lp:'hw-speedface_v5lp',senseface4a:'hw-senseface4a',senseface3a:'hw-senseface3a',senseface7a:'hw-senseface7a',profacex:'hw-profacex',s922:'hw-s922',ts2000pro:'hw-ts2000pro',ts2000plus:'hw-ts2000plus'};
-var DEVICE_PRICES={f22:{compra:4500,renta:700},speedface_v5lp:{compra:7000,renta:1000},senseface4a:{compra:3500,renta:550},senseface3a:{compra:3500,renta:550},senseface7a:{compra:3500,renta:550},s922:{compra:6000,renta:900},ts2000pro:{compra:17500,renta:null},ts2000plus:{compra:17500,renta:null},in05:{compra:5000,renta:750},mb360:{compra:4000,renta:600},senseface:{compra:2500,renta:300},profacex:{compra:20000,renta:2900},generico:{compra:0,renta:0}};
+var DEV_MAP={impresora:'hw-impresora',senseface:'hw-senseface',mb360:'hw-mb360',in05:'hw-in05',f22:'hw-f22',speedface_v5lp:'hw-speedface_v5lp',senseface4a:'hw-senseface4a',senseface3a:'hw-senseface3a',senseface7a:'hw-senseface7a',profacex:'hw-profacex',s922:'hw-s922',ts2000pro:'hw-ts2000pro',ts2000plus:'hw-ts2000plus'};
+var DEVICE_PRICES={impresora:{compra:3100,renta:null},f22:{compra:4500,renta:700},speedface_v5lp:{compra:7000,renta:1000},senseface4a:{compra:3500,renta:550},senseface3a:{compra:3500,renta:550},senseface7a:{compra:3500,renta:550},s922:{compra:6000,renta:900},ts2000pro:{compra:17500,renta:null},ts2000plus:{compra:17500,renta:null},in05:{compra:5000,renta:750},mb360:{compra:4000,renta:600},senseface:{compra:2500,renta:300},profacex:{compra:20000,renta:2900},generico:{compra:0,renta:0}};
 function updateSelectorModes(mods){
   document.querySelectorAll('.hw-sel-btn').forEach(function(b){
     var bm=(b.getAttribute('data-modes')||'').split(',');
@@ -2835,6 +2888,7 @@ function toggleReloj(key,btn){
   el.classList[wasActive?'add':'remove']('wiz-hide');
   if(btn)btn.classList[wasActive?'remove':'add']('active');
   updateDevicePricing(key,!wasActive);
+  if(typeof updateHardwareLabel==='function')updateHardwareLabel();
 }
 function setRelojSelection(keys){
   Object.keys(DEV_MAP).forEach(function(k){
@@ -2846,6 +2900,45 @@ function setRelojSelection(keys){
       btn.classList[on?'add':'remove']('active');
     });
   });
+}
+// Rótulo del recuadro de hardware: singular/plural según lo que se cotiza.
+// La impresora no es un biométrico, así que al incluirla el rótulo pasa a "Equipos".
+function updateHardwareLabel(){
+  var lbl=document.querySelector('#sec-hardware .sec-label');
+  if(!lbl||lbl.dataset.manual)return;
+  var keys=[];
+  function add(k){if(k&&keys.indexOf(k)<0)keys.push(k);}
+  document.querySelectorAll('#tbody-recurrente tr[data-device],#tbody-unico tr[data-device],#tbody-rango tr[data-device]').forEach(function(r){
+    add(r.getAttribute('data-device'));
+  });
+  // También cuenta las fichas técnicas visibles (cubre "ya cuenta con reloj")
+  document.querySelectorAll('#sec-hardware .hw-layout').forEach(function(c){
+    if(!c.classList.contains('wiz-hide')) add(c.id.replace(/^hw-/,''));
+  });
+  var hasImp=keys.indexOf('impresora')>=0;
+  var bio=keys.filter(function(k){return k!=='impresora';}).length;
+  lbl.textContent = hasImp ? 'Equipos' : (bio>1 ? 'Equipos biométricos' : 'Equipo biométrico');
+}
+// Muestra la ficha de la impresora y su fila de venta cuando el AE la activó
+// en el wizard junto a Comedor + IN05. Es sólo venta: obliga a pago único.
+function applyImpresora(){
+  var card=document.getElementById('hw-impresora');
+  document.querySelectorAll('#tbody-unico tr[data-device="impresora"]').forEach(function(r){r.remove();});
+  var in05Card=document.getElementById('hw-in05');
+  var in05On=in05Card&&!in05Card.classList.contains('wiz-hide');
+  var on=WZ.impresora&&in05On&&WZ.mods.indexOf('comedor')>=0&&WZ.modalidad&&WZ.modalidad!=='tiene';
+  if(card)card.classList[on?'remove':'add']('wiz-hide');
+  if(!on){
+    if(typeof recalcTable==='function')recalcTable('tbody-unico','total-unico');
+    return;
+  }
+  showFixed('sec-hardware');
+  var bl=document.getElementById('block-pago-unico');
+  var estabaOculto=bl&&bl.classList.contains('wiz-hide');
+  if(estabaOculto)clearUnicoRows();
+  showPagoUnicoExpanded();
+  addDeviceRow('tbody-unico','impresora','Impresora ZKP8001',WZ.equipQty||1,3100,'uni');
+  if(typeof recalcTable==='function')recalcTable('tbody-unico','total-unico');
 }
 function clearUnicoRows(){
   var tb=document.getElementById('tbody-unico');if(!tb)return;
