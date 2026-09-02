@@ -464,7 +464,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
         </div>
         </div>
         <div id="wiz-impresora-box" style="display:none;margin-top:10px;">
-            <div id="btn-impresora" class="wiz-solo-btn" onclick="wizToggleImpresora(this)" style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border:1.5px dashed #b8dff5;border-radius:999px;cursor:pointer;font-size:12px;font-weight:700;color:#2fabe4;background:#f0f9fe;width:fit-content;transition:all .15s;" onmouseover="if(!this.classList.contains('on')){this.style.background='#2fabe4';this.style.color='#fff'}" onmouseout="if(!this.classList.contains('on')){this.style.background='#f0f9fe';this.style.color='#2fabe4'}"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2"><rect x="6" y="9" width="12" height="7" rx="1"/><path d="M6 9V4h12v5"/><path d="M8 13h8v7H8z"/></svg> Incluir impresora de tickets (venta · $3,100 MXN + IVA)</div>
+            <div id="btn-impresora" class="wiz-solo-btn" onclick="wizToggleImpresora(this)" style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border:1.5px dashed #b8dff5;border-radius:999px;cursor:pointer;font-size:12px;font-weight:700;color:#2fabe4;background:#f0f9fe;width:fit-content;transition:all .15s;" onmouseover="if(!this.classList.contains('on')){this.style.background='#2fabe4';this.style.color='#fff'}" onmouseout="if(!this.classList.contains('on')){this.style.background='#f0f9fe';this.style.color='#2fabe4'}"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2"><rect x="6" y="9" width="12" height="7" rx="1"/><path d="M6 9V4h12v5"/><path d="M8 13h8v7H8z"/></svg> Incluir impresora de tickets (venta · $3,500 MXN + IVA)</div>
         </div>
       </div>
 
@@ -3166,7 +3166,7 @@ function updateDevicePricing(key,isActive){
   }
 }
 var DEV_MAP={impresora:'hw-impresora',senseface:'hw-senseface',mb360:'hw-mb360',in05:'hw-in05',f22:'hw-f22',speedface_v5lp:'hw-speedface_v5lp',senseface4a:'hw-senseface4a',senseface3a:'hw-senseface3a',senseface7a:'hw-senseface7a',profacex:'hw-profacex',s922:'hw-s922',ts2000pro:'hw-ts2000pro',ts2000plus:'hw-ts2000plus'};
-var DEVICE_PRICES={impresora:{compra:3100,renta:null},f22:{compra:4500,renta:700},speedface_v5lp:{compra:7000,renta:1000},senseface4a:{compra:3500,renta:550},senseface3a:{compra:3500,renta:550},senseface7a:{compra:3500,renta:550},s922:{compra:6000,renta:900},ts2000pro:{compra:17500,renta:null},ts2000plus:{compra:17500,renta:null},in05:{compra:5000,renta:750},mb360:{compra:4000,renta:600},senseface:{compra:2500,renta:300},profacex:{compra:20000,renta:2900},generico:{compra:0,renta:0}};
+var DEVICE_PRICES={impresora:{compra:3500,renta:null},f22:{compra:4500,renta:700},speedface_v5lp:{compra:7000,renta:1000},senseface4a:{compra:3500,renta:550},senseface3a:{compra:3500,renta:550},senseface7a:{compra:3500,renta:550},s922:{compra:6000,renta:900},ts2000pro:{compra:17500,renta:null},ts2000plus:{compra:17500,renta:null},in05:{compra:5000,renta:750},mb360:{compra:4000,renta:600},senseface:{compra:2500,renta:300},profacex:{compra:20000,renta:2900},generico:{compra:0,renta:0}};
 function updateSelectorModes(mods){
   document.querySelectorAll('.hw-sel-btn').forEach(function(b){
     var bm=(b.getAttribute('data-modes')||'').split(',');
@@ -3231,7 +3231,7 @@ function applyImpresora(){
   var estabaOculto=bl&&bl.classList.contains('wiz-hide');
   if(estabaOculto)clearUnicoRows();
   showPagoUnicoExpanded();
-  addDeviceRow('tbody-unico','impresora','Impresora ZKP8001',WZ.equipQty||1,3100,'uni');
+  addDeviceRow('tbody-unico','impresora','Impresora ZKP8001',WZ.equipQty||1,3500,'uni');
   if(typeof recalcTable==='function')recalcTable('tbody-unico','total-unico');
 }
 function clearUnicoRows(){
