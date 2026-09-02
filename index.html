@@ -34,6 +34,11 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 .optional-sec{border:1.5px solid #b8dff5;border-radius:10px;padding:1.25rem;background:#f7fcff;margin-bottom:2.25rem;}
 .opt-toggle-bar{display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
 .opt-toggle-bar .sec-label{margin-bottom:0;border-bottom:none;padding-bottom:0;}
+/* Ficha técnica oculta: sólo queda la barra para poder restaurarla en pantalla */
+.optional-sec.sec-oculta > *:not(.opt-toggle-bar){display:none!important;}
+.optional-sec.sec-oculta{background:#fafbfc;border-style:dashed;border-color:#cfd8e3;}
+.optional-sec.sec-oculta .sec-label{color:#8b98a8;}
+.optional-sec.sec-oculta .opt-toggle-btn{display:none!important;}
 .opt-toggle-btn{font-size:11px;font-weight:600;color:#fff;background:#2fabe4;border:none;border-radius:5px;padding:4px 14px;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0;}
 .opt-content{display:none;margin-top:1rem;}
 .opt-content.visible{display:block;}
@@ -217,6 +222,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
   /* Optional sections: hide entire block unless active */
   .optional-sec{display:none!important;}
   .optional-sec.active{display:block!important;}
+  .optional-sec.sec-oculta{display:none!important;}
   .hw-selector{display:none!important;}
   .opt-content{display:none!important;}
   .opt-content.visible{display:block!important;}
@@ -938,7 +944,10 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 <div class="optional-sec" id="sec-hardware">
   <div class="opt-toggle-bar" onclick="toggleOpt('sec-hardware','+ Ver equipo')">
     <div class="sec-label">Equipo biométrico</div>
-    <button class="opt-toggle-btn" id="btn-sec-hardware">+ Ver especificaciones</button>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="btn-toggle-totals no-print" id="btn-hide-hw" onclick="event.stopPropagation();toggleFichaHW();">Ocultar ficha técnica</button>
+      <button class="opt-toggle-btn" id="btn-sec-hardware">+ Ver especificaciones</button>
+    </div>
   </div>
   <div id="hw-reloj-selector" class="hw-selector wiz-hide" style="padding:10px 16px 4px;">
     <div style="font-size:11px;font-weight:700;color:#4a6080;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;">Selecciona el equipo a incluir</div>
@@ -1317,6 +1326,14 @@ function calc(){
   document.getElementById('r-roi').textContent=roi.toFixed(1)+'×';
 }
 calc();
+// Oculta/muestra el recuadro de especificaciones del equipo.
+// Es sólo presentación: no toca precios ni las tablas de costos.
+function toggleFichaHW(){
+  var sec=document.getElementById('sec-hardware'); if(!sec)return;
+  var oculta=sec.classList.toggle('sec-oculta');
+  var b=document.getElementById('btn-hide-hw');
+  if(b) b.textContent=oculta?'Mostrar ficha técnica':'Ocultar ficha técnica';
+}
 function toggleOpt(id, openLabel){
   var content=document.getElementById('content-'+id);
   var btn=document.getElementById('btn-'+id);
@@ -2387,7 +2404,9 @@ function wizPrev(){
 // ── section visibility helpers ──
 function showFixed(id){
   var sec=document.getElementById(id),content=document.getElementById('content-'+id),btn=document.getElementById('btn-'+id);
-  if(sec){sec.classList.remove('wiz-hide');sec.classList.add('active');}
+  if(sec){sec.classList.remove('wiz-hide');sec.classList.remove('sec-oculta');sec.classList.add('active');}
+  var hb=document.getElementById('btn-hide-hw');
+  if(hb&&id==='sec-hardware')hb.textContent='Ocultar ficha técnica';
   if(content)content.classList.add('visible');
   if(btn)btn.style.display='none';
   var bar=sec?sec.querySelector('.opt-toggle-bar'):null;
