@@ -114,6 +114,19 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
 .price-table tr.total td{font-weight:700;background:rgba(47,171,228,0.1);}
 .price-table td:last-child{text-align:right;}
 .price-fn{font-size:11px;color:#4a6080;margin-top:0.75rem;line-height:1.6;}
+/* ── Comparativa Mensual vs Anual ── */
+.cmp-anual{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.1rem;}
+.cmp-col{background:#fff;border:1px solid #b8dff5;border-radius:10px;padding:0.9rem 1rem;text-align:center;}
+.cmp-col.win{border:2px solid #2fabe4;background:#f0f9fe;position:relative;}
+.cmp-tag{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#4a6080;margin-bottom:6px;}
+.cmp-col.win .cmp-tag{color:#1a8fc7;}
+.cmp-val{font-family:'DM Serif Display',serif;font-size:24px;color:#1a2332;line-height:1.1;}
+.cmp-col.win .cmp-val{color:#2fabe4;}
+.cmp-sub{font-size:11px;color:#4a6080;margin-top:5px;line-height:1.4;}
+.cmp-save{background:#fabb0c;color:#1a2332;border-radius:8px;padding:0.7rem 1rem;text-align:center;font-size:13px;font-weight:600;margin-bottom:1.1rem;}
+.cmp-save span{font-weight:700;}
+.anual-dcto-box{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px dashed #38a169;border-radius:5px;padding:3px 10px;font-size:11px;font-weight:600;color:#38a169;}
+.anual-dcto-box .ed{min-width:34px;text-align:right;color:#1a2332;font-weight:700;}
 .row-ctrl{display:inline-flex;align-items:center;gap:4px;margin-left:6px;vertical-align:middle;}
 .row-ctrl button{font-size:10px;padding:1px 6px;border:none;border-radius:3px;cursor:pointer;font-weight:700;line-height:1.4;}
 
@@ -487,6 +500,23 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
           </div>
         </div>
 
+        <div id="wt-periodo" style="background:#f0f9fe;border:1px solid #b8dff5;border-radius:8px;padding:13px 15px;margin:10px 0;">
+          <label style="color:#1a6989;letter-spacing:1px;font-size:11px;font-weight:700;text-transform:uppercase;">Periodicidad de cobro</label>
+          <div style="font-size:11px;color:#4a6080;margin-top:3px;">Se combina con cualquier modalidad. La anualidad sólo incluye costos recurrentes.</div>
+          <div class="wiz-chips" id="wc-periodo" style="margin-top:8px;">
+            <button class="wiz-chip on" data-per="mensual">Mensual</button>
+            <button class="wiz-chip" data-per="comparativo">Mensual vs Anual</button>
+            <button class="wiz-chip" data-per="solo">Sólo anual</button>
+          </div>
+          <div id="wc-anual-box" style="display:none;margin-top:10px;padding-top:10px;border-top:1px dashed #b8dff5;">
+            <label style="color:#1a6989;letter-spacing:1px;font-size:11px;font-weight:700;text-transform:uppercase;display:block;margin-bottom:6px;">Descuento por pago anual (%)</label>
+            <input type="number" id="wc-anual-dcto" min="0" max="100" step="0.5" value="10"
+              style="width:100px;padding:8px 12px;border:1.5px solid #b8dff5;border-radius:8px;font-size:14px;font-weight:600;color:#1a2332;outline:none;"
+              oninput="WZ.anualDcto=Math.max(0,Math.min(100,parseFloat(this.value)||0))">
+            <span style="font-size:11px;color:#4a6080;margin-left:8px;">Editable después en la propuesta</span>
+          </div>
+        </div>
+
         <div class="wiz-tog" id="wt-tramos">
           <div class="wt-txt"><label>Rangos de costo por usuario</label><span>Agrega una tabla escalonada que muestra cómo baja el precio al sumar usuarios</span></div>
           <button class="wt-switch" id="sw-tramos" onclick="wizToggle('tramos')"></button>
@@ -772,6 +802,46 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
       </tbody>
     </table>
     <button class="price-add-btn no-print" onclick="addPriceRow('tbody-recurrente','rec')">+ Agregar ítem</button> <button class="btn-pref no-print" onclick="applyDescuento(this,'tbody-recurrente')">+ Agregar descuento</button>
+  </div>
+
+  <!-- COSTO ANUAL (modalidad: anual) -->
+  <div class="price-block wiz-hide" id="block-anual">
+    <div class="price-block-toggle">
+      <h4 contenteditable="true" spellcheck="false">Costo anual</h4>
+      <button class="btn-toggle-totals no-print" id="btn-toggle-anu" onclick="toggleTotals(this,'tbody-anual')">Ocultar totales</button>
+    </div>
+    <div class="price-sub">
+      <span class="bb" contenteditable="true" spellcheck="false" title="Edita la moneda (ej. COP + IVA)">MXN + IVA</span>
+      <span class="anual-dcto-box no-print">Descuento anual <span class="ed" id="anual-dcto-global" contenteditable="true" spellcheck="false" inputmode="numeric">10</span>%
+        <button onclick="aplicarDctoAnual()" style="border:none;background:#38a169;color:#fff;border-radius:4px;font-size:10px;font-weight:700;padding:2px 8px;cursor:pointer;">Aplicar a todas</button>
+      </span>
+    </div>
+    <div id="cmp-anual-wrap"></div>
+    <table class="price-table" id="tbl-anual">
+      <thead><tr>
+        <th contenteditable="true" spellcheck="false">Servicio</th>
+        <th style="text-align:center;" contenteditable="true" spellcheck="false">Cantidad</th>
+        <th style="text-align:right;" contenteditable="true" spellcheck="false">Precio anual unitario</th>
+        <th style="text-align:center;" contenteditable="true" spellcheck="false">Dcto %</th>
+        <th style="text-align:right;" contenteditable="true" spellcheck="false">Precio con dcto</th>
+        <th style="text-align:right;" contenteditable="true" spellcheck="false">Total anual</th>
+        <th class="no-print" style="width:60px;"></th>
+      </tr></thead>
+      <tbody id="tbody-anual">
+        <tr class="subtotal">
+          <td colspan="5" id="subtotal-anu-label" contenteditable="true" spellcheck="false">Pago total anual</td>
+          <td style="text-align:right;" id="subtotal-anual" contenteditable="true" spellcheck="false">$0 MXN</td>
+          <td class="no-print"></td>
+        </tr>
+        <tr class="total">
+          <td colspan="5" id="total-anu-label" contenteditable="true" spellcheck="false">Pago total anual + IVA</td>
+          <td style="color:#2fabe4;text-align:right;" id="total-anual" contenteditable="true" spellcheck="false">$0 MXN</td>
+          <td class="no-print"></td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="price-add-btn no-print" onclick="addAnualRow('','1','0','0')">+ Agregar ítem</button>
+    <div class="price-fn" id="anual-fn">Los costos de pago único (equipos en venta, instalación y envío) se facturan por separado y no forman parte de la anualidad.</div>
   </div>
 
 
@@ -1769,7 +1839,7 @@ function updateSegHint(){
 }
 
 // ── Wizard state ──
-var WZ = {ind:null,sub:null,size:null,colab:0,mods:[],marcaje:[],devices:[],devicesTouched:false,equipQty:1,soloEquipo:false,modalidad:null,reform:false,phased:false,billing:'estandar',paquete:'starter',tramos:false,step:1,impresora:false};
+var WZ = {ind:null,sub:null,size:null,colab:0,mods:[],marcaje:[],devices:[],devicesTouched:false,equipQty:1,soloEquipo:false,modalidad:null,reform:false,phased:false,billing:'estandar',paquete:'starter',tramos:false,step:1,impresora:false,periodo:'mensual',anualDcto:10};
 
 document.querySelectorAll('#wc-ind .wiz-chip').forEach(function(b){b.onclick=function(){
   document.querySelectorAll('#wc-ind .wiz-chip').forEach(function(x){x.classList.remove('on');});
@@ -1963,10 +2033,26 @@ function syncBillingChips(){
   document.querySelectorAll('#wc-paquete .wiz-chip').forEach(function(x){
     x.classList.toggle('on', x.dataset.paq===WZ.paquete);
   });
+  document.querySelectorAll('#wc-periodo .wiz-chip').forEach(function(x){
+    x.classList.toggle('on', x.dataset.per===WZ.periodo);
+  });
 }
 function updateBillingUI(){
   var pb=document.getElementById('wc-paquete-box');
   if(pb) pb.style.display=(WZ.billing==='paquete')?'block':'none';
+  var ab=document.getElementById('wc-anual-box');
+  if(ab) ab.style.display=(WZ.periodo!=='mensual')?'block':'none';
+  // Anualizar no aplica a proyecto faseado ni a cotización de sólo equipos
+  var wp=document.getElementById('wt-periodo');
+  var showPer=!WZ.phased && !WZ.soloEquipo;
+  if(wp) wp.style.display=showPer?'':'none';
+  if(!showPer && WZ.periodo!=='mensual'){
+    WZ.periodo='mensual';
+    document.querySelectorAll('#wc-periodo .wiz-chip').forEach(function(x){
+      x.classList.toggle('on', x.dataset.per==='mensual');
+    });
+    if(ab) ab.style.display='none';
+  }
   // "Rangos de costo por usuario" sólo aplica en modalidad estándar sin faseado
   var wt=document.getElementById('wt-tramos');
   var showTramos=(WZ.billing==='estandar' && !WZ.phased && !WZ.soloEquipo);
@@ -1989,6 +2075,9 @@ document.querySelectorAll('#wc-billing .wiz-chip').forEach(function(b){b.onclick
 };});
 document.querySelectorAll('#wc-paquete .wiz-chip').forEach(function(b){b.onclick=function(){
   WZ.paquete=b.dataset.paq; syncBillingChips();
+};});
+document.querySelectorAll('#wc-periodo .wiz-chip').forEach(function(b){b.onclick=function(){
+  WZ.periodo=b.dataset.per; syncBillingChips(); updateBillingUI();
 };});
 
 // ── 4a. Costo fijo por rango ──
@@ -2353,6 +2442,192 @@ function toggleTotals(btn,tbodyId){
   rows.forEach(function(r){r.style.display=hidden?'':'none';});
   btn.textContent=hidden?'Ocultar totales':'Mostrar totales';
 }
+// ══════════════════════════════════════════════
+// COSTO ANUAL
+// La anualidad se calcula SÓLO sobre los costos recurrentes.
+// Los pagos únicos (equipos en venta, instalación, envío) van aparte.
+// ══════════════════════════════════════════════
+function addAnualRow(label,qty,unitAnual,dcto){
+  var tb=document.getElementById('tbody-anual');if(!tb)return;
+  var anchor=tb.querySelector('tr.subtotal')||tb.querySelector('tr.total');
+  var tr=document.createElement('tr');tr.className='price-row';tr.setAttribute('data-row','anu');
+  tr.innerHTML='<td contenteditable="true" spellcheck="false">'+label+'</td>'
+    +'<td style="text-align:center;" contenteditable="true" spellcheck="false" class="qty" inputmode="numeric">'+qty+'</td>'
+    +'<td style="text-align:right;" contenteditable="true" spellcheck="false" class="unit-anual" inputmode="numeric">'+unitAnual+'</td>'
+    +'<td style="text-align:center;" contenteditable="true" spellcheck="false" class="anual-pct" inputmode="numeric">'+dcto+'</td>'
+    +'<td style="text-align:right;" class="unit-neto"></td>'
+    +'<td style="text-align:right;" class="row-total" contenteditable="true" spellcheck="false">$0</td>'
+    +'<td class="no-print" style="text-align:center;white-space:nowrap;"><button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button></td>';
+  tb.insertBefore(tr,anchor);
+  return tr;
+}
+function recalcAnual(){
+  var tb=document.getElementById('tbody-anual');if(!tb)return;
+  var grand=0;
+  tb.querySelectorAll('tr.price-row').forEach(function(r){
+    var qty=parseNum(r.querySelector('.qty').innerText);
+    var unit=parseNum(r.querySelector('.unit-anual').innerText);
+    var pct=parseNum(r.querySelector('.anual-pct').innerText);
+    if(pct>100)pct=100; if(pct<0)pct=0;
+    var neto=unit*(1-pct/100);
+    // Precio unitario ya descontado (celda calculada, no editable)
+    var nc=r.querySelector('.unit-neto');
+    if(nc){
+      nc.textContent=pct>0?formatMXN(neto):'—';
+      nc.style.color=pct>0?'#38a169':'#a0aec0';
+      nc.style.fontWeight=pct>0?'600':'400';
+    }
+    var uc=r.querySelector('.unit-anual');
+    if(uc)uc.classList[pct>0?'add':'remove']('price-original');
+    var tot=qty*neto;
+    grand+=tot;
+    var tc=r.querySelector('.row-total');
+    if(tc&&!tc.dataset.manual) tc.textContent=formatMXN(tot);
+    else if(tc&&tc.dataset.manual) grand=grand-tot+parseNum(tc.innerText);
+  });
+  var sc=document.getElementById('subtotal-anual');
+  var gc=document.getElementById('total-anual');
+  if(sc&&!sc.dataset.manual) sc.textContent=formatMXN(grand);
+  if(gc&&!gc.dataset.manual) gc.textContent=formatMXN(grand*1.16);
+  renderCmpAnual(grand);
+}
+function aplicarDctoAnual(){
+  var g=document.getElementById('anual-dcto-global');
+  var pct=g?parseNum(g.innerText):0;
+  document.querySelectorAll('#tbody-anual tr.price-row .anual-pct').forEach(function(c){c.textContent=pct;});
+  document.querySelectorAll('#tbody-anual tr.price-row .row-total').forEach(function(c){delete c.dataset.manual;});
+  var sc=document.getElementById('subtotal-anual'),gc=document.getElementById('total-anual');
+  if(sc)delete sc.dataset.manual; if(gc)delete gc.dataset.manual;
+  recalcAnual();
+}
+// Tira comparativa Mensual vs Anual (sólo en modo comparativo)
+function renderCmpAnual(anualNeto){
+  var wrap=document.getElementById('cmp-anual-wrap');if(!wrap)return;
+  if(WZ.periodo!=='comparativo'){wrap.innerHTML='';return;}
+  var mensual=totalMensualActivo();
+  var anualSinDcto=mensual*12;
+  var ahorro=anualSinDcto-anualNeto;
+  var pct=anualSinDcto>0?(ahorro/anualSinDcto*100):0;
+  var mesEquiv=anualNeto/12;
+  var h='<div class="cmp-anual">'
+    +'<div class="cmp-col"><div class="cmp-tag">Pago mensual</div><div class="cmp-val">'+formatMXN(mensual)+'</div>'
+    +'<div class="cmp-sub">al mes · '+formatMXN(anualSinDcto)+' en 12 meses</div></div>'
+    +'<div class="cmp-col win"><div class="cmp-tag">Pago anual</div><div class="cmp-val">'+formatMXN(anualNeto)+'</div>'
+    +'<div class="cmp-sub">al año · equivale a '+formatMXN(mesEquiv)+' / mes</div></div>'
+    +'</div>';
+  if(ahorro>0){
+    h+='<div class="cmp-save">Ahorro con pago anual: <span>'+formatMXN(ahorro)+'</span> ('+pct.toFixed(1).replace('.0','')+'%) &middot; equivale a <span>'+(ahorro/mensual).toFixed(1).replace('.0','')+' meses</span> sin costo</div>';
+  }
+  wrap.innerHTML=h;
+}
+// Total mensual de la modalidad de cobro vigente (estándar, rango, paquete o kit)
+function totalMensualActivo(){
+  var id;
+  if(WZ.billing==='rango') id='subtotal-rango';
+  else if(WZ.billing==='paquete') id='paq-total';
+  else if(WZ.billing==='kit') id='kit-total';
+  else id='subtotal-recurrente';
+  var base=parseNum((document.getElementById(id)||{innerText:'0'}).innerText);
+  // En paquete y kit la renta de equipos va en su propio bloque: se suma aparte
+  if(WZ.billing==='paquete'||WZ.billing==='kit'){
+    document.querySelectorAll('#tbody-recurrente tr.price-row[data-device]').forEach(function(r){
+      base+=parseNum(r.querySelector('.qty').innerText)*parseNum(r.querySelector('.unit').innerText);
+    });
+  }
+  return base;
+}
+// Filas base para anualizar, según la modalidad de cobro elegida
+function anualSourceRows(){
+  var out=[];
+  function pushDeviceRows(){
+    document.querySelectorAll('#tbody-recurrente tr.price-row[data-device]').forEach(function(r){
+      out.push({label:r.querySelector('td').innerText.trim(),
+                qty:parseNum(r.querySelector('.qty').innerText),
+                unit:parseNum(r.querySelector('.unit').innerText)});
+    });
+  }
+  if(WZ.billing==='rango'){
+    document.querySelectorAll('#tbody-rango tr.price-row').forEach(function(r){
+      var tds=r.querySelectorAll('td');
+      var serv=tds[0]?tds[0].innerText.trim():'';
+      var rango=tds[1]?tds[1].innerText.trim():'';
+      var val=parseNum(r.querySelector('.rango-val').innerText);
+      if(!serv&&!val)return;
+      out.push({label:serv+(rango?' ('+rango+')':''),qty:1,unit:val});
+    });
+  } else if(WZ.billing==='paquete'){
+    var pn=document.getElementById('paq-name');
+    var pu=parseNum((document.getElementById('paq-users')||{innerText:'0'}).innerText);
+    var pp=parseNum((document.getElementById('paq-price')||{innerText:'0'}).innerText);
+    out.push({label:'Plan '+(pn?pn.innerText.trim():'')+' — licencia por usuario',qty:pu||1,unit:pp});
+    pushDeviceRows();
+  } else if(WZ.billing==='kit'){
+    var kn=document.getElementById('kit-name');
+    var kt=parseNum((document.getElementById('kit-total')||{innerText:'0'}).innerText);
+    out.push({label:kn?kn.innerText.trim():'Kit Digital',qty:1,unit:kt});
+    pushDeviceRows();
+  } else {
+    document.querySelectorAll('#tbody-recurrente tr.price-row:not(.price-row-hidden)').forEach(function(r){
+      var label=r.querySelector('td').innerText.trim();
+      var qty=parseNum(r.querySelector('.qty').innerText);
+      var unit=parseNum(r.querySelector('.unit').innerText);
+      if(!label&&unit===0)return;
+      out.push({label:label,qty:qty,unit:unit});
+    });
+  }
+  return out;
+}
+// Construye el bloque anual sobre los costos recurrentes de la modalidad activa
+function anualInit(){
+  var tb=document.getElementById('tbody-anual');
+  if(!tb)return;
+  tb.querySelectorAll('tr.price-row').forEach(function(r){r.remove();});
+  var g=document.getElementById('anual-dcto-global');
+  if(g)g.textContent=WZ.anualDcto;
+  anualSourceRows().forEach(function(row){
+    addAnualRow(row.label,row.qty,Math.round(row.unit*12*100)/100,WZ.anualDcto);
+  });
+  if(tb.querySelectorAll('tr.price-row').length===0){
+    hideBlock('block-anual'); mostrarBloquesMensuales(true); return;
+  }
+  showBlock('block-anual');
+  recalcAnual();
+  // "Sólo anual": los bloques mensuales desaparecen de la propuesta
+  mostrarBloquesMensuales(WZ.periodo!=='solo');
+}
+// Muestra u oculta el bloque mensual de la modalidad vigente
+function mostrarBloquesMensuales(show){
+  var id;
+  if(WZ.billing==='rango') id='block-rango';
+  else if(WZ.billing==='paquete') id='block-paquete';
+  else if(WZ.billing==='kit') id='block-kit';
+  else id='block-recurrente';
+  if(show)showBlock(id); else hideBlock(id);
+  // La renta de equipos en paquete/kit vive en block-recurrente
+  if((WZ.billing==='paquete'||WZ.billing==='kit')){
+    var dev=document.querySelectorAll('#tbody-recurrente tr.price-row[data-device]').length;
+    if(dev>0){ if(show)showBlock('block-recurrente'); else hideBlock('block-recurrente'); }
+  }
+  if(!show) hideBlock('block-resumen');
+}
+document.addEventListener('DOMContentLoaded',function(){
+  var tb=document.getElementById('tbody-anual');
+  if(tb) tb.addEventListener('input',function(e){
+    var c=e.target;
+    if(c.classList.contains('qty')||c.classList.contains('unit-anual')||c.classList.contains('anual-pct')){
+      tb.querySelectorAll('.row-total').forEach(function(x){delete x.dataset.manual;});
+      var sc=document.getElementById('subtotal-anual'),gc=document.getElementById('total-anual');
+      if(sc)delete sc.dataset.manual; if(gc)delete gc.dataset.manual;
+      recalcAnual();
+    } else if(c.classList.contains('row-total')){
+      c.dataset.manual='1'; recalcAnual();
+    }
+  });
+  ['subtotal-anual','total-anual'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.addEventListener('input',function(){el.dataset.manual='1';});
+  });
+});
 function showPagoUnicoExpanded(){
   showBlock('block-pago-unico');
   var c=document.getElementById('pago-unico-content');
@@ -2797,6 +3072,10 @@ function wizGenerate(){
     // Sección opcional: rangos escalonados de costo por usuario
     if(WZ.tramos){ showBlock('block-tramos'); tramosInitRows(); }
   }
+
+  // ── Periodicidad anual (se calcula sobre los recurrentes ya cargados) ──
+  if(WZ.periodo!=='mensual' && !WZ.soloEquipo && !WZ.phased){ anualInit(); }
+  else { hideBlock('block-anual'); }
 
   document.getElementById('wiz-overlay').classList.add('hidden');
   window.scrollTo(0,0);
