@@ -846,7 +846,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2332;background:#fff;max-width:78
         </tr>
       </tbody>
     </table>
-    <button class="price-add-btn no-print" onclick="addAnualRow('','1','0','0')">+ Agregar ítem</button>
+    <button class="price-add-btn no-print" onclick="addAnualItem()">+ Agregar ítem</button>
     <div class="price-fn" id="anual-fn">Los costos de pago único (equipos en venta, instalación y envío) se facturan por separado y no forman parte de la anualidad.</div>
   </div>
 
@@ -1395,6 +1395,9 @@ function setCurrency(code){
 function recalcTable(tbodyId, totalId){
   var tbody=document.getElementById(tbodyId);
   if(!tbody) return;
+  // Blindaje: esta función asume columnas .unit/.row-total. Otras tablas
+  // (anual, rango) tienen su propio recálculo.
+  if(tbodyId!=='tbody-recurrente' && tbodyId!=='tbody-unico') return;
   var rows=tbody.querySelectorAll('tr.price-row:not(.price-row-hidden)');
   var grand=0;
   rows.forEach(function(row){
@@ -1544,8 +1547,12 @@ function deletePriceRow(btn){
   var row=btn.closest('tr');
   var tbody=row.closest('tbody');
   var tbodyId=tbody.id;
-  var totalId=tbodyId==='tbody-recurrente'?'total-recurrente':'total-unico';
   row.remove();
+  // Cada tabla tiene su propio motor de cálculo. Enrutar mal aquí vaciaba
+  // los totales de la tabla borrada Y los de pago único.
+  if(tbodyId==='tbody-anual'){ if(typeof recalcAnual==='function')recalcAnual(); return; }
+  if(tbodyId==='tbody-rango'){ if(typeof recalcRango==='function')recalcRango(); return; }
+  var totalId=tbodyId==='tbody-recurrente'?'total-recurrente':'total-unico';
   recalcTable(tbodyId, totalId);
   if(tbodyId==='tbody-recurrente' && typeof syncFeeFromTable==='function'){ syncFeeFromTable(); }
 }
@@ -2485,6 +2492,13 @@ function addAnualRow(label,qty,unitAnual,dcto){
     +'<td class="no-print" style="text-align:center;white-space:nowrap;"><button class="row-ctrl btn-del-row" onclick="deletePriceRow(this)" title="Eliminar">✕</button></td>';
   tb.insertBefore(tr,anchor);
   return tr;
+}
+// Alta manual de un ítem en la tabla anual (hereda el % de descuento vigente)
+function addAnualItem(){
+  var g=document.getElementById('anual-dcto-global');
+  var pct=g?parseNum(g.innerText):0;
+  addAnualRow('Nuevo servicio','1','0',pct);
+  recalcAnual();
 }
 function recalcAnual(){
   var tb=document.getElementById('tbody-anual');if(!tb)return;
