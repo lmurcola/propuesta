@@ -1424,7 +1424,7 @@ function recalcTable(tbodyId, totalId){
   var subCell=document.getElementById(subId);
   if(subCell&&!subCell.dataset.manual) subCell.innerText=formatMXN(grand);
   if(grandCell&&!grandCell.dataset.manual) grandCell.innerText=formatMXN(grand*1.16);
-  var prefSum=0;
+  var prefSum=0, prefAny=false;
   rows.forEach(function(row){
     var prefUnit=row.querySelector('.dcto-pct-cell');
     var prefTot=row.querySelector('.dcto-total-cell');
@@ -1433,12 +1433,18 @@ function recalcTable(tbodyId, totalId){
       var pv=prefUnit.innerText.trim();
       var pNum=parseNum(pv);
       var rowQty=parseNum(row.querySelector('.qty')?row.querySelector('.qty').innerText:'1');
-      if(pv&&pv.toLowerCase()!=='n/a'&&pNum>0){
+      // Un 0 escrito a mano SÍ es descuento (ítem sin costo). La celda nace
+      // vacía, así que "vacío" es lo único que significa "sin descuento".
+      var tienePref = pv!=='' && pv.toLowerCase()!=='n/a' && /[0-9]/.test(pv);
+      if(tienePref){
         var pt=pNum*rowQty;
+        var full=parseNum(rowTotCell?rowTotCell.innerText:'0');
         prefTot.innerText=formatMXN(pt);
         prefTot.style.color='#38a169';
         prefSum+=pt;
-        if(rowTotCell)rowTotCell.classList.add('price-original');
+        prefAny=true;
+        // Sólo se tacha si de verdad hay una rebaja que mostrar
+        if(rowTotCell)rowTotCell.classList[(full>0&&pt<full)?'add':'remove']('price-original');
       } else {
         prefTot.innerText='';
         if(rowTotCell)rowTotCell.classList.remove('price-original');
@@ -1450,17 +1456,17 @@ function recalcTable(tbodyId, totalId){
     var subCell=document.getElementById('subtotal-recurrente');
     if(subCell) subCell.innerText=formatMXN(grand);
     var ps=document.getElementById('pref-sub-recurrente');
-    if(ps&&ps.style.display!=='none')ps.innerText=prefSum>0?formatMXN(prefSum):'';
+    if(ps&&ps.style.display!=='none')ps.innerText=prefAny?formatMXN(prefSum):'';
     var pt=document.getElementById('pref-tot-recurrente');
-    if(pt&&pt.style.display!=='none')pt.innerText=prefSum>0?formatMXN(prefSum*1.16):'';
+    if(pt&&pt.style.display!=='none')pt.innerText=prefAny?formatMXN(prefSum*1.16):'';
   }
   if(tbodyId==='tbody-unico'){
     var subCellU=document.getElementById('subtotal-unico');
     if(subCellU) subCellU.innerText=formatMXN(grand);
     var psU=document.getElementById('pref-sub-unico');
-    if(psU&&psU.style.display!=='none')psU.innerText=prefSum>0?formatMXN(prefSum):'';
+    if(psU&&psU.style.display!=='none')psU.innerText=prefAny?formatMXN(prefSum):'';
     var ptU=document.getElementById('pref-tot-unico');
-    if(ptU&&ptU.style.display!=='none')ptU.innerText=prefSum>0?formatMXN(prefSum*1.16):'';
+    if(ptU&&ptU.style.display!=='none')ptU.innerText=prefAny?formatMXN(prefSum*1.16):'';
   }
 }
 function bindPricingEvents(tbody, totalId){
